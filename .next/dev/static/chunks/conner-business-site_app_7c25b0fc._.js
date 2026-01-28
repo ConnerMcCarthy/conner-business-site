@@ -1428,11 +1428,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2
 ;
 function Theme2Home() {
     const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(24);
-    if ($[0] !== "50822e08322a5c5172b9c0b16ed5b83ee05e79c6b60e7fd02cb276b388ad2b12") {
+    if ($[0] !== "b91ff914f40e034a1571809ac6c9f6d6a38693cebfcac50634ccc06585c3cdde") {
         for(let $i = 0; $i < 24; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "50822e08322a5c5172b9c0b16ed5b83ee05e79c6b60e7fd02cb276b388ad2b12";
+        $[0] = "b91ff914f40e034a1571809ac6c9f6d6a38693cebfcac50634ccc06585c3cdde";
     }
     let t0;
     if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
@@ -1548,7 +1548,7 @@ function Theme2Home() {
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
                         className: "rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 hover:bg-slate-100",
                         href: "tel:+15551234567",
-                        children: "(555) 123-4567"
+                        children: "Call"
                     }, void 0, false, {
                         fileName: "[project]/conner-business-site/app/designs/Theme2Home.tsx",
                         lineNumber: 38,
@@ -2111,11 +2111,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2
 ;
 function Theme3Home() {
     const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(19);
-    if ($[0] !== "39dd486f8532cae2a336b6fbebae98804043a95805ba948dbf31459eb1189fc4") {
+    if ($[0] !== "9c9c1077a3a1e933ead9a9e6f04485ac5da9a6d30a0d97a60c4bc139f9554ed5") {
         for(let $i = 0; $i < 19; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "39dd486f8532cae2a336b6fbebae98804043a95805ba948dbf31459eb1189fc4";
+        $[0] = "9c9c1077a3a1e933ead9a9e6f04485ac5da9a6d30a0d97a60c4bc139f9554ed5";
     }
     let t0;
     if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
@@ -2208,7 +2208,7 @@ function Theme3Home() {
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
                         className: "rounded-full bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-amber-700",
                         href: "#contact",
-                        children: "Get a quote"
+                        children: "Contact"
                     }, void 0, false, {
                         fileName: "[project]/conner-business-site/app/designs/Theme3Home.tsx",
                         lineNumber: 29,

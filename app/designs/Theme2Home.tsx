@@ -29,7 +29,7 @@ export default function Theme2Home() {
             className="rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 hover:bg-slate-100"
             href="tel:+15551234567"
           >
-            (555) 123-4567
+            Call
           </a>
         </div>
       </header>

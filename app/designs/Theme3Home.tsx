@@ -34,7 +34,7 @@ export default function Theme3Home() {
             className="rounded-full bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-amber-700"
             href="#contact"
           >
-            Get a quote
+            Contact
           </a>
         </div>
       </header>
