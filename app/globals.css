@@ -87,13 +87,16 @@ body {
   background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 45%, #2563eb 100%);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .topbar .brand {
   color: #f8fafc;
   font-weight: 800;
   letter-spacing: 0.2px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .brand {
@@ -141,6 +144,8 @@ a.btn.primary {
   padding: 0;
   border-radius: 0;
   backdrop-filter: none;
+  flex-shrink: 0;
+  min-width: fit-content;
 }
 .topbar .btn {
   color: #e2e8f0;

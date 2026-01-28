@@ -2864,13 +2864,15 @@ body {
   display: flex;
   position: sticky;
   top: 0;
-  overflow: hidden;
+  overflow: auto hidden;
   box-shadow: 0 2px 12px #00000026;
 }
 
 .topbar .brand {
   color: #f8fafc;
   letter-spacing: .2px;
+  white-space: nowrap;
+  flex-shrink: 0;
   font-weight: 800;
 }
 
@@ -2916,6 +2918,8 @@ body {
   background: none;
   border: none;
   border-radius: 0;
+  flex-shrink: 0;
+  min-width: fit-content;
   padding: 0;
 }
 
