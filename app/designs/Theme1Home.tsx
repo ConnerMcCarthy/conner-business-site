@@ -9,7 +9,7 @@ export default function Theme1Home() {
         className="sticky z-30 border-b border-slate-200/60 bg-white/70 backdrop-blur"
         style={{ top: "var(--topbar-height)" }}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-2">
             <Image
               src="/conner-headshot-v2.png"
@@ -24,14 +24,17 @@ export default function Theme1Home() {
             </div>
           </div>
 
-          <nav className="hidden items-center gap-6 text-sm text-slate-600 md:flex">
-            <a className="transition-colors hover:text-slate-900" href="#process">
-              Process
-            </a>
-            <a className="transition-colors hover:text-slate-900" href="#faq">
+          <nav className="flex items-center gap-2 text-sm">
+            <a 
+              className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
+              href="#faq"
+            >
               FAQ
             </a>
-            <a className="transition-colors hover:text-slate-900" href="#contact">
+            <a 
+              className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
+              href="#contact"
+            >
               Contact
             </a>
           </nav>
@@ -62,12 +65,11 @@ export default function Theme1Home() {
               </div>
 
               <h1 className="mt-5 text-3xl font-semibold leading-tight tracking-tight md:text-5xl">
-                Websites that feel welcoming — and quietly convert.
+                Professional Modern Websites
               </h1>
 
               <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">
-                Fast, clean, mobile-first sites for real people and real businesses. You’ll get a
-                modern look, clear messaging, and a setup that’s easy to maintain.
+                Fast, clean, mobile-first sites for real people and real businesses.
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
@@ -118,45 +120,8 @@ export default function Theme1Home() {
           </div>
         </div>
       </section>
-
-      {/* Process */}
-      <section id="process" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
-          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">A calm, simple process</h2>
-          <p className="mt-2 max-w-2xl text-slate-600">
-            You shouldn’t need to “manage” a website project. Here’s how we keep it easy.
-          </p>
-
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {[
-              {
-                n: "01",
-                t: "Quick call or email",
-                d: "You tell me what you do, who you serve, and what you want the site to accomplish.",
-              },
-              {
-                n: "02",
-                t: "Design + copy",
-                d: "I draft a clean layout and tighten the message so visitors understand you fast.",
-              },
-              {
-                n: "03",
-                t: "Build + launch",
-                d: "We review, make final edits, connect domain/email, and go live with confidence.",
-              },
-            ].map((s) => (
-              <div key={s.n} className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
-                <div className="text-xs font-semibold text-slate-500">{s.n}</div>
-                <div className="mt-2 text-base font-semibold">{s.t}</div>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{s.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* FAQ */}
-      <section id="faq" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20">
+      <section id="faq" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
         <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
           <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">FAQ</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -220,9 +185,6 @@ export default function Theme1Home() {
 
             <div className="flex w-full flex-col self-center rounded-3xl border border-white/10 bg-white/5 p-6">
               <div className="text-sm font-semibold text-white">A calm, simple process</div>
-              <p className="mt-2 text-sm text-white/80">
-                You shouldn't need to "manage" a website project. Here's how we keep it easy.
-              </p>
 
               <ul className="mt-5 space-y-3 text-sm text-white/80">
                 <li className="flex items-start gap-2">

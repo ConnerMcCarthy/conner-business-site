@@ -49,7 +49,7 @@ function ThemeSwitcher({ theme, onChange }) {
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                 className: `btn ${theme === "theme4" ? "active" : ""}`,
                 onClick: ()=>onChange("theme4"),
-                children: "Service"
+                children: "Local Service"
             }, void 0, false, {
                 fileName: "[project]/conner-business-site/app/ThemeSwitcher.tsx",
                 lineNumber: 23,
@@ -285,7 +285,7 @@ function Theme1Home() {
                     top: "var(--topbar-height)"
                 },
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "mx-auto flex max-w-6xl items-center justify-between px-4 py-3",
+                    className: "mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "flex items-center gap-2",
@@ -333,28 +333,19 @@ function Theme1Home() {
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
-                            className: "hidden items-center gap-6 text-sm text-slate-600 md:flex",
+                            className: "flex items-center gap-2 text-sm",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
-                                    className: "transition-colors hover:text-slate-900",
-                                    href: "#process",
-                                    children: "Process"
+                                    className: "rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm",
+                                    href: "#faq",
+                                    children: "FAQ"
                                 }, void 0, false, {
                                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
                                     lineNumber: 28,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
-                                    className: "transition-colors hover:text-slate-900",
-                                    href: "#faq",
-                                    children: "FAQ"
-                                }, void 0, false, {
-                                    fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                    lineNumber: 31,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
-                                    className: "transition-colors hover:text-slate-900",
+                                    className: "rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm",
                                     href: "#contact",
                                     children: "Contact"
                                 }, void 0, false, {
@@ -376,12 +367,12 @@ function Theme1Home() {
                                 children: "Get a quote"
                             }, void 0, false, {
                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                lineNumber: 40,
+                                lineNumber: 43,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 39,
+                            lineNumber: 42,
                             columnNumber: 11
                         }, this)
                     ]
@@ -404,14 +395,14 @@ function Theme1Home() {
                             className: "pointer-events-none absolute -left-20 -top-24 h-64 w-64 rounded-full bg-sky-200/40 blur-3xl"
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 54,
+                            lineNumber: 57,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "pointer-events-none absolute -right-24 -bottom-28 h-72 w-72 rounded-full bg-indigo-200/40 blur-3xl"
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 55,
+                            lineNumber: 58,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -425,30 +416,30 @@ function Theme1Home() {
                                                 className: "h-2 w-2 rounded-full bg-emerald-500"
                                             }, void 0, false, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 60,
+                                                lineNumber: 63,
                                                 columnNumber: 17
                                             }, this),
                                             "Small-business websites, built with care"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 59,
+                                        lineNumber: 62,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                                         className: "mt-5 text-3xl font-semibold leading-tight tracking-tight md:text-5xl",
-                                        children: "Websites that feel welcoming — and quietly convert."
+                                        children: "Professional Modern Websites"
                                     }, void 0, false, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 64,
+                                        lineNumber: 67,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "mt-4 text-base leading-relaxed text-slate-600 md:text-lg",
-                                        children: "Fast, clean, mobile-first sites for real people and real businesses. You’ll get a modern look, clear messaging, and a setup that’s easy to maintain."
+                                        children: "Fast, clean, mobile-first sites for real people and real businesses."
                                     }, void 0, false, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 68,
+                                        lineNumber: 71,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -459,12 +450,12 @@ function Theme1Home() {
                                             children: "Get a quote"
                                         }, void 0, false, {
                                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                            lineNumber: 74,
+                                            lineNumber: 76,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 73,
+                                        lineNumber: 75,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -478,7 +469,7 @@ function Theme1Home() {
                                                         children: "Mobile-first"
                                                     }, void 0, false, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 84,
+                                                        lineNumber: 86,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -486,13 +477,13 @@ function Theme1Home() {
                                                         children: "Looks great anywhere"
                                                     }, void 0, false, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 85,
+                                                        lineNumber: 87,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 83,
+                                                lineNumber: 85,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -503,7 +494,7 @@ function Theme1Home() {
                                                         children: "Fast"
                                                     }, void 0, false, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 88,
+                                                        lineNumber: 90,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -511,13 +502,13 @@ function Theme1Home() {
                                                         children: "Speed + SEO friendly"
                                                     }, void 0, false, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 89,
+                                                        lineNumber: 91,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 87,
+                                                lineNumber: 89,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -528,7 +519,7 @@ function Theme1Home() {
                                                         children: "Support"
                                                     }, void 0, false, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 92,
+                                                        lineNumber: 94,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -536,30 +527,30 @@ function Theme1Home() {
                                                         children: "Help when you need it"
                                                     }, void 0, false, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 93,
+                                                        lineNumber: 95,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 91,
+                                                lineNumber: 93,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 82,
+                                        lineNumber: 84,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                lineNumber: 58,
+                                lineNumber: 61,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 57,
+                            lineNumber: 60,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -574,7 +565,7 @@ function Theme1Home() {
                                                 children: "Simple pricing."
                                             }, void 0, false, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 103,
+                                                lineNumber: 105,
                                                 columnNumber: 17
                                             }, this),
                                             " ",
@@ -582,7 +573,7 @@ function Theme1Home() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 102,
+                                        lineNumber: 104,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -595,14 +586,14 @@ function Theme1Home() {
                                                         className: "h-2 w-2 rounded-full bg-blue-500"
                                                     }, void 0, false, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 108,
+                                                        lineNumber: 110,
                                                         columnNumber: 19
                                                     }, this),
                                                     " Launch-ready"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 107,
+                                                lineNumber: 109,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -612,14 +603,14 @@ function Theme1Home() {
                                                         className: "h-2 w-2 rounded-full bg-indigo-500"
                                                     }, void 0, false, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 111,
+                                                        lineNumber: 113,
                                                         columnNumber: 19
                                                     }, this),
                                                     " Easy edits"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 110,
+                                                lineNumber: 112,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -629,136 +620,47 @@ function Theme1Home() {
                                                         className: "h-2 w-2 rounded-full bg-sky-500"
                                                     }, void 0, false, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 114,
+                                                        lineNumber: 116,
                                                         columnNumber: 19
                                                     }, this),
                                                     " Performance minded"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 113,
+                                                lineNumber: 115,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 106,
+                                        lineNumber: 108,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                lineNumber: 101,
+                                lineNumber: 103,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 100,
+                            lineNumber: 102,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 52,
+                    lineNumber: 55,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 51,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
-                id: "process",
-                className: "mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12",
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                            className: "text-2xl font-semibold tracking-tight md:text-3xl",
-                            children: "A calm, simple process"
-                        }, void 0, false, {
-                            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 125,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                            className: "mt-2 max-w-2xl text-slate-600",
-                            children: "You shouldn’t need to “manage” a website project. Here’s how we keep it easy."
-                        }, void 0, false, {
-                            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 126,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "mt-8 grid gap-4 md:grid-cols-3",
-                            children: [
-                                {
-                                    n: "01",
-                                    t: "Quick call or email",
-                                    d: "You tell me what you do, who you serve, and what you want the site to accomplish."
-                                },
-                                {
-                                    n: "02",
-                                    t: "Design + copy",
-                                    d: "I draft a clean layout and tighten the message so visitors understand you fast."
-                                },
-                                {
-                                    n: "03",
-                                    t: "Build + launch",
-                                    d: "We review, make final edits, connect domain/email, and go live with confidence."
-                                }
-                            ].map((s)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "text-xs font-semibold text-slate-500",
-                                            children: s.n
-                                        }, void 0, false, {
-                                            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                            lineNumber: 149,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "mt-2 text-base font-semibold",
-                                            children: s.t
-                                        }, void 0, false, {
-                                            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                            lineNumber: 150,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                            className: "mt-2 text-sm leading-relaxed text-slate-600",
-                                            children: s.d
-                                        }, void 0, false, {
-                                            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                            lineNumber: 151,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, s.n, true, {
-                                    fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                    lineNumber: 148,
-                                    columnNumber: 15
-                                }, this))
-                        }, void 0, false, {
-                            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 130,
-                            columnNumber: 11
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 124,
-                    columnNumber: 9
-                }, this)
-            }, void 0, false, {
-                fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 123,
+                lineNumber: 54,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
                 id: "faq",
-                className: "mx-auto max-w-6xl px-4 pt-14 md:pt-20",
+                className: "mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12",
                     children: [
@@ -767,7 +669,7 @@ function Theme1Home() {
                             children: "FAQ"
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 161,
+                            lineNumber: 126,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -793,7 +695,7 @@ function Theme1Home() {
                                             children: f.q
                                         }, void 0, false, {
                                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                            lineNumber: 179,
+                                            lineNumber: 144,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -801,29 +703,29 @@ function Theme1Home() {
                                             children: f.a
                                         }, void 0, false, {
                                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                            lineNumber: 180,
+                                            lineNumber: 145,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, f.q, true, {
                                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                    lineNumber: 178,
+                                    lineNumber: 143,
                                     columnNumber: 15
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 162,
+                            lineNumber: 127,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 160,
+                    lineNumber: 125,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 159,
+                lineNumber: 124,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -841,7 +743,7 @@ function Theme1Home() {
                                         children: "Ready to launch?"
                                     }, void 0, false, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 192,
+                                        lineNumber: 157,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -849,7 +751,7 @@ function Theme1Home() {
                                         children: "Tell me what you do and what you want your website to accomplish. I’ll reply with a quick plan and a straightforward quote."
                                     }, void 0, false, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 193,
+                                        lineNumber: 158,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -861,7 +763,7 @@ function Theme1Home() {
                                                 children: "Email | conner.mccarthy.97@gmail.com"
                                             }, void 0, false, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 199,
+                                                lineNumber: 164,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
@@ -870,19 +772,19 @@ function Theme1Home() {
                                                 children: "Call | (919) 525-0582"
                                             }, void 0, false, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 205,
+                                                lineNumber: 170,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 198,
+                                        lineNumber: 163,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                lineNumber: 191,
+                                lineNumber: 156,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -893,25 +795,25 @@ function Theme1Home() {
                                         children: "Send a message"
                                     }, void 0, false, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 215,
+                                        lineNumber: 180,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "w-full",
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$app$2f$components$2f$ContactForm$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                            lineNumber: 217,
+                                            lineNumber: 182,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 216,
+                                        lineNumber: 181,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                lineNumber: 214,
+                                lineNumber: 179,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -922,15 +824,7 @@ function Theme1Home() {
                                         children: "A calm, simple process"
                                     }, void 0, false, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 222,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "mt-2 text-sm text-white/80",
-                                        children: "You shouldn't need to \"manage\" a website project. Here's how we keep it easy."
-                                    }, void 0, false, {
-                                        fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 223,
+                                        lineNumber: 187,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -943,7 +837,7 @@ function Theme1Home() {
                                                         className: "mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white/40"
                                                     }, void 0, false, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 229,
+                                                        lineNumber: 191,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -953,20 +847,20 @@ function Theme1Home() {
                                                                 children: "Quick call or email"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                                lineNumber: 231,
+                                                                lineNumber: 193,
                                                                 columnNumber: 21
                                                             }, this),
                                                             " — You tell me what you do, who you serve, and what you want the site to accomplish."
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 230,
+                                                        lineNumber: 192,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 228,
+                                                lineNumber: 190,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -976,7 +870,7 @@ function Theme1Home() {
                                                         className: "mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white/40"
                                                     }, void 0, false, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 235,
+                                                        lineNumber: 197,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -986,20 +880,20 @@ function Theme1Home() {
                                                                 children: "Design + copy"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                                lineNumber: 237,
+                                                                lineNumber: 199,
                                                                 columnNumber: 21
                                                             }, this),
                                                             " — I draft a clean layout and tighten the message so visitors understand you fast."
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 236,
+                                                        lineNumber: 198,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 234,
+                                                lineNumber: 196,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -1009,7 +903,7 @@ function Theme1Home() {
                                                         className: "mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white/40"
                                                     }, void 0, false, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 241,
+                                                        lineNumber: 203,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1019,48 +913,48 @@ function Theme1Home() {
                                                                 children: "Build + launch"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                                lineNumber: 243,
+                                                                lineNumber: 205,
                                                                 columnNumber: 21
                                                             }, this),
                                                             " — We review, make final edits, connect domain/email, and go live with confidence."
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                        lineNumber: 242,
+                                                        lineNumber: 204,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                lineNumber: 240,
+                                                lineNumber: 202,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                        lineNumber: 227,
+                                        lineNumber: 189,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                lineNumber: 221,
+                                lineNumber: 186,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                        lineNumber: 190,
+                        lineNumber: 155,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 189,
+                    lineNumber: 154,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 188,
+                lineNumber: 153,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
@@ -1076,7 +970,7 @@ function Theme1Home() {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 255,
+                            lineNumber: 217,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1084,18 +978,18 @@ function Theme1Home() {
                             children: "Built with Next.js"
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 256,
+                            lineNumber: 218,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 254,
+                    lineNumber: 216,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 253,
+                lineNumber: 215,
                 columnNumber: 7
             }, this)
         ]

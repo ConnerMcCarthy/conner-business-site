@@ -13,11 +13,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2
 ;
 function ThemeSwitcher(t0) {
     const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(32);
-    if ($[0] !== "1d1f08be7928ab4ee728ff5c593b0560370b407332ad2cf23073090b37bd632d") {
+    if ($[0] !== "27be2dbffd740391bd736555f5273321222ca956c3d7c52887f5590145330965") {
         for(let $i = 0; $i < 32; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "1d1f08be7928ab4ee728ff5c593b0560370b407332ad2cf23073090b37bd632d";
+        $[0] = "27be2dbffd740391bd736555f5273321222ca956c3d7c52887f5590145330965";
     }
     const { theme, onChange } = t0;
     const t1 = `btn ${theme === "theme1" ? "active" : ""}`;
@@ -120,7 +120,7 @@ function ThemeSwitcher(t0) {
         t12 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
             className: t10,
             onClick: t11,
-            children: "Service"
+            children: "Local Service"
         }, void 0, false, {
             fileName: "[project]/conner-business-site/app/ThemeSwitcher.tsx",
             lineNumber: 90,
@@ -477,12 +477,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2
 ;
 ;
 function Theme1Home() {
-    const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(35);
-    if ($[0] !== "91dd9cdcb582e287f2c66cc0af0fbca0b3ac6afd2679510c69e3940ec3c2224f") {
-        for(let $i = 0; $i < 35; $i += 1){
+    const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(31);
+    if ($[0] !== "8c61e5ff946d1624b39e06eba2827ecee67a6bf2fbe2fd71c42d8942ebb8eb21") {
+        for(let $i = 0; $i < 31; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "91dd9cdcb582e287f2c66cc0af0fbca0b3ac6afd2679510c69e3940ec3c2224f";
+        $[0] = "8c61e5ff946d1624b39e06eba2827ecee67a6bf2fbe2fd71c42d8942ebb8eb21";
     }
     let t0;
     if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
@@ -554,34 +554,25 @@ function Theme1Home() {
     let t3;
     if ($[4] === Symbol.for("react.memo_cache_sentinel")) {
         t3 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
-            className: "hidden items-center gap-6 text-sm text-slate-600 md:flex",
+            className: "flex items-center gap-2 text-sm",
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
-                    className: "transition-colors hover:text-slate-900",
-                    href: "#process",
-                    children: "Process"
-                }, void 0, false, {
-                    fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 37,
-                    columnNumber: 84
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
-                    className: "transition-colors hover:text-slate-900",
+                    className: "rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm",
                     href: "#faq",
                     children: "FAQ"
                 }, void 0, false, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
                     lineNumber: 37,
-                    columnNumber: 165
+                    columnNumber: 59
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
-                    className: "transition-colors hover:text-slate-900",
+                    className: "rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm",
                     href: "#contact",
                     children: "Contact"
                 }, void 0, false, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
                     lineNumber: 37,
-                    columnNumber: 238
+                    columnNumber: 316
                 }, this)
             ]
         }, void 0, true, {
@@ -599,7 +590,7 @@ function Theme1Home() {
             className: "sticky z-30 border-b border-slate-200/60 bg-white/70 backdrop-blur",
             style: t0,
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "mx-auto flex max-w-6xl items-center justify-between px-4 py-3",
+                className: "mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3",
                 children: [
                     t2,
                     t3,
@@ -612,12 +603,12 @@ function Theme1Home() {
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
                             lineNumber: 44,
-                            columnNumber: 236
+                            columnNumber: 252
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
                         lineNumber: 44,
-                        columnNumber: 195
+                        columnNumber: 211
                     }, this)
                 ]
             }, void 0, true, {
@@ -680,7 +671,7 @@ function Theme1Home() {
         }, this);
         t8 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
             className: "mt-5 text-3xl font-semibold leading-tight tracking-tight md:text-5xl",
-            children: "Websites that feel welcoming — and quietly convert."
+            children: "Professional Modern Websites"
         }, void 0, false, {
             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
             lineNumber: 65,
@@ -688,7 +679,7 @@ function Theme1Home() {
         }, this);
         t9 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
             className: "mt-4 text-base leading-relaxed text-slate-600 md:text-lg",
-            children: "Fast, clean, mobile-first sites for real people and real businesses. You’ll get a modern look, clear messaging, and a setup that’s easy to maintain."
+            children: "Fast, clean, mobile-first sites for real people and real businesses."
         }, void 0, false, {
             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
             lineNumber: 66,
@@ -988,102 +979,28 @@ function Theme1Home() {
         t17 = $[18];
     }
     let t18;
-    let t19;
     if ($[19] === Symbol.for("react.memo_cache_sentinel")) {
         t18 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
             className: "text-2xl font-semibold tracking-tight md:text-3xl",
-            children: "A calm, simple process"
+            children: "FAQ"
         }, void 0, false, {
             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 134,
-            columnNumber: 11
-        }, this);
-        t19 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-            className: "mt-2 max-w-2xl text-slate-600",
-            children: "You shouldn’t need to “manage” a website project. Here’s how we keep it easy."
-        }, void 0, false, {
-            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 135,
+            lineNumber: 133,
             columnNumber: 11
         }, this);
         $[19] = t18;
-        $[20] = t19;
     } else {
         t18 = $[19];
-        t19 = $[20];
     }
-    let t20;
-    if ($[21] === Symbol.for("react.memo_cache_sentinel")) {
-        t20 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
-            id: "process",
+    let t19;
+    if ($[20] === Symbol.for("react.memo_cache_sentinel")) {
+        t19 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+            id: "faq",
             className: "mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32",
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12",
                 children: [
                     t18,
-                    t19,
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "mt-8 grid gap-4 md:grid-cols-3",
-                        children: [
-                            {
-                                n: "01",
-                                t: "Quick call or email",
-                                d: "You tell me what you do, who you serve, and what you want the site to accomplish."
-                            },
-                            {
-                                n: "02",
-                                t: "Design + copy",
-                                d: "I draft a clean layout and tighten the message so visitors understand you fast."
-                            },
-                            {
-                                n: "03",
-                                t: "Build + launch",
-                                d: "We review, make final edits, connect domain/email, and go live with confidence."
-                            }
-                        ].map(_Theme1HomeAnonymous)
-                    }, void 0, false, {
-                        fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                        lineNumber: 144,
-                        columnNumber: 190
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 144,
-                columnNumber: 96
-            }, this)
-        }, void 0, false, {
-            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 144,
-            columnNumber: 11
-        }, this);
-        $[21] = t20;
-    } else {
-        t20 = $[21];
-    }
-    let t21;
-    if ($[22] === Symbol.for("react.memo_cache_sentinel")) {
-        t21 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-            className: "text-2xl font-semibold tracking-tight md:text-3xl",
-            children: "FAQ"
-        }, void 0, false, {
-            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 163,
-            columnNumber: 11
-        }, this);
-        $[22] = t21;
-    } else {
-        t21 = $[22];
-    }
-    let t22;
-    if ($[23] === Symbol.for("react.memo_cache_sentinel")) {
-        t22 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
-            id: "faq",
-            className: "mx-auto max-w-6xl px-4 pt-14 md:pt-20",
-            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12",
-                children: [
-                    t21,
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "mt-6 grid gap-4 md:grid-cols-2",
                         children: [
@@ -1099,58 +1016,58 @@ function Theme1Home() {
                                 q: "What if I need updates later?",
                                 a: "You can request simple edits, or choose a maintenance option depending on how hands-on you want to be."
                             }
-                        ].map(_Theme1HomeAnonymous2)
+                        ].map(_Theme1HomeAnonymous)
                     }, void 0, false, {
                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                        lineNumber: 170,
-                        columnNumber: 168
+                        lineNumber: 140,
+                        columnNumber: 181
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 170,
-                columnNumber: 79
+                lineNumber: 140,
+                columnNumber: 92
             }, this)
         }, void 0, false, {
             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 170,
+            lineNumber: 140,
             columnNumber: 11
         }, this);
-        $[23] = t22;
+        $[20] = t19;
     } else {
-        t22 = $[23];
+        t19 = $[20];
     }
-    let t23;
-    let t24;
-    if ($[24] === Symbol.for("react.memo_cache_sentinel")) {
-        t23 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+    let t20;
+    let t21;
+    if ($[21] === Symbol.for("react.memo_cache_sentinel")) {
+        t20 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
             className: "text-2xl font-semibold tracking-tight md:text-3xl",
             children: "Ready to launch?"
         }, void 0, false, {
             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 187,
+            lineNumber: 157,
             columnNumber: 11
         }, this);
-        t24 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+        t21 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
             className: "mt-3 text-white/80",
             children: "Tell me what you do and what you want your website to accomplish. I’ll reply with a quick plan and a straightforward quote."
         }, void 0, false, {
             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 188,
+            lineNumber: 158,
             columnNumber: 11
         }, this);
-        $[24] = t23;
-        $[25] = t24;
+        $[21] = t20;
+        $[22] = t21;
     } else {
-        t23 = $[24];
-        t24 = $[25];
+        t20 = $[21];
+        t21 = $[22];
     }
-    let t25;
-    if ($[26] === Symbol.for("react.memo_cache_sentinel")) {
-        t25 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+    let t22;
+    if ($[23] === Symbol.for("react.memo_cache_sentinel")) {
+        t22 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             children: [
-                t23,
-                t24,
+                t20,
+                t21,
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "mt-6 flex flex-wrap gap-3",
                     children: [
@@ -1160,7 +1077,7 @@ function Theme1Home() {
                             children: "Email | conner.mccarthy.97@gmail.com"
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 197,
+                            lineNumber: 167,
                             columnNumber: 69
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
@@ -1169,19 +1086,75 @@ function Theme1Home() {
                             children: "Call | (919) 525-0582"
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 197,
+                            lineNumber: 167,
                             columnNumber: 377
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 197,
+                    lineNumber: 167,
                     columnNumber: 26
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 197,
+            lineNumber: 167,
+            columnNumber: 11
+        }, this);
+        $[23] = t22;
+    } else {
+        t22 = $[23];
+    }
+    let t23;
+    if ($[24] === Symbol.for("react.memo_cache_sentinel")) {
+        t23 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "mb-4 text-sm font-semibold text-white",
+            children: "Send a message"
+        }, void 0, false, {
+            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
+            lineNumber: 174,
+            columnNumber: 11
+        }, this);
+        $[24] = t23;
+    } else {
+        t23 = $[24];
+    }
+    let t24;
+    if ($[25] === Symbol.for("react.memo_cache_sentinel")) {
+        t24 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "flex w-full flex-col rounded-3xl border border-white/10 bg-white/5 p-6",
+            children: [
+                t23,
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "w-full",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$app$2f$components$2f$ContactForm$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                        fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
+                        lineNumber: 181,
+                        columnNumber: 128
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
+                    lineNumber: 181,
+                    columnNumber: 104
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
+            lineNumber: 181,
+            columnNumber: 11
+        }, this);
+        $[25] = t24;
+    } else {
+        t24 = $[25];
+    }
+    let t25;
+    if ($[26] === Symbol.for("react.memo_cache_sentinel")) {
+        t25 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "text-sm font-semibold text-white",
+            children: "A calm, simple process"
+        }, void 0, false, {
+            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
+            lineNumber: 188,
             columnNumber: 11
         }, this);
         $[26] = t25;
@@ -1190,81 +1163,14 @@ function Theme1Home() {
     }
     let t26;
     if ($[27] === Symbol.for("react.memo_cache_sentinel")) {
-        t26 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "mb-4 text-sm font-semibold text-white",
-            children: "Send a message"
-        }, void 0, false, {
-            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 204,
-            columnNumber: 11
-        }, this);
-        $[27] = t26;
-    } else {
-        t26 = $[27];
-    }
-    let t27;
-    if ($[28] === Symbol.for("react.memo_cache_sentinel")) {
-        t27 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "flex w-full flex-col rounded-3xl border border-white/10 bg-white/5 p-6",
-            children: [
-                t26,
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "w-full",
-                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$app$2f$components$2f$ContactForm$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
-                        fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                        lineNumber: 211,
-                        columnNumber: 128
-                    }, this)
-                }, void 0, false, {
-                    fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 211,
-                    columnNumber: 104
-                }, this)
-            ]
-        }, void 0, true, {
-            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 211,
-            columnNumber: 11
-        }, this);
-        $[28] = t27;
-    } else {
-        t27 = $[28];
-    }
-    let t28;
-    let t29;
-    if ($[29] === Symbol.for("react.memo_cache_sentinel")) {
-        t28 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "text-sm font-semibold text-white",
-            children: "A calm, simple process"
-        }, void 0, false, {
-            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 219,
-            columnNumber: 11
-        }, this);
-        t29 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-            className: "mt-2 text-sm text-white/80",
-            children: "You shouldn't need to \"manage\" a website project. Here's how we keep it easy."
-        }, void 0, false, {
-            fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 220,
-            columnNumber: 11
-        }, this);
-        $[29] = t28;
-        $[30] = t29;
-    } else {
-        t28 = $[29];
-        t29 = $[30];
-    }
-    let t30;
-    if ($[31] === Symbol.for("react.memo_cache_sentinel")) {
-        t30 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+        t26 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
             className: "flex items-start gap-2",
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                     className: "mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white/40"
                 }, void 0, false, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 229,
+                    lineNumber: 195,
                     columnNumber: 50
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1274,36 +1180,36 @@ function Theme1Home() {
                             children: "Quick call or email"
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 229,
+                            lineNumber: 195,
                             columnNumber: 132
                         }, this),
                         " — You tell me what you do, who you serve, and what you want the site to accomplish."
                     ]
                 }, void 0, true, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 229,
+                    lineNumber: 195,
                     columnNumber: 126
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 229,
+            lineNumber: 195,
             columnNumber: 11
         }, this);
-        $[31] = t30;
+        $[27] = t26;
     } else {
-        t30 = $[31];
+        t26 = $[27];
     }
-    let t31;
-    if ($[32] === Symbol.for("react.memo_cache_sentinel")) {
-        t31 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+    let t27;
+    if ($[28] === Symbol.for("react.memo_cache_sentinel")) {
+        t27 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
             className: "flex items-start gap-2",
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                     className: "mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white/40"
                 }, void 0, false, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 236,
+                    lineNumber: 202,
                     columnNumber: 50
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1313,29 +1219,29 @@ function Theme1Home() {
                             children: "Design + copy"
                         }, void 0, false, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 236,
+                            lineNumber: 202,
                             columnNumber: 132
                         }, this),
                         " — I draft a clean layout and tighten the message so visitors understand you fast."
                     ]
                 }, void 0, true, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 236,
+                    lineNumber: 202,
                     columnNumber: 126
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 236,
+            lineNumber: 202,
             columnNumber: 11
         }, this);
-        $[32] = t31;
+        $[28] = t27;
     } else {
-        t31 = $[32];
+        t27 = $[28];
     }
-    let t32;
-    if ($[33] === Symbol.for("react.memo_cache_sentinel")) {
-        t32 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+    let t28;
+    if ($[29] === Symbol.for("react.memo_cache_sentinel")) {
+        t28 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
             id: "contact",
             className: "mx-auto max-w-6xl px-4 py-14 md:py-20 scroll-mt-32",
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1343,18 +1249,17 @@ function Theme1Home() {
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "grid items-stretch gap-y-10 gap-x-12 p-8 md:grid-cols-[0.6fr_1.2fr_1fr] md:p-12",
                     children: [
-                        t25,
-                        t27,
+                        t22,
+                        t24,
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "flex w-full flex-col self-center rounded-3xl border border-white/10 bg-white/5 p-6",
                             children: [
-                                t28,
-                                t29,
+                                t25,
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
                                     className: "mt-5 space-y-3 text-sm text-white/80",
                                     children: [
-                                        t30,
-                                        t31,
+                                        t26,
+                                        t27,
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                             className: "flex items-start gap-2",
                                             children: [
@@ -1362,8 +1267,8 @@ function Theme1Home() {
                                                     className: "mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white/40"
                                                 }, void 0, false, {
                                                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                    lineNumber: 243,
-                                                    columnNumber: 518
+                                                    lineNumber: 209,
+                                                    columnNumber: 513
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     children: [
@@ -1372,64 +1277,63 @@ function Theme1Home() {
                                                             children: "Build + launch"
                                                         }, void 0, false, {
                                                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                            lineNumber: 243,
-                                                            columnNumber: 600
+                                                            lineNumber: 209,
+                                                            columnNumber: 595
                                                         }, this),
                                                         " — We review, make final edits, connect domain/email, and go live with confidence."
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                                    lineNumber: 243,
-                                                    columnNumber: 594
+                                                    lineNumber: 209,
+                                                    columnNumber: 589
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                            lineNumber: 243,
-                                            columnNumber: 479
+                                            lineNumber: 209,
+                                            columnNumber: 474
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                    lineNumber: 243,
-                                    columnNumber: 416
+                                    lineNumber: 209,
+                                    columnNumber: 411
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                            lineNumber: 243,
+                            lineNumber: 209,
                             columnNumber: 306
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 243,
+                    lineNumber: 209,
                     columnNumber: 199
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 243,
+                lineNumber: 209,
                 columnNumber: 96
             }, this)
         }, void 0, false, {
             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 243,
+            lineNumber: 209,
             columnNumber: 11
         }, this);
-        $[33] = t32;
+        $[29] = t28;
     } else {
-        t32 = $[33];
+        t28 = $[29];
     }
-    let t33;
-    if ($[34] === Symbol.for("react.memo_cache_sentinel")) {
-        t33 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
+    let t29;
+    if ($[30] === Symbol.for("react.memo_cache_sentinel")) {
+        t29 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
             className: "min-h-screen bg-gradient-to-b from-blue-50 via-blue-50/95 to-blue-100 text-slate-900",
             children: [
                 t4,
                 t17,
-                t20,
-                t22,
-                t32,
+                t19,
+                t28,
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
                     className: "border-t border-slate-200 bg-white",
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1443,42 +1347,42 @@ function Theme1Home() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                lineNumber: 250,
-                                columnNumber: 328
+                                lineNumber: 216,
+                                columnNumber: 323
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "text-slate-500",
                                 children: "Built with Next.js"
                             }, void 0, false, {
                                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                                lineNumber: 250,
-                                columnNumber: 392
+                                lineNumber: 216,
+                                columnNumber: 387
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                        lineNumber: 250,
-                        columnNumber: 193
+                        lineNumber: 216,
+                        columnNumber: 188
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                    lineNumber: 250,
-                    columnNumber: 138
+                    lineNumber: 216,
+                    columnNumber: 133
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-            lineNumber: 250,
+            lineNumber: 216,
             columnNumber: 11
         }, this);
-        $[34] = t33;
+        $[30] = t29;
     } else {
-        t33 = $[34];
+        t29 = $[30];
     }
-    return t33;
+    return t29;
 }
 _c = Theme1Home;
-function _Theme1HomeAnonymous2(f) {
+function _Theme1HomeAnonymous(f) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300",
         children: [
@@ -1487,7 +1391,7 @@ function _Theme1HomeAnonymous2(f) {
                 children: f.q
             }, void 0, false, {
                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 258,
+                lineNumber: 224,
                 columnNumber: 193
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1495,48 +1399,13 @@ function _Theme1HomeAnonymous2(f) {
                 children: f.a
             }, void 0, false, {
                 fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 258,
+                lineNumber: 224,
                 columnNumber: 243
             }, this)
         ]
     }, f.q, true, {
         fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-        lineNumber: 258,
-        columnNumber: 10
-    }, this);
-}
-function _Theme1HomeAnonymous(s) {
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300",
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "text-xs font-semibold text-slate-500",
-                children: s.n
-            }, void 0, false, {
-                fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 261,
-                columnNumber: 193
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "mt-2 text-base font-semibold",
-                children: s.t
-            }, void 0, false, {
-                fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 261,
-                columnNumber: 258
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$conner$2d$business$2d$site$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                className: "mt-2 text-sm leading-relaxed text-slate-600",
-                children: s.d
-            }, void 0, false, {
-                fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-                lineNumber: 261,
-                columnNumber: 315
-            }, this)
-        ]
-    }, s.n, true, {
-        fileName: "[project]/conner-business-site/app/designs/Theme1Home.tsx",
-        lineNumber: 261,
+        lineNumber: 224,
         columnNumber: 10
     }, this);
 }

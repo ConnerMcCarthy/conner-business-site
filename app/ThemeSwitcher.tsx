@@ -21,7 +21,7 @@ export default function ThemeSwitcher({
         Small Business
       </button>
       <button className={`btn ${theme === "theme4" ? "active" : ""}`} onClick={() => onChange("theme4")}>
-        Service
+        Local Service
       </button>
       <button className={`btn ${theme === "theme5" ? "active" : ""}`} onClick={() => onChange("theme5")}>
         Portfolio
