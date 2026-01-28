@@ -1,0 +1,20 @@
+{
+  "node": {
+    "4093e387fb3b3e810c4c6514ff215c14677fe1b6f7": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/conner-business-site/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/conner-business-site/app/actions/contact.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "submitContactForm",
+          "filename": "conner-business-site/app/actions/contact.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "exportedName": "submitContactForm",
+      "filename": "conner-business-site/app/actions/contact.ts"
+    }
+  },
+  "edge": {}
+}

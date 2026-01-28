@@ -1,0 +1,16 @@
+Project: Next.js (App Router) + TypeScript + Tailwind CSS.
+
+Architecture rules:
+- Use Server Components by default (NO "use client" unless needed).
+- Only use "use client" when the component uses: useState/useEffect, event handlers, browser-only APIs, or context that requires client.
+- Keep pages/layouts in /app. Put reusable UI in /app/components or /components.
+- Prefer composable components; avoid huge single files.
+- Do not add new libraries unless I ask.
+- Use Tailwind utility classes; avoid custom CSS unless necessary.
+- Prefer semantic HTML and accessibility (labels, aria where needed).
+- When you change code, explain what you changed and why.
+
+Coding style:
+- TypeScript strict-friendly code.
+- Use named exports for components unless otherwise needed.
+- Avoid unnecessary re-renders and infinite loops.
