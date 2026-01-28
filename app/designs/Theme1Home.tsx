@@ -169,9 +169,9 @@ export default function Theme1Home() {
                 </a>
                 <a
                   className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 hover:scale-105 hover:shadow-lg hover:-translate-y-0.5 hover:border-white/30"
-                  href="tel:+19195250582"
+                  href="tel:+18283295839"
                 >
-                  Call | (919) 525-0582
+                  Call | (828) 329-5839
                 </a>
               </div>
             </div>
