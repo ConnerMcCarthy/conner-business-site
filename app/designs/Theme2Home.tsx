@@ -127,8 +127,7 @@ export default function Theme2Home() {
           {[
             { title: "Drains & sewer", desc: "Clogs, cleanouts, camera inspections." },
             { title: "Water heaters", desc: "Install, repair, tank & tankless." },
-            { title: "Repairs", desc: "Leaks, pipes, fixtures, toilets." },
-            { title: "Installations", desc: "New fixtures, reroutes, remodels." },
+            { title: "Repairs and Installations", desc: "Leaks, pipes, fixtures, toilets." },
           ].map((s) => (
             <div
               key={s.title}
