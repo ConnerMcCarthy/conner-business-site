@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Section = "home" | "services" | "reviews" | "faq" | "rates" | "contact";
+
+const SCROLL_OFFSET = 0; // adjust if needed for header overlap
 
 const NAV_ITEMS: { id: Section; label: string }[] = [
   { id: "home", label: "Book" },
@@ -13,9 +15,49 @@ const NAV_ITEMS: { id: Section; label: string }[] = [
   { id: "contact", label: "Contact" },
 ];
 
+function getNextSection(current: Section): Section | null {
+  const idx = NAV_ITEMS.findIndex((n) => n.id === current);
+  if (idx < 0 || idx >= NAV_ITEMS.length - 1) return null;
+  return NAV_ITEMS[idx + 1].id;
+}
+
+function NextSectionButton({
+  current,
+  onNext,
+}: {
+  current: Section;
+  onNext: (s: Section) => void;
+}) {
+  const next = getNextSection(current);
+  if (!next) return null;
+  return (
+    <div className="mt-auto flex flex-shrink-0 justify-center pb-8 pt-8">
+      <button
+        type="button"
+        onClick={() => onNext(next)}
+        className="flex items-center justify-center gap-2 rounded-xl border border-stone-200 bg-white px-6 py-3 text-stone-700 shadow-sm transition-all hover:border-fuchsia-300 hover:bg-fuchsia-50 hover:text-fuchsia-700"
+        aria-label={`Go to next section`}
+      >
+        <span className="text-fuchsia-500">▼</span>
+      </button>
+    </div>
+  );
+}
+
 export default function Theme4Home() {
   const [activeSection, setActiveSection] = useState<Section>("home");
   const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const scroll = () => {
+      el.scrollTop = SCROLL_OFFSET;
+      window.scrollTo(0, SCROLL_OFFSET);
+    };
+    requestAnimationFrame(scroll);
+  }, [activeSection]);
 
   const testimonials = [
     {
@@ -111,8 +153,8 @@ export default function Theme4Home() {
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Home */}
         {activeSection === "home" && (
-          <section className="flex flex-1 flex-col overflow-y-auto">
-            <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-12 md:flex-row md:items-center md:gap-16 md:px-6 md:py-16">
+          <section ref={sectionRef} className="flex flex-1 flex-col overflow-y-auto">
+            <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-12 md:flex-row md:items-start md:gap-16 md:px-6 md:py-16">
               <div className="flex-1">
                 <h1 className="text-4xl font-bold uppercase leading-tight tracking-tight text-stone-900 md:text-5xl lg:text-6xl">
                   <span className="block">Your Dog&apos;s</span>
@@ -188,13 +230,14 @@ export default function Theme4Home() {
                 </form>
               </div>
             </div>
+            <NextSectionButton current="home" onNext={setActiveSection} />
           </section>
         )}
 
         {/* Services */}
         {activeSection === "services" && (
-          <section className="flex flex-1 flex-col overflow-y-auto">
-            <div className="mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
+          <section ref={sectionRef} className="flex flex-1 flex-col overflow-y-auto">
+            <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-12 md:px-6 md:py-16">
               <h2 className="text-3xl font-bold uppercase tracking-tight text-stone-900 md:text-4xl">
                 What I offer
               </h2>
@@ -215,13 +258,14 @@ export default function Theme4Home() {
                 ))}
               </div>
             </div>
+            <NextSectionButton current="services" onNext={setActiveSection} />
           </section>
         )}
 
         {/* Rates */}
         {activeSection === "rates" && (
-          <section className="flex flex-1 flex-col overflow-y-auto">
-            <div className="mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
+          <section ref={sectionRef} className="flex flex-1 flex-col overflow-y-auto">
+            <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-12 md:px-6 md:py-16">
               <h2 className="text-3xl font-bold uppercase tracking-tight text-stone-900 md:text-4xl">
                 Simple, clear rates
               </h2>
@@ -259,13 +303,14 @@ export default function Theme4Home() {
                 </div>
               </div>
             </div>
+            <NextSectionButton current="rates" onNext={setActiveSection} />
           </section>
         )}
 
         {/* Reviews */}
         {activeSection === "reviews" && (
-          <section className="flex flex-1 flex-col overflow-y-auto">
-            <div className="mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
+          <section ref={sectionRef} className="flex flex-1 flex-col overflow-y-auto">
+            <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-12 md:px-6 md:py-16">
               <h2 className="text-3xl font-bold uppercase tracking-tight text-stone-900 md:text-4xl">
                 What dog owners say
               </h2>
@@ -316,13 +361,14 @@ export default function Theme4Home() {
                 </div>
               </div>
             </div>
+            <NextSectionButton current="reviews" onNext={setActiveSection} />
           </section>
         )}
 
         {/* FAQ */}
         {activeSection === "faq" && (
-          <section className="flex flex-1 flex-col overflow-y-auto">
-            <div className="mx-auto w-full max-w-3xl px-4 py-12 md:px-6 md:py-16">
+          <section ref={sectionRef} className="flex flex-1 flex-col overflow-y-auto">
+            <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-12 md:px-6 md:py-16">
               <h2 className="text-3xl font-bold uppercase tracking-tight text-stone-900 md:text-4xl">
                 Frequently asked questions
               </h2>
@@ -344,12 +390,13 @@ export default function Theme4Home() {
                 ))}
               </div>
             </div>
+            <NextSectionButton current="faq" onNext={setActiveSection} />
           </section>
         )}
 
         {/* Contact */}
         {activeSection === "contact" && (
-          <section className="flex flex-1 flex-col overflow-y-auto">
+          <section ref={sectionRef} className="flex flex-1 flex-col overflow-y-auto">
             <div className="mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
               <div className="grid gap-8 lg:grid-cols-[minmax(0,200px)_1fr_1fr] lg:gap-12">
                 <div className="flex justify-center lg:justify-start">
