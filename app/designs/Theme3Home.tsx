@@ -168,16 +168,16 @@ export default function Theme3Home() {
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <a
-              href="mailto:pam@example.com"
+              href="mailto:pamjrmccarthy@gmail.com"
               className="rounded-full bg-amber-600 px-8 py-3 text-sm font-semibold text-white hover:bg-amber-700"
             >
-              pam@example.com
+              pamjrmccarthy@gmail.com
             </a>
             <a
-              href="tel:+15551234567"
+              href="tel:+18283297953"
               className="rounded-full border border-stone-300 bg-white px-8 py-3 text-sm font-semibold text-stone-800 hover:bg-stone-50"
             >
-              (555) 123-4567
+              (828) 329-7953
             </a>
           </div>
         </div>
