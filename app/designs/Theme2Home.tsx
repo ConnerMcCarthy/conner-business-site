@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Theme2Home() {
   return (
     <main className="min-h-screen" style={{ color: "var(--text)", background: "var(--bg)" }}>
@@ -8,7 +10,13 @@ export default function Theme2Home() {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-4">
           <div className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-lg bg-white/10" aria-hidden />
+            <Image
+              src="/plumbing-logo.png"
+              alt="Plumbing company logo"
+              width={56}
+              height={56}
+              className="h-12 w-12 flex-shrink-0 rounded-lg object-contain md:h-14 md:w-14"
+            />
             <div>
               <span className="text-sm font-semibold tracking-tight text-white md:text-base">
                 Your Company Plumbing

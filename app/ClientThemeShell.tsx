@@ -43,7 +43,7 @@ export default function ClientThemeShell() {
   return (
     <>
       <header className="topbar">
-        <div className="brand text-xl">Designs</div>
+        <div className="brand text-xl">Samples</div>
         <ThemeSwitcher theme={theme} onChange={applyTheme} />
       </header>
 
