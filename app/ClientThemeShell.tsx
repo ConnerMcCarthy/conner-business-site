@@ -44,17 +44,27 @@ export default function ClientThemeShell() {
   }, [mounted]);
 
   useEffect(() => {
+    if (!mounted) return;
+    const run = () => checkScroll();
+    run();
+    const t = setTimeout(run, 100);
     const el = topbarRef.current;
-    if (!el) return;
-    checkScroll();
-    el.addEventListener("scroll", checkScroll);
-    const ro = new ResizeObserver(checkScroll);
-    ro.observe(el);
+    const ro = el ? new ResizeObserver(run) : null;
+    if (el) ro?.observe(el);
+    window.addEventListener("resize", run);
     return () => {
-      el.removeEventListener("scroll", checkScroll);
-      ro.disconnect();
+      clearTimeout(t);
+      if (el && ro) ro.disconnect();
+      window.removeEventListener("resize", run);
     };
   }, [mounted, checkScroll]);
+
+  function scrollRight() {
+    const el = topbarRef.current;
+    if (!el) return;
+    el.scrollBy({ left: 120, behavior: "smooth" });
+    requestAnimationFrame(() => setTimeout(checkScroll, 300));
+  }
 
   function applyTheme(t: Theme) {
     setTheme(t);
@@ -62,30 +72,26 @@ export default function ClientThemeShell() {
     document.documentElement.setAttribute("data-theme", t);
   }
 
-  function scrollRight() {
-    const el = topbarRef.current;
-    if (!el) return;
-    el.scrollBy({ left: 120, behavior: "smooth" });
-  }
-
   return (
     <>
-      <div className="relative">
-        <header className="topbar" ref={topbarRef}>
-          <div className="brand text-xl">Designs</div>
-          <ThemeSwitcher theme={theme} onChange={applyTheme} />
-        </header>
+      <header
+        ref={topbarRef}
+        className="topbar relative"
+        onScroll={checkScroll}
+      >
+        <div className="brand text-xl">Designs</div>
+        <ThemeSwitcher theme={theme} onChange={applyTheme} />
         {canScrollRight && (
           <button
             type="button"
             onClick={scrollRight}
-            className="topbar-scroll-hint"
+            className="absolute right-0 top-0 z-10 flex h-full w-10 flex-shrink-0 items-center justify-end pr-1 text-white/70 transition-opacity hover:text-white"
             aria-label="Scroll to see more themes"
           >
-            →
+            <span className="text-3xl font-medium">&gt;</span>
           </button>
         )}
-      </div>
+      </header>
 
       {mounted ? THEME_PAGES[theme] : THEME_PAGES.theme1}
     </>

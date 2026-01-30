@@ -99,33 +99,6 @@ body {
   white-space: nowrap;
 }
 
-/* Scroll hint — right arrow when more content to scroll */
-.topbar-scroll-hint {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 51;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.9);
-  color: #1e40af;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  transition: background 0.2s, transform 0.2s;
-}
-.topbar-scroll-hint:hover {
-  background: #fff;
-  transform: translateY(-50%) scale(1.05);
-}
-
 .brand {
   font-weight: 800;
   letter-spacing: 0.2px;
