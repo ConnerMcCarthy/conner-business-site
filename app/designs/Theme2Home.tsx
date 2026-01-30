@@ -1,32 +1,34 @@
 export default function Theme2Home() {
   return (
     <main className="min-h-screen" style={{ color: "var(--text)", background: "var(--bg)" }}>
-      {/* Top bar */}
+      {/* Header — opaque for readability over hero */}
       <header
-        className="sticky z-30 border-b border-white/10 bg-[#0b1220]"
+        className="sticky z-30 border-b border-white/10 bg-[#0b1220]/95 backdrop-blur-md"
         style={{ top: "var(--topbar-height)" }}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-4">
           <div className="flex items-center gap-2">
             <div className="h-9 w-9 rounded-lg bg-white/10" aria-hidden />
             <div>
-              <span className="font-semibold tracking-tight">[Company] Plumbing</span>
-              <span className="ml-1.5 text-sm opacity-80">· Asheville, NC</span>
+              <span className="text-sm font-semibold tracking-tight text-white md:text-base">
+                Your Company Plumbing
+              </span>
+              <span className="ml-1.5 text-xs text-white/70 md:text-sm">· Asheville, NC</span>
             </div>
           </div>
-          <nav className="hidden items-center gap-6 text-sm opacity-90 md:flex">
-            <a className="hover:opacity-100" href="#services">
+          <nav className="hidden items-center gap-8 text-sm text-white/90 md:flex">
+            <a className="transition-opacity hover:text-white" href="#services">
               Services
             </a>
-            <a className="hover:opacity-100" href="#about">
+            <a className="transition-opacity hover:text-white" href="#about">
               About
             </a>
-            <a className="hover:opacity-100" href="#contact">
+            <a className="transition-opacity hover:text-white" href="#contact">
               Contact
             </a>
           </nav>
           <a
-            className="rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 hover:bg-slate-100"
+            className="flex-shrink-0 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition-all hover:bg-slate-100"
             href="tel:+15551234567"
           >
             Call
@@ -34,9 +36,9 @@ export default function Theme2Home() {
         </div>
       </header>
 
-      {/* Hero */}
-      <section 
-        className="relative w-full pt-14 pb-10 md:pt-20 md:pb-14 text-center"
+      {/* Hero — gradient overlay, constrained content, clear hierarchy */}
+      <section
+        className="relative w-full overflow-hidden"
         style={{
           backgroundImage: "url('/plumbing-background.png')",
           backgroundSize: "cover",
@@ -44,65 +46,62 @@ export default function Theme2Home() {
           backgroundRepeat: "no-repeat",
         }}
       >
-        {/* Overlay for text readability */}
-        <div className="absolute inset-0 bg-black/60" />
-        
-        <div className="relative z-10 mx-auto max-w-4xl px-4">
-          <p className="text-sm font-medium uppercase tracking-widest text-white/90">
-            Licensed &amp; insured · Asheville &amp; surrounding areas
-          </p>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-5xl">
-            Reliable plumbing when you need it
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-white/90 md:text-xl">
-            Repairs, installations, and emergencies. Same-day service when we can—clear pricing,
-            no surprises.
-          </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <a
-              className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition-all duration-200 hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:-translate-y-0.5"
-              href="tel:+15551234567"
-            >
-              Call now
-            </a>
-            <a
-              className="inline-flex items-center justify-center rounded-full border border-white/40 bg-white/20 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/30 hover:scale-105 hover:shadow-lg hover:-translate-y-0.5"
-              href="#contact"
-            >
-              Request service
-            </a>
-            <a
-              className="inline-flex items-center justify-center rounded-full border border-amber-400/60 bg-amber-400/10 px-6 py-3 text-sm font-semibold text-amber-300 transition-all duration-200 hover:bg-amber-400/20 hover:scale-105 hover:shadow-lg hover:-translate-y-0.5"
-              href="tel:+15551234567"
-            >
-              Emergency?
-            </a>
+        {/* Dark gradient overlay — stronger center, softer edges */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 70% at 50% 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.35) 100%)",
+          }}
+        />
+
+        {/* Hero content — centered, max-width, backdrop blur behind text */}
+        <div className="relative z-10 mx-auto max-w-[1150px] px-4 py-20 text-center md:py-28 lg:py-32">
+          <div className="mx-auto max-w-2xl rounded-2xl bg-black/30 px-6 py-8 backdrop-blur-sm md:px-10 md:py-10">
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/90 md:text-sm">
+              Licensed &amp; insured · Asheville &amp; surrounding areas
+            </p>
+            <h1 className="mt-5 text-[2.5rem] font-bold leading-[1.1] tracking-tight text-white md:text-5xl lg:text-[3.5rem]">
+              Reliable plumbing when you need it
+            </h1>
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/95 md:text-lg md:leading-[1.6]">
+              Repairs, installations, and emergencies. Same-day service when we can—clear pricing,
+              no surprises.
+            </p>
+            <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-4">
+              <a
+                className="inline-flex w-full items-center justify-center rounded-full bg-white px-6 py-3.5 text-sm font-semibold text-slate-900 shadow-lg transition-all hover:bg-slate-100 hover:shadow-xl sm:w-auto"
+                href="tel:+15551234567"
+              >
+                Call now
+              </a>
+              <a
+                className="inline-flex w-full items-center justify-center rounded-full border-2 border-white/60 bg-white/15 px-6 py-3.5 text-sm font-semibold text-white transition-all hover:bg-white/25 hover:border-white/80 sm:w-auto"
+                href="#contact"
+              >
+                Request service
+              </a>
+              <a
+                className="rounded-full border border-amber-400/50 bg-amber-400/10 px-4 py-2 text-xs font-medium text-amber-300 transition-colors hover:bg-amber-400/20 hover:text-amber-200"
+                href="tel:+15551234567"
+              >
+                Emergency?
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Trust strip */}
+      {/* Trust strip — compact, one line on desktop */}
       <section
-        className="border-t border-white/10 border-b border-white/10 py-4 px-4"
+        className="border-b border-white/10 px-4 py-3"
         aria-label="Credentials"
       >
-        <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-x-10 gap-y-2 text-sm opacity-90">
-          <span className="inline-flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden />
-            Licensed
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden />
-            Insured
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden />
-            Fast response
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden />
-            Upfront pricing
-          </span>
+        <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-x-8 gap-y-1.5 text-xs text-white/80 md:flex-nowrap md:justify-center md:gap-x-10 md:text-sm">
+          <span>Licensed</span>
+          <span>Insured</span>
+          <span>Fast response</span>
+          <span>Upfront pricing</span>
         </div>
       </section>
 
@@ -175,7 +174,7 @@ export default function Theme2Home() {
         style={{ color: "var(--text)" }}
       >
         <div className="mx-auto flex max-w-6xl flex-col gap-2 text-sm text-center md:flex-row md:items-center md:justify-between md:text-left">
-          <div>© {new Date().getFullYear()} [Company] Plumbing. Licensed &amp; insured.</div>
+          <div>© {new Date().getFullYear()} Your Company Plumbing. Licensed &amp; insured.</div>
           <div className="opacity-70">Asheville, NC · (555) 123-4567</div>
         </div>
       </footer>

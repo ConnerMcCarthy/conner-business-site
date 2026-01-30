@@ -73,17 +73,17 @@ export default function Theme1Home() {
               </div>
 
               <div className="mt-8 grid grid-cols-3 gap-3 text-sm">
-                <div className="rounded-2xl border border-slate-200 bg-white p-3">
-                  <div className="font-semibold">Mobile-first</div>
-                  <div className="mt-1 text-xs text-slate-500">Looks great anywhere</div>
+                <div className="rounded-2xl border border-blue-200 bg-blue-50 p-3 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-blue-300 hover:shadow-lg">
+                  <div className="font-semibold text-black">Mobile-first</div>
+                  <div className="mt-1 text-xs text-black/70">Looks great anywhere</div>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-white p-3">
-                  <div className="font-semibold">Fast</div>
-                  <div className="mt-1 text-xs text-slate-500">Speed + SEO friendly</div>
+                <div className="rounded-2xl border border-blue-200 bg-blue-50 p-3 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-blue-300 hover:shadow-lg">
+                  <div className="font-semibold text-black">Fast</div>
+                  <div className="mt-1 text-xs text-black/70">Speed + SEO friendly</div>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-white p-3">
-                  <div className="font-semibold">Support</div>
-                  <div className="mt-1 text-xs text-slate-500">Help when you need it</div>
+                <div className="rounded-2xl border border-blue-200 bg-blue-50 p-3 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-blue-300 hover:shadow-lg">
+                  <div className="font-semibold text-black">Support</div>
+                  <div className="mt-1 text-xs text-black/70">Help when you need it</div>
                 </div>
               </div>
             </div>
