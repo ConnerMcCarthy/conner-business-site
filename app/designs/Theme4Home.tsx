@@ -8,7 +8,7 @@ type Section = "home" | "services" | "reviews" | "faq" | "rates" | "contact";
 const SCROLL_OFFSET = 0; // adjust if needed for header overlap
 
 const NAV_ITEMS: { id: Section; label: string }[] = [
-  { id: "home", label: "Book" },
+  { id: "home", label: "Home" },
   { id: "services", label: "Services" },
   { id: "rates", label: "Rates" },
   { id: "reviews", label: "Reviews" },
