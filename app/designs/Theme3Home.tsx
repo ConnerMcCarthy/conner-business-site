@@ -17,7 +17,7 @@ export default function Theme3Home() {
               height={64}
               className="max-h-16 object-contain opacity-90"
             />
-            <span className="text-lg font-semibold text-stone-900">Pam McCarthy Catering</span>
+            <span className="text-lg font-semibold text-stone-900">Pamela McCarthy Catering</span>
           </div>
           <nav className="hidden items-center gap-6 text-sm font-medium text-stone-700 md:flex">
             <a className="transition-colors hover:text-amber-700" href="#gallery">
