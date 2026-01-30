@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 type Section = "home" | "services" | "reviews" | "faq" | "rates" | "contact";
@@ -161,73 +162,38 @@ export default function Theme4Home() {
                   <span className="block">Home Away</span>
                   <span className="block">From Home</span>
                 </h1>
-                <div className="mt-4 h-1 w-16 bg-fuchsia-500" />
-                <p className="mt-6 max-w-lg text-base leading-relaxed text-stone-600 md:text-lg">
+                <div className="mt-6 h-1 w-16 bg-fuchsia-500" />
+                <p className="mt-8 max-w-lg text-base leading-relaxed text-stone-600 md:text-lg">
                   Reliable, experienced dog sitting from Rick Johnson. Overnight stays, day care, and walks—your pup gets personalized care in a safe, loving environment.
                 </p>
-                <div className="mt-6 flex items-center gap-2">
-                  <div className="flex gap-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <span key={i} className="text-amber-400">★</span>
-                    ))}
+                <div className="mt-10 flex flex-col gap-8 sm:flex-row sm:items-center sm:gap-12">
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i} className="text-amber-400">★</span>
+                      ))}
+                    </div>
+                    <span className="text-sm text-stone-600">4.9 / 5 (200+ reviews)</span>
                   </div>
-                  <span className="text-sm text-stone-600">4.9 / 5 (200+ reviews)</span>
-                </div>
-                <div className="mt-8">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-                    Featured in
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-4 text-xs font-medium uppercase tracking-wider text-stone-400">
-                    {featuredIn.map((name, i) => (
-                      <span key={i}>{name}</span>
-                    ))}
+                  <div className="border-l-0 pl-0 sm:border-l sm:border-stone-200 sm:pl-8">
+                    <div className="text-xs font-medium uppercase tracking-wider text-stone-400">
+                      Featured in
+                    </div>
+                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-stone-400">
+                      {featuredIn.map((name, i) => (
+                        <span key={i}>{name}</span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="mt-10 w-full max-w-md flex-shrink-0 md:mt-0">
-                <form className="space-y-4 rounded-xl border border-stone-200 bg-stone-50/50 p-6">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="mb-1 block text-sm font-medium text-stone-700">
-                        First name:
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
-                        placeholder="e.g. Sarah"
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-sm font-medium text-stone-700">
-                        Last name:
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
-                        placeholder="e.g. Miller"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-stone-700">
-                      Email address:
-                    </label>
-                    <input
-                      type="email"
-                      className="w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
-                      placeholder="e.g. sarah@gmail.com"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full rounded-lg bg-gradient-to-r from-fuchsia-500 to-fuchsia-600 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:from-fuchsia-600 hover:to-fuchsia-700 hover:shadow-lg"
-                  >
-                    Get free quote
-                  </button>
-                  <p className="text-center text-xs text-stone-500">
-                    You&apos;ll receive a response within a few hours.
-                  </p>
-                </form>
+              <div className="relative mt-10 aspect-square w-full max-w-md flex-shrink-0 overflow-hidden rounded-xl md:mt-0">
+                <Image
+                  src="/theme4-dog-contact.png"
+                  alt="Happy dog"
+                  fill
+                  className="object-cover"
+                />
               </div>
             </div>
             <NextSectionButton current="home" onNext={setActiveSection} />
@@ -398,18 +364,18 @@ export default function Theme4Home() {
         {activeSection === "contact" && (
           <section ref={sectionRef} className="flex flex-1 flex-col overflow-y-auto">
             <div className="mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
-              <div className="grid gap-8 lg:grid-cols-[minmax(0,200px)_1fr_1fr] lg:gap-12">
-                <div className="flex justify-center lg:justify-start">
-                  <div className="aspect-square w-full max-w-[200px] overflow-hidden rounded-xl border border-stone-200 bg-stone-100">
-                    <div className="flex h-full w-full items-center justify-center text-stone-400">
-                      <div className="text-center">
-                        <div className="text-4xl">👨‍🦱</div>
-                        <div className="mt-2 text-xs font-medium">Photo of Rick</div>
-                      </div>
-                    </div>
+              <div className="grid gap-8 lg:grid-cols-[200px_1fr_1fr] lg:gap-12">
+                <div className="m-3">
+                  <div className="relative aspect-square w-full max-w-[200px] overflow-hidden rounded-xl lg:max-w-none">
+                    <Image
+                      src="/theme4-dog-contact-photo.png"
+                      alt="Happy dog"
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                 </div>
-                <div>
+                <div className="m-4 lg:m-0">
                   <h2 className="text-3xl font-bold uppercase tracking-tight text-stone-900 md:text-4xl">
                     Book a stay or ask a question
                   </h2>
@@ -444,14 +410,14 @@ export default function Theme4Home() {
                     </a>
                   </div>
                 </div>
-                <div className="rounded-xl border border-stone-200 bg-stone-50/50 p-6">
+                <div className="m-3 rounded-xl border border-stone-200 bg-stone-50/50 p-6">
                   <div className="mb-4 font-semibold text-stone-900">Send a message</div>
-                  <form className="space-y-4">
-                    <div>
-                      <label className="mb-1 block text-sm font-medium text-stone-700">
-                        Your name
-                      </label>
-                      <input
+                    <form className="space-y-4">
+                      <div>
+                        <label className="mb-1 block text-sm font-medium text-stone-700">
+                          Your name
+                        </label>
+                        <input
                         type="text"
                         className="w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                         placeholder="John Smith"
@@ -493,7 +459,7 @@ export default function Theme4Home() {
                     >
                       Send message
                     </button>
-                  </form>
+                    </form>
                 </div>
               </div>
             </div>
