@@ -315,6 +315,14 @@ export default function Theme5Home() {
                 <div className="font-medium text-neutral-900">Schedule a call</div>
                 <div className="mt-1 text-sm text-neutral-500">Book time</div>
               </a>
+              <a
+                href="#"
+                className="block rounded-lg border border-neutral-300 bg-white p-6 text-center transition-all hover:border-neutral-400 hover:shadow-md"
+              >
+                <div className="text-2xl mb-2">💬</div>
+                <div className="font-medium text-neutral-900">Send a message</div>
+                <div className="mt-1 text-sm text-neutral-500">Contact form</div>
+              </a>
             </div>
           </div>
         </div>
