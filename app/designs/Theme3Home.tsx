@@ -94,7 +94,7 @@ export default function Theme3Home() {
           </div>
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-stone-200 bg-stone-100">
             <Image
-              src="/theme3-photo-2.png"
+              src="/theme3-photo-2-new.png"
               alt="Catering photo 2"
               width={900}
               height={1200}
