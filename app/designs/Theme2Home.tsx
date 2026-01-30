@@ -132,9 +132,9 @@ export default function Theme2Home() {
               referrerPolicy="no-referrer-when-downgrade"
               style={{ pointerEvents: "none" }}
             />
-            {/* Radius overlay — visible circle on top of map */}
+            {/* Radius overlay — true circle (height-based + aspect-square) */}
             <div
-              className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-blue-500/90 bg-blue-500/15"
+              className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-[70%] w-auto -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-blue-500/90 bg-blue-500/15 aspect-square"
               aria-hidden
             />
           </div>
