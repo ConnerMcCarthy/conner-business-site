@@ -114,6 +114,33 @@ export default function Theme2Home() {
         </p>
       </section>
 
+      {/* Service area map — Asheville radius, locked to clicks */}
+      <section className="mx-auto max-w-4xl px-4 pb-14 md:pb-20" aria-label="Service area">
+        <h2 className="mb-4 text-center text-lg font-semibold tracking-tight text-white/90 md:text-xl">
+          Service area
+        </h2>
+        <p className="mx-auto mb-6 max-w-xl text-center text-sm text-white/70">
+          We serve Asheville and surrounding communities within a 25-mile radius.
+        </p>
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
+          <div className="relative aspect-[16/10] w-full md:aspect-[2/1]">
+            <iframe
+              title="Asheville service area map"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-82.75%2C35.45%2C-82.35%2C35.75&layer=mapnik&marker=35.5951%2C-82.5515"
+              className="absolute inset-0 h-full w-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              style={{ pointerEvents: "none" }}
+            />
+            {/* Radius overlay — visible circle on top of map */}
+            <div
+              className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-blue-500/90 bg-blue-500/15"
+              aria-hidden
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Services */}
       <section id="services" className="mx-auto max-w-6xl px-4 py-10 md:py-16">
         <h2 className="text-center text-2xl font-semibold tracking-tight md:text-3xl">
