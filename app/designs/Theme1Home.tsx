@@ -124,7 +124,7 @@ export default function Theme1Home() {
 
               {
                 q: "Can you help with hosting/domain/email?",
-                a: "Yes — I’ll guide you through setup (AWS/Cloudflare/etc.) and make sure everything connects cleanly.",
+                a: "I’ll guide you through setup (AWS/Cloudflare/etc.) and make sure everything connects cleanly.",
               },
               {
                 q: "What if I need updates later?",
