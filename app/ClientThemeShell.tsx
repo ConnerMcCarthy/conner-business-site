@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ThemeSwitcher from "./ThemeSwitcher";
 import Theme1Home from "./designs/Theme1Home";
 import Theme2Home from "./designs/Theme2Home";
@@ -21,6 +21,15 @@ const THEME_PAGES: Record<Theme, React.ReactNode> = {
 export default function ClientThemeShell() {
   const [theme, setTheme] = useState<Theme>("theme1");
   const [mounted, setMounted] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const topbarRef = useRef<HTMLElement>(null);
+
+  const checkScroll = useCallback(() => {
+    const el = topbarRef.current;
+    if (!el) return;
+    const { scrollLeft, clientWidth, scrollWidth } = el;
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 2);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -34,18 +43,49 @@ export default function ClientThemeShell() {
     document.documentElement.setAttribute("data-theme", valid);
   }, [mounted]);
 
+  useEffect(() => {
+    const el = topbarRef.current;
+    if (!el) return;
+    checkScroll();
+    el.addEventListener("scroll", checkScroll);
+    const ro = new ResizeObserver(checkScroll);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", checkScroll);
+      ro.disconnect();
+    };
+  }, [mounted, checkScroll]);
+
   function applyTheme(t: Theme) {
     setTheme(t);
     localStorage.setItem("theme", t);
     document.documentElement.setAttribute("data-theme", t);
   }
 
+  function scrollRight() {
+    const el = topbarRef.current;
+    if (!el) return;
+    el.scrollBy({ left: 120, behavior: "smooth" });
+  }
+
   return (
     <>
-      <header className="topbar">
-        <div className="brand text-xl">Designs</div>
-        <ThemeSwitcher theme={theme} onChange={applyTheme} />
-      </header>
+      <div className="relative">
+        <header className="topbar" ref={topbarRef}>
+          <div className="brand text-xl">Designs</div>
+          <ThemeSwitcher theme={theme} onChange={applyTheme} />
+        </header>
+        {canScrollRight && (
+          <button
+            type="button"
+            onClick={scrollRight}
+            className="topbar-scroll-hint"
+            aria-label="Scroll to see more themes"
+          >
+            →
+          </button>
+        )}
+      </div>
 
       {mounted ? THEME_PAGES[theme] : THEME_PAGES.theme1}
     </>
