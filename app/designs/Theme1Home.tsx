@@ -101,7 +101,7 @@ export default function Theme1Home() {
                   <span className="h-2 w-2 rounded-full bg-blue-500" /> Launch-ready
                 </span>
                 <span className="inline-flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-indigo-500" /> Easy edits
+                  <span className="h-2 w-2 rounded-full bg-indigo-500" /> Instant edits
                 </span>
                 <span className="inline-flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-sky-500" /> Performance minded
@@ -156,13 +156,13 @@ export default function Theme1Home() {
                   className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition-all duration-200 hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:-translate-y-0.5"
                   href="mailto:conner.mccarthy.97@gmail.com"
                 >
-                  Email | conner.mccarthy.97@gmail.com
+                  Email - conner.mccarthy.97@gmail.com
                 </a>
                 <a
                   className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 hover:scale-105 hover:shadow-lg hover:-translate-y-0.5 hover:border-white/30"
                   href="tel:+18283295839"
                 >
-                  Call | (828) 329-5839
+                  Call - (828) 329-5839
                 </a>
               </div>
             </div>
@@ -187,13 +187,13 @@ export default function Theme1Home() {
                 <li className="flex items-start gap-2">
                   <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white/40" />
                   <span>
-                    <span className="font-semibold text-white">Design + copy</span> — I draft a clean layout and tighten the message so visitors understand you fast.
+                    <span className="font-semibold text-white">Design + copy</span> — I draft a clean layout so visitors understand you fast.
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white/40" />
                   <span>
-                    <span className="font-semibold text-white">Build + launch</span> — We review, make final edits, connect domain/email, and go live with confidence.
+                    <span className="font-semibold text-white">Build + launch</span> — We review, make final edits, connect domain/email, and go live.
                   </span>
                 </li>
               </ul>

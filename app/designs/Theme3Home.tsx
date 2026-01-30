@@ -44,7 +44,7 @@ export default function Theme3Home() {
         <div className="flex flex-col items-center gap-6 md:flex-row md:items-start">
           <Image
             src="/pam-mccarthy-headshot.png"
-            alt="Pam McCarthy"
+            alt="Pamela McCarthy"
             width={160}
             height={160}
             className="h-32 w-32 rounded-full object-cover ring-4 ring-amber-200 md:h-40 md:w-40"
@@ -186,7 +186,7 @@ export default function Theme3Home() {
       {/* Footer */}
       <footer className="border-t border-stone-200 bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-stone-600 md:flex-row md:items-center md:justify-between">
-          <div>© {new Date().getFullYear()} Pam McCarthy Catering</div>
+          <div>© {new Date().getFullYear()} Pamela McCarthy Catering</div>
           <div className="text-stone-500">Serving exceptional events since 2010</div>
         </div>
       </footer>
