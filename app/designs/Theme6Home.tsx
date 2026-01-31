@@ -77,8 +77,8 @@ export default function Theme6Home() {
               <div className="hidden md:block" />
             </div>
 
-            {/* Full-bleed image pinned to the right */}
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-full md:w-[55%]">
+            {/* Full-bleed image: hidden on mobile; pinned to right on md+ */}
+            <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-full md:block md:w-[55%]">
               <div className="relative h-full w-full">
                 <Image
                   src="/laptopgirl-transparent-new.png"
@@ -93,28 +93,28 @@ export default function Theme6Home() {
           </div>
         </section>
         {/* Testimonial */}
-<section className="relative overflow-visible px-0 py-12 md:py-16">
+<section className="relative overflow-visible px-0 py-8 md:py-16">
   <div className="md:-mx-6 md:px-6 lg:-mx-10 lg:px-10 xl:-mx-16 xl:px-16">
-    <div className="ml-[2in] mr-[2in] rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm md:rounded-3xl md:p-12">
+    <div className="mx-[5vw] rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm md:mx-0 md:ml-[2in] md:mr-[2in] md:rounded-3xl md:p-12">
       <div className="text-neutral-900">
-        <h3 className="text-lg font-semibold text-neutral-900">What Our Clients Say</h3>
+        <h3 className="text-base font-semibold text-neutral-900 md:text-lg">What Our Clients Say</h3>
         
-        <div className="mt-4 flex items-center gap-4">
-          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border-2 border-fuchsia-500 bg-fuchsia-500/10 text-sm font-semibold text-fuchsia-600">
+        <div className="mt-3 flex items-center gap-3 md:mt-4 md:gap-4">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-fuchsia-500 bg-fuchsia-500/10 text-xs font-semibold text-fuchsia-600 md:h-12 md:w-12 md:text-sm">
             ST
           </div>
           <div>
-            <div className="font-semibold text-neutral-900">Sarah Thompson</div>
+            <div className="text-sm font-semibold text-neutral-900 md:text-base">Sarah Thompson</div>
             <div className="flex gap-0.5 text-amber-500">{"★".repeat(5)}</div>
           </div>
         </div>
 
-        <p className="mt-4 text-sm leading-relaxed text-neutral-600 md:text-base max-w-2xl">
+        <p className="mt-3 text-xs leading-relaxed text-neutral-600 md:mt-4 md:text-base max-w-2xl">
           Creative Studio delivered exactly what we needed. Our new website has increased
           traffic and conversions. Professional, responsive, and a pleasure to work with.
         </p>
         
-        <a href="#reviews" className="mt-4 inline-block text-sm font-medium text-fuchsia-600 underline underline-offset-2 hover:text-fuchsia-700">
+        <a href="#reviews" className="mt-3 inline-block text-xs font-medium text-fuchsia-600 underline underline-offset-2 hover:text-fuchsia-700 md:mt-4 md:text-sm">
           Read more reviews →
         </a>
       </div>
