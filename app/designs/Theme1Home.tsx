@@ -181,7 +181,7 @@ export default function Theme1Home() {
               <p className="mt-2 text-sm leading-relaxed text-slate-600">A professional website without the big upfront expense and risk.</p>
             </div>
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 min-h-[120px]">
-              <div className="text-sm font-semibold">$125 / month</div>
+              <div className="text-sm font-semibold">Starting at $85 / month</div>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">Includes hosting, domain, backups, security, and simple edits.</p>
             </div>
           </div>
