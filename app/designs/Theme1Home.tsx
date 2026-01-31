@@ -125,18 +125,18 @@ export default function Theme1Home() {
                 </a>
               </div>
 
-              <div className="mt-8 grid grid-cols-3 gap-3 text-sm">
-                <div className="rounded-2xl border border-blue-200 bg-blue-50 p-3 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-blue-300 hover:shadow-lg">
-                  <div className="font-semibold text-black">Mobile-first</div>
-                  <div className="mt-1 text-xs text-black/70">Looks great anywhere</div>
+              <div className="mt-8 grid grid-cols-3 gap-4 text-sm">
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-slate-300 hover:shadow-lg">
+                  <div className="text-sm font-semibold">Mobile-first</div>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">Looks great anywhere</p>
                 </div>
-                <div className="rounded-2xl border border-blue-200 bg-blue-50 p-3 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-blue-300 hover:shadow-lg">
-                  <div className="font-semibold text-black">Fast</div>
-                  <div className="mt-1 text-xs text-black/70">Speed + SEO friendly</div>
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-slate-300 hover:shadow-lg">
+                  <div className="text-sm font-semibold">Fast</div>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">Speed + SEO friendly</p>
                 </div>
-                <div className="rounded-2xl border border-blue-200 bg-blue-50 p-3 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-blue-300 hover:shadow-lg">
-                  <div className="font-semibold text-black">Support</div>
-                  <div className="mt-1 text-xs text-black/70">Help when you need it</div>
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-slate-300 hover:shadow-lg">
+                  <div className="text-sm font-semibold">Support</div>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">Help when you need it</p>
                 </div>
               </div>
             </div>
