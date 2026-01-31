@@ -1,7 +1,24 @@
+"use client";
+
+import { useState } from "react";
 import ContactForm from "../components/ContactForm";
 import Image from "next/image";
 
+const EMAIL = "conner.mccarthy.97@gmail.com";
+const PHONE = "(828) 329-5839";
+
 export default function Theme1Home() {
+  const [copied, setCopied] = useState<"email" | "phone" | null>(null);
+
+  async function copyToClipboard(text: string, type: "email" | "phone") {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(type);
+      setTimeout(() => setCopied(null), 1500);
+    } catch {
+      // fallback: mailto/tel still work via href
+    }
+  }
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 via-blue-50/95 to-blue-100 text-slate-900">
       {/* Top Bar */}
@@ -25,6 +42,12 @@ export default function Theme1Home() {
           </div>
 
           <nav className="flex items-center gap-2 text-sm">
+            <a 
+              className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
+              href="#pricing"
+            >
+              Pricing
+            </a>
             <a 
               className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
               href="#faq"
@@ -111,6 +134,28 @@ export default function Theme1Home() {
           </div>
         </div>
       </section>
+
+      {/* One simple monthly price */}
+      <section id="pricing" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
+          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">One simple monthly price</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
+              <div className="text-sm font-semibold">ZERO upfront cost</div>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">No upfront cost. No contracts. Cancel anytime.</p>
+            </div>
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 min-h-[120px]">
+              <div className="text-sm font-semibold">Pay only when your site goes live</div> 
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">A professional website without the big upfront expense and risk.</p>
+            </div>
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 min-h-[120px]">
+              <div className="text-sm font-semibold">$125 / month</div>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">Includes hosting, domain, backups, security, and simple edits.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section id="faq" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
         <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
@@ -155,14 +200,16 @@ export default function Theme1Home() {
                 <a
                   className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition-all duration-200 hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:-translate-y-0.5"
                   href="mailto:conner.mccarthy.97@gmail.com"
+                  onClick={() => copyToClipboard(EMAIL, "email")}
                 >
-                  Email - conner.mccarthy.97@gmail.com
+                  {copied === "email" ? "Copied!" : `Email - ${EMAIL}`}
                 </a>
                 <a
                   className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 hover:scale-105 hover:shadow-lg hover:-translate-y-0.5 hover:border-white/30"
                   href="tel:+18283295839"
+                  onClick={() => copyToClipboard(PHONE, "phone")}
                 >
-                  Call - (828) 329-5839
+                  {copied === "phone" ? "Copied!" : `Call - ${PHONE}`}
                 </a>
               </div>
             </div>
