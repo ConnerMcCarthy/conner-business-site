@@ -9,10 +9,20 @@ export default function ThemeSwitcher({
   theme: Theme;
   onChange: (t: Theme) => void;
 }) {
+  function goToContact() {
+    onChange("theme1");
+    setTimeout(() => {
+      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+    }, 150);
+  }
+
   return (
     <div className="switcher">
       <button className={`btn ${theme === "theme1" ? "active" : ""}`} onClick={() => onChange("theme1")}>
         Simple
+      </button>
+      <button className={`btn ${theme === "theme6" ? "active" : ""}`} onClick={() => onChange("theme6")}>
+        Custom
       </button>
       <button className={`btn ${theme === "theme2" ? "active" : ""}`} onClick={() => onChange("theme2")}>
         Contractor
@@ -26,8 +36,8 @@ export default function ThemeSwitcher({
       <button className={`btn ${theme === "theme5" ? "active" : ""}`} onClick={() => onChange("theme5")}>
         Portfolio
       </button>
-      <button className={`btn ${theme === "theme6" ? "active" : ""}`} onClick={() => onChange("theme6")}>
-        Creative Studio
+      <button className="btn btn-contact ml-2" onClick={goToContact}>
+        Contact
       </button>
     </div>
   );

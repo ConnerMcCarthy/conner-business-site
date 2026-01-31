@@ -164,6 +164,17 @@ a.btn.primary {
   color: #1e40af;
 }
 
+.topbar .btn.btn-contact {
+  background: #ef4444;
+  border-color: #dc2626;
+  color: #fff;
+}
+.topbar .btn.btn-contact:hover {
+  background: #dc2626;
+  border-color: #b91c1c;
+  color: #fff;
+}
+
 /* ---------- Page layout ---------- */
 .container {
   max-width: 1050px;
