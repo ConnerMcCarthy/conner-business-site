@@ -8,7 +8,7 @@ export default function Theme6Home() {
     <main className="min-h-screen bg-white text-neutral-900">
       {/* Background fills this area, white margin around it */}
       <div
-        className="mx-6 min-h-screen rounded-2xl pt-0 md:mx-10 md:pt-0 md:rounded-3xl lg:mx-16"
+        className="mx-0 min-h-screen rounded-none pt-0 md:mx-10 md:rounded-3xl md:pt-0 lg:mx-16"
         style={{
           backgroundImage: "url('/theme6-background.png')",
           backgroundSize: "cover",
@@ -45,7 +45,7 @@ export default function Theme6Home() {
         </header>
 
         {/* Hero */}
-        <section id="home" className="relative min-h-[80vh] overflow-hidden rounded-2xl">
+        <section id="home" className="relative min-h-[80vh] overflow-hidden rounded-2xl scroll-mt-36">
           <div className="relative min-h-[80vh]">
             {/* Left content stays constrained */}
             <div className="mx-auto grid min-h-[80vh] max-w-6xl grid-cols-1 gap-12 px-4 py-20 md:grid-cols-2 md:items-end md:gap-16 md:px-6">
@@ -123,7 +123,7 @@ export default function Theme6Home() {
 </section>
 
         {/* About */}
-        <section id="about" className="mx-auto max-w-6xl px-4 py-20 md:py-28">
+        <section id="about" className="mx-auto max-w-6xl scroll-mt-36 px-4 py-20 md:py-28">
           <div className="border-l-8 border-fuchsia-500 bg-white py-8 pl-8 pr-8 md:py-12 md:pl-12 md:pr-12">
             <h2 className="text-3xl font-bold uppercase tracking-wider text-neutral-900 md:text-4xl">About Creative Studio</h2>
             <p className="mt-6 text-lg leading-relaxed italic text-neutral-600">
