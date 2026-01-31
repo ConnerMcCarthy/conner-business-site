@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 export default function Theme5Home() {
   const [activeFilter, setActiveFilter] = useState<string>("all");
@@ -187,15 +188,16 @@ export default function Theme5Home() {
 
       {/* About - Personal & Personality */}
       <section id="about" className="mx-auto max-w-5xl px-4 py-20 md:py-28">
-        <div className="grid gap-12 md:grid-cols-2 md:items-center">
+        <div className="grid gap-12 md:grid-cols-2 md:items-start">
           <div>
-            <div className="aspect-square max-w-md overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100">
-              <div className="flex h-full w-full items-center justify-center text-neutral-400">
-                <div className="text-center">
-                  <div className="text-7xl mb-4">👤</div>
-                  <div className="text-sm font-medium">Portrait photo</div>
-                </div>
-              </div>
+            <div className="aspect-[3/4] max-w-md overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100">
+              <Image
+                src="/theme5-portrait.png"
+                alt="Creative professional portrait"
+                width={384}
+                height={512}
+                className="h-full w-full object-cover"
+              />
             </div>
           </div>
           

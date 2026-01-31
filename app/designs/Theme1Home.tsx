@@ -1,11 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import ContactForm from "../components/ContactForm";
 import Image from "next/image";
 
 const EMAIL = "conner.mccarthy.97@gmail.com";
 const PHONE = "(828) 329-5839";
+
+function FadeInSection({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const [isVisible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ease-out ${
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
 
 export default function Theme1Home() {
   const [copied, setCopied] = useState<"email" | "phone" | null>(null);
@@ -66,6 +95,7 @@ export default function Theme1Home() {
 
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-4 pt-14 md:pt-20">
+        <FadeInSection>
         <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
           {/* soft decorative blobs */}
           <div className="pointer-events-none absolute -left-20 -top-24 h-64 w-64 rounded-full bg-sky-200/40 blur-3xl" />
@@ -133,10 +163,12 @@ export default function Theme1Home() {
             </div>
           </div>
         </div>
+        </FadeInSection>
       </section>
 
       {/* One simple monthly price */}
       <section id="pricing" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
+        <FadeInSection>
         <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
           <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">One simple monthly price</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -154,10 +186,12 @@ export default function Theme1Home() {
             </div>
           </div>
         </div>
+        </FadeInSection>
       </section>
 
       {/* FAQ */}
       <section id="faq" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
+        <FadeInSection>
         <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
           <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">FAQ</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -183,10 +217,12 @@ export default function Theme1Home() {
             ))}
           </div>
         </div>
+        </FadeInSection>
       </section>
 
       {/* Contact CTA */}
       <section id="contact" className="mx-auto max-w-6xl px-4 py-14 md:py-20 scroll-mt-32">
+        <FadeInSection>
         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-900 text-white shadow-sm">
           <div className="grid items-stretch gap-y-10 gap-x-12 p-8 md:grid-cols-[0.6fr_1.2fr_1fr] md:p-12">
             <div>
@@ -247,14 +283,17 @@ export default function Theme1Home() {
             </div>
           </div>
         </div>
+        </FadeInSection>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white">
+        <FadeInSection>
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-slate-600 md:flex-row md:items-center md:justify-between">
           <div>© {new Date().getFullYear()} Conner McCarthy Websites</div>
           <div className="text-slate-500">Built with Next.js</div>
         </div>
+        </FadeInSection>
       </footer>
     </main>
   );
