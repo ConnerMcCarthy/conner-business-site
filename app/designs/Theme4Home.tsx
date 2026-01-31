@@ -449,12 +449,12 @@ export default function CritterSitter() {
         {activeSection === "contact" && (
           <section ref={sectionRef} className="flex flex-1 flex-col overflow-y-auto">
             <div className="mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
-              <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[320px_1fr_1fr] lg:gap-12">
+              <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[240px_1fr_1fr] lg:gap-12">
                 <div className="flex justify-center lg:justify-start lg:items-center">
                   <img
                     src="/ric-contact.png"
                     alt="Rick Johnson with dog"
-                    className="h-[340px] w-[255px] rounded-xl object-cover lg:h-[400px] lg:w-[300px]"
+                    className="h-[280px] w-[210px] rounded-xl object-cover lg:h-[320px] lg:w-[240px]"
                   />
                 </div>
                 <div className="m-4 lg:m-0">

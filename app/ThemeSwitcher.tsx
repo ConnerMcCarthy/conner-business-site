@@ -1,6 +1,6 @@
 "use client";
 
-type Theme = "theme1" | "theme2" | "theme3" | "theme4" | "theme5";
+type Theme = "theme1" | "theme2" | "theme3" | "theme4" | "theme5" | "theme6";
 
 export default function ThemeSwitcher({
   theme,
@@ -25,6 +25,9 @@ export default function ThemeSwitcher({
       </button>
       <button className={`btn ${theme === "theme5" ? "active" : ""}`} onClick={() => onChange("theme5")}>
         Portfolio
+      </button>
+      <button className={`btn ${theme === "theme6" ? "active" : ""}`} onClick={() => onChange("theme6")}>
+        Creative Studio
       </button>
     </div>
   );
