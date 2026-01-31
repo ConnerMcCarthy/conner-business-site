@@ -51,7 +51,7 @@ export default function Theme6Home() {
             <div className="mx-auto grid min-h-[80vh] max-w-6xl grid-cols-1 gap-12 px-4 py-20 md:grid-cols-2 md:items-end md:gap-16 md:px-6">
               <div className="max-w-xl text-center md:text-left">
                 <h1 className="text-4xl font-bold leading-tight tracking-tight text-neutral-900 md:text-5xl lg:text-6xl">
-                  Grow Your <span className="text-orange-500">Business</span> with Stunning Websites
+                  Grow Your <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-orange-500 bg-clip-text font-bold text-transparent">Business</span> with Stunning Websites
                 </h1>
                 <p className="mt-6 text-lg leading-relaxed text-neutral-700">
                   Custom websites that captivate and convert. We build modern, fast, and beautiful
