@@ -30,15 +30,11 @@ export default function ClientThemeShell() {
 
   useEffect(() => {
     if (!mounted) return;
-    const saved = (localStorage.getItem("theme") as Theme) || "theme1";
-    const valid = ["theme1", "theme2", "theme3", "theme4", "theme5", "theme6"].includes(saved) ? saved : "theme1";
-    setTheme(valid);
-    document.documentElement.setAttribute("data-theme", valid);
+    document.documentElement.setAttribute("data-theme", "theme1");
   }, [mounted]);
 
   function applyTheme(t: Theme) {
     setTheme(t);
-    localStorage.setItem("theme", t);
     document.documentElement.setAttribute("data-theme", t);
   }
 
