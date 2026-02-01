@@ -114,12 +114,14 @@ export default function Theme2Home() {
       </section>
 
       {/* About */}
-      <section id="about" className="mx-auto max-w-3xl px-4 py-10 text-center md:py-14">
-        <h2 className="text-xl font-semibold tracking-tight md:text-2xl">Why choose us</h2>
-        <p className="mt-3 text-sm opacity-90">
-          Local, licensed, and focused on doing the job right. We explain options and costs
-          upfront so you can decide with confidence.
-        </p>
+      <section id="about" className="mx-auto max-w-3xl px-4 py-10 md:py-14">
+        <div className="rounded-xl border border-white/10 bg-white/10 px-6 py-8 text-center md:px-10 md:py-10">
+          <h2 className="text-xl font-semibold tracking-tight md:text-2xl">Why choose us</h2>
+          <p className="mt-3 text-sm opacity-90">
+            Local, licensed, and focused on doing the job right. We explain options and costs
+            upfront so you can decide with confidence.
+          </p>
+        </div>
       </section>
 
       {/* Service area map — Asheville radius, locked to clicks */}
