@@ -1,7 +1,37 @@
 "use client";
 
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import ContactForm from "../components/ContactForm";
 import Image from "next/image";
+
+function FadeInSection({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const [isVisible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ease-out ${
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
 
 export default function Theme6Home() {
   return (
@@ -46,6 +76,7 @@ export default function Theme6Home() {
 
         {/* Hero */}
         <section id="home" className="relative min-h-[80vh] overflow-hidden rounded-2xl scroll-mt-36">
+          <FadeInSection>
           <div className="relative min-h-[80vh]">
             {/* Left content stays constrained */}
             <div className="mx-auto grid min-h-[80vh] max-w-6xl grid-cols-1 gap-12 px-4 py-20 md:grid-cols-2 md:items-end md:gap-16 md:px-6">
@@ -91,9 +122,11 @@ export default function Theme6Home() {
               </div>
             </div>
           </div>
+          </FadeInSection>
         </section>
         {/* Testimonial */}
 <section className="relative overflow-visible px-0 py-8 md:py-16">
+  <FadeInSection>
   <div className="md:-mx-6 md:px-6 lg:-mx-10 lg:px-10 xl:-mx-16 xl:px-16">
     <div className="mx-[5vw] rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm md:mx-0 md:ml-[2in] md:mr-[2in] md:rounded-3xl md:p-12">
       <div className="text-neutral-900">
@@ -120,10 +153,12 @@ export default function Theme6Home() {
       </div>
     </div>
   </div>
+  </FadeInSection>
 </section>
 
         {/* About */}
         <section id="about" className="mx-auto max-w-6xl scroll-mt-36 px-4 py-20 md:py-28">
+          <FadeInSection>
           <div className="border-l-8 border-fuchsia-500 bg-white py-8 pl-8 pr-8 md:py-12 md:pl-12 md:pr-12">
             <h2 className="text-3xl font-bold uppercase tracking-wider text-neutral-900 md:text-4xl">About Creative Studio</h2>
             <p className="mt-6 text-lg leading-relaxed italic text-neutral-600">
@@ -132,6 +167,7 @@ export default function Theme6Home() {
               businesses grow their online presence.
             </p>
           </div>
+          </FadeInSection>
         </section>
 
         {/* Contact */}
@@ -139,6 +175,7 @@ export default function Theme6Home() {
           id="contact"
           className="rounded-b-2xl rounded-t-3xl bg-gradient-to-br from-violet-900 via-fuchsia-900 to-neutral-900 px-4 py-20 pb-8 text-white md:rounded-b-3xl md:py-28 md:pb-10"
         >
+          <FadeInSection>
           <div className="mx-auto max-w-4xl">
             <h2 className="text-center text-3xl font-bold md:text-4xl">Get in Touch</h2>
             <p className="mx-auto mt-4 max-w-xl text-center text-white/80">
@@ -148,6 +185,7 @@ export default function Theme6Home() {
               <ContactForm />
             </div>
           </div>
+          </FadeInSection>
         </section>
       </div>
     </main>

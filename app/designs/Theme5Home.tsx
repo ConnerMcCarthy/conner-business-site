@@ -1,7 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import Image from "next/image";
+
+function FadeInSection({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const [isVisible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ease-out ${
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
 
 export default function Theme5Home() {
   const [activeFilter, setActiveFilter] = useState<string>("all");
@@ -12,7 +41,7 @@ export default function Theme5Home() {
       category: "design",
       title: "Brand Identity Design",
       client: "Tech Startup",
-      image: "🎨",
+      image: "/theme5-work-1.png",
       description: "Complete brand identity including logo, color palette, and visual guidelines.",
     },
     {
@@ -20,7 +49,7 @@ export default function Theme5Home() {
       category: "photography",
       title: "Portrait Series",
       client: "Personal Project",
-      image: "📸",
+      image: "/theme5-work-2.png",
       description: "A collection of intimate portraits exploring human emotion and connection.",
     },
     {
@@ -28,7 +57,7 @@ export default function Theme5Home() {
       category: "design",
       title: "Website Redesign",
       client: "E-commerce Brand",
-      image: "💻",
+      image: "/theme5-work-3.png",
       description: "Modern, conversion-focused redesign improving user experience and sales.",
     },
     {
@@ -36,7 +65,7 @@ export default function Theme5Home() {
       category: "art",
       title: "Digital Art Collection",
       client: "Gallery Exhibition",
-      image: "🖼️",
+      image: "/theme5-work-4.png",
       description: "Series of digital artworks exploring themes of nature and technology.",
     },
     {
@@ -44,7 +73,7 @@ export default function Theme5Home() {
       category: "photography",
       title: "Product Photography",
       client: "Fashion Brand",
-      image: "👔",
+      image: "/theme5-work-5.png",
       description: "Clean, editorial-style product shots for online and print catalogs.",
     },
     {
@@ -52,7 +81,7 @@ export default function Theme5Home() {
       category: "design",
       title: "Mobile App UI",
       client: "Health & Wellness",
-      image: "📱",
+      image: "/theme5-work-6.png",
       description: "Intuitive mobile interface design focused on user engagement and accessibility.",
     },
   ];
@@ -109,6 +138,7 @@ export default function Theme5Home() {
         {/* Overlay for text readability */}
         <div className="absolute inset-0 bg-black/40" />
         
+        <FadeInSection>
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
           <h1 className="text-5xl font-light tracking-tight text-white md:text-6xl lg:text-7xl">
             Creative Designer
@@ -133,10 +163,12 @@ export default function Theme5Home() {
             </a>
           </div>
         </div>
+        </FadeInSection>
       </section>
 
       {/* Work Samples - Portfolio Grid */}
-      <section id="work" className="mx-auto max-w-7xl px-4 py-20 md:py-28">
+      <section id="work" className="mx-auto max-w-7xl scroll-mt-36 px-4 py-20 md:py-28">
+        <FadeInSection>
         <div className="mb-12 text-center">
           <h2 className="text-3xl font-light tracking-tight text-neutral-900 md:text-4xl">
             Selected Work
@@ -170,8 +202,14 @@ export default function Theme5Home() {
               key={item.id}
               className="group relative overflow-hidden rounded-lg border border-neutral-200 bg-white transition-all hover:border-neutral-300 hover:shadow-lg"
             >
-              <div className="aspect-[4/3] flex items-center justify-center bg-gradient-to-br from-neutral-50 to-neutral-100">
-                <div className="text-6xl">{item.image}</div>
+              <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover"
+                />
               </div>
               <div className="p-6">
                 <div className="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-500">
@@ -184,11 +222,13 @@ export default function Theme5Home() {
             </div>
           ))}
         </div>
+        </FadeInSection>
       </section>
 
       {/* About - Personal & Personality */}
-      <section id="about" className="mx-auto max-w-5xl px-4 py-20 md:py-28">
-        <div className="grid gap-12 md:grid-cols-2 md:items-start">
+      <section id="about" className="ml-auto mr-4 max-w-5xl scroll-mt-36 px-4 py-20 md:mr-8 md:py-28 lg:mr-16">
+        <FadeInSection>
+        <div className="grid gap-16 md:grid-cols-2 md:items-start md:gap-24 lg:gap-32">
           <div>
             <div className="aspect-[3/4] max-w-md overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100">
               <Image
@@ -253,11 +293,22 @@ export default function Theme5Home() {
             </div>
           </div>
         </div>
+        </FadeInSection>
       </section>
 
       {/* Social Links */}
-      <section className="mx-auto max-w-4xl px-4 py-16 md:py-20">
-        <div className="rounded-lg border border-neutral-200 bg-neutral-50/50 p-8 md:p-12">
+      <section
+        className="relative mx-auto max-w-4xl overflow-hidden rounded-lg px-8 py-24 md:px-12 md:py-32"
+        style={{
+          backgroundImage: "url('/theme5-connect-bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundColor: "#f5f5f5",
+        }}
+      >
+        <FadeInSection>
+        <div className="relative z-10 rounded-lg border border-neutral-200 bg-white p-8 md:p-12">
           <h2 className="text-center text-2xl font-light tracking-tight text-neutral-900 md:text-3xl">
             Connect With Me
           </h2>
@@ -277,10 +328,12 @@ export default function Theme5Home() {
             ))}
           </div>
         </div>
+        </FadeInSection>
       </section>
 
       {/* Contact */}
-      <section id="contact" className="mx-auto max-w-3xl px-4 py-20 md:py-28">
+      <section id="contact" className="mx-auto max-w-3xl scroll-mt-36 px-4 py-20 md:py-28">
+        <FadeInSection>
         <div className="text-center">
           <h2 className="text-3xl font-light tracking-tight text-neutral-900 md:text-4xl">
             Let&apos;s Work Together
@@ -328,10 +381,12 @@ export default function Theme5Home() {
             </div>
           </div>
         </div>
+        </FadeInSection>
       </section>
 
       {/* Footer - Minimal */}
       <footer className="border-t border-neutral-200 bg-white">
+        <FadeInSection>
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 py-12 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>© {new Date().getFullYear()} Alex Morgan. All rights reserved.</div>
           <div className="flex gap-6">
@@ -343,6 +398,7 @@ export default function Theme5Home() {
             </a>
           </div>
         </div>
+        </FadeInSection>
       </footer>
     </main>
   );

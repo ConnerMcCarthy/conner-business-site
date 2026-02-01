@@ -1,4 +1,36 @@
+"use client";
+
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import Image from "next/image";
+
+function FadeInSection({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const [isVisible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ease-out ${
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
 
 export default function Theme3Home() {
   return (
@@ -41,6 +73,7 @@ export default function Theme3Home() {
 
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-4 pt-12 pb-10 md:pt-20 md:pb-14">
+        <FadeInSection>
         <div className="flex flex-col items-center gap-6 md:flex-row md:items-start">
           <Image
             src="/pam-mccarthy-headshot.png"
@@ -72,10 +105,12 @@ export default function Theme3Home() {
             </div>
           </div>
         </div>
+        </FadeInSection>
       </section>
 
       {/* Gallery */}
       <section id="gallery" className="mx-auto max-w-6xl px-4 py-14 md:py-20 scroll-mt-28">
+        <FadeInSection>
         <h2 className="text-center text-3xl font-bold tracking-tight text-stone-900 md:text-4xl">
           Our Work
         </h2>
@@ -111,10 +146,12 @@ export default function Theme3Home() {
             />
           </div>
         </div>
+        </FadeInSection>
       </section>
 
       {/* What we offer */}
       <section id="events" className="mx-auto max-w-6xl px-4 py-14 md:py-20 scroll-mt-28">
+        <FadeInSection>
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-stone-900 md:text-4xl">
             What We Offer
@@ -155,10 +192,12 @@ export default function Theme3Home() {
             </div>
           ))}
         </div>
+        </FadeInSection>
       </section>
 
       {/* Contact */}
       <section id="contact" className="mx-auto max-w-4xl px-4 py-14 md:py-20">
+        <FadeInSection>
         <div className="rounded-3xl border border-stone-200 bg-white p-8 shadow-lg md:p-12">
           <h2 className="text-center text-3xl font-bold tracking-tight text-stone-900 md:text-4xl">
             Let&apos;s Plan Your Event
@@ -181,14 +220,17 @@ export default function Theme3Home() {
             </a>
           </div>
         </div>
+        </FadeInSection>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-stone-200 bg-white">
+        <FadeInSection>
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-stone-600 md:flex-row md:items-center md:justify-between">
           <div>© {new Date().getFullYear()} Pamela McCarthy Catering</div>
           <div className="text-stone-500">Serving exceptional events since 2010</div>
         </div>
+        </FadeInSection>
       </footer>
     </main>
   );
