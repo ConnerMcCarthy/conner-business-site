@@ -449,12 +449,12 @@ export default function CritterSitter() {
         {activeSection === "contact" && (
           <section ref={sectionRef} className="flex flex-1 flex-col overflow-y-auto">
             <div className="mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
-              <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[240px_1fr_1fr] lg:gap-12">
+              <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[280px_1fr_1fr] lg:gap-x-0 lg:gap-y-8">
                 <div className="flex justify-center lg:justify-start lg:items-center">
                   <img
                     src="/ric-contact.png"
                     alt="Rick Johnson with dog"
-                    className="h-[280px] w-[210px] rounded-xl object-cover lg:h-[320px] lg:w-[240px]"
+                    className="h-[320px] w-[240px] rounded-xl object-cover lg:h-[368px] lg:w-[276px]"
                   />
                 </div>
                 <div className="m-4 lg:m-0">
@@ -492,7 +492,7 @@ export default function CritterSitter() {
                     </a>
                   </div>
                 </div>
-                <div className="m-3 rounded-xl border border-stone-200 bg-stone-50/50 p-6">
+                <div className="m-3 rounded-xl border border-stone-200 bg-stone-50/50 p-6 lg:-mr-8 lg:ml-20 lg:pl-8">
                   <div className="mb-4 font-semibold text-stone-900">Send a message</div>
                   <form onSubmit={handleContactSubmit} className="space-y-4">
                     <div>
