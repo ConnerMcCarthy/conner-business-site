@@ -44,7 +44,7 @@ export default function Theme2Home() {
         </div>
       </header>
 
-      {/* Hero — gradient overlay, constrained content, clear hierarchy */}
+      {/* Hero — gradient overlay, parallax background */}
       <section
         className="relative w-full overflow-hidden"
         style={{
@@ -52,6 +52,7 @@ export default function Theme2Home() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
         }}
       >
         {/* Dark gradient overlay — stronger center, softer edges */}
@@ -152,27 +153,40 @@ export default function Theme2Home() {
       </section>
 
       {/* Services */}
-      <section id="services" className="mx-auto max-w-6xl px-4 py-10 md:py-16">
-        <h2 className="text-center text-2xl font-semibold tracking-tight md:text-3xl">
-          What we do
-        </h2>
-        <p className="mx-auto mt-2 max-w-xl text-center text-sm opacity-80">
-          Residential and light commercial plumbing across Asheville and the area.
-        </p>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { title: "Drains & sewer", desc: "Clogs, cleanouts, camera inspections." },
-            { title: "Water heaters", desc: "Install, repair, tank & tankless." },
-            { title: "Repairs and Installations", desc: "Leaks, pipes, fixtures, toilets." },
-          ].map((s) => (
-            <div
-              key={s.title}
-              className="rounded-xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm"
-            >
-              <h3 className="font-semibold">{s.title}</h3>
-              <p className="mt-1 text-sm opacity-80">{s.desc}</p>
-            </div>
-          ))}
+      <section
+        id="services"
+        className="relative overflow-hidden py-10 md:py-16"
+        style={{
+          backgroundImage: "url('/plumbing-background.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        <div className="absolute inset-0 bg-[#0b1220]/85" />
+        <div className="relative z-10 mx-auto max-w-6xl px-4">
+          <h2 className="text-center text-2xl font-semibold tracking-tight md:text-3xl">
+            What we do
+          </h2>
+          <p className="mx-auto mt-2 max-w-xl text-center text-sm opacity-80">
+            Residential and light commercial plumbing across Asheville and the area.
+          </p>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { title: "Drains & sewer", desc: "Clogs, cleanouts, camera inspections." },
+              { title: "Water heaters", desc: "Install, repair, tank & tankless." },
+              { title: "Repairs and Installations", desc: "Leaks, pipes, fixtures, toilets." },
+            ].map((s) => (
+              <div
+                key={s.title}
+                className="rounded-xl border border-white/25 bg-[#0b1220]/95 p-5 backdrop-blur-md"
+              >
+                <h3 className="font-semibold text-white">{s.title}</h3>
+                <p className="mt-1 text-sm text-white/90">{s.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
