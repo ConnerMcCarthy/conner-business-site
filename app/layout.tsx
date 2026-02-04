@@ -14,9 +14,23 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Conner McCarthy Websites",
-  description: "Professional Modern Websites",
+  description: "Professional & personal websites with zero upfront cost.",
   icons: {
     icon: "/conner-headshot-v2.png",
+  },
+  openGraph: {
+    title: "Conner McCarthy Websites",
+    description: "Professional & personal websites. Zero upfront cost.",
+    url: "https://connermccarthy.com",
+    siteName: "Conner McCarthy",
+    images: [
+      {
+        url: "https://connermccarthy.com/og.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    type: "website",
   },
 };
 
