@@ -1,6 +1,6 @@
 "use client";
 
-type Theme = "theme1" | "theme2" | "theme3" | "theme4" | "theme5" | "theme6";
+type Theme = "theme1" | "theme2" | "theme3" | "theme4" | "theme5" | "theme6" | "theme7";
 
 export default function ThemeSwitcher({
   theme,
@@ -20,6 +20,9 @@ export default function ThemeSwitcher({
     <div className="switcher">
       <button className={`btn ${theme === "theme1" ? "active" : ""}`} onClick={() => onChange("theme1")}>
         Simple
+      </button>
+      <button className={`btn ${theme === "theme7" ? "active" : ""}`} onClick={() => onChange("theme7")}>
+        Professional
       </button>
       <button className={`btn ${theme === "theme6" ? "active" : ""}`} onClick={() => onChange("theme6")}>
         Custom

@@ -8,8 +8,9 @@ import Theme3Home from "./designs/Theme3Home";
 import Theme4Home from "./designs/Theme4Home";
 import Theme5Home from "./designs/Theme5Home";
 import Theme6Home from "./designs/Theme6Home";
+import Theme7Home from "./designs/Theme7Home";
 
-type Theme = "theme1" | "theme2" | "theme3" | "theme4" | "theme5" | "theme6";
+type Theme = "theme1" | "theme2" | "theme3" | "theme4" | "theme5" | "theme6" | "theme7";
 
 const THEME_PAGES: Record<Theme, React.ReactNode> = {
   theme1: <Theme1Home />,
@@ -18,6 +19,7 @@ const THEME_PAGES: Record<Theme, React.ReactNode> = {
   theme4: <Theme4Home />,
   theme5: <Theme5Home />,
   theme6: <Theme6Home />,
+  theme7: <Theme7Home />,
 };
 
 export default function ClientThemeShell() {
