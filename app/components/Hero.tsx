@@ -35,23 +35,11 @@ export default function Hero({ headlineTop, headlineAccent, subtext, cta, image 
         <div className="relative z-10 min-w-0 md:w-[48%] md:flex-shrink-0">
           <div className="relative w-full overflow-hidden rounded-3xl shadow-2xl">
             <div className="relative aspect-[5/4] w-full min-h-[260px] md:min-h-0">
-              {image.src.startsWith("/") ? (
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="h-full w-full object-cover"
-                  sizes="(max-width: 768px) 100vw, 57vw"
-                />
-              ) : (
-                <ImageWithFallback
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  priority
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 48vw"
-                />
-              )}
+              <img
+                src={image.src}
+                alt={image.alt}
+                className="h-full w-full object-cover"
+              />
             </div>
           </div>
         </div>
