@@ -24,6 +24,9 @@ export default function ThemeSwitcher({
       <button className={`btn ${theme === "theme7" ? "active" : ""}`} onClick={() => onChange("theme7")}>
         Professional
       </button>
+      <button className={`btn ${theme === "theme5" ? "active" : ""}`} onClick={() => onChange("theme5")}>
+        Portfolio
+      </button>
       <button className={`btn ${theme === "theme6" ? "active" : ""}`} onClick={() => onChange("theme6")}>
         Custom
       </button>
@@ -35,9 +38,6 @@ export default function ThemeSwitcher({
       </button>
       <button className={`btn ${theme === "theme4" ? "active" : ""}`} onClick={() => onChange("theme4")}>
         Local Service
-      </button>
-      <button className={`btn ${theme === "theme5" ? "active" : ""}`} onClick={() => onChange("theme5")}>
-        Portfolio
       </button>
       <button className="btn btn-contact ml-2" onClick={goToContact}>
         Contact

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import ImageWithFallback from "./ImageWithFallback";
 
 type SplitSectionProps = {
   id?: string;
@@ -24,12 +23,10 @@ export default function SplitSection({ id, heading, paragraphs, image, overlay }
           {/* Image: fixed width on desktop */}
           <div className="relative w-full overflow-hidden rounded-3xl shadow-lg md:w-[720px] md:flex-shrink-0">
             <div className="relative aspect-[16/11]">
-              <ImageWithFallback
+              <img
                 src={image.src}
                 alt={image.alt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 720px"
+                className="h-full w-full object-cover"
               />
             </div>
 
