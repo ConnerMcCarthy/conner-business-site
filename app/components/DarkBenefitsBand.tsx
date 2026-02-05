@@ -17,8 +17,8 @@ type DarkBenefitsBandProps = {
 
 function BenefitIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-8 w-8 text-[#e56a2e]" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M5 7h6a3 3 0 1 1 0 6H8a3 3 0 1 0 0 6h7" />
+    <svg viewBox="0 0 24 24" className="h-8 w-8 text-[#e56a2e]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
     </svg>
   );
 }

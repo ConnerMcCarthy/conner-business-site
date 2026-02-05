@@ -23,7 +23,7 @@ export default function FeatureTiles({ id, items }: FeatureTilesProps) {
           {items.map((item) => (
             <article
               key={item.title}
-              className="rounded-2xl border border-slate-200 bg-slate-50 px-6 py-8 text-center shadow-sm"
+              className="rounded-2xl border-2 border-[#e56a2e]/40 bg-slate-50 px-6 py-8 text-center shadow-sm"
             >
               <div className="mx-auto mb-3 flex w-fit items-center justify-center">
                 <LineIcon />

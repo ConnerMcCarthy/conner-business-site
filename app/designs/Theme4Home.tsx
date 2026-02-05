@@ -4,7 +4,7 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
-const ServiceAreaMap = dynamic(() => import("./ServiceAreaMap"), { ssr: false });
+const ServiceAreaMap = dynamic(() => import("../components/ServiceAreaMap"), { ssr: false });
 
 type Section = "home" | "services" | "servicearea" | "reviews" | "faq" | "rates" | "contact";
 
