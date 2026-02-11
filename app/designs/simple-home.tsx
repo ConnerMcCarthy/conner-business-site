@@ -210,7 +210,14 @@ export default function Theme1Home() {
                 description: "Let visitors get instant answers about your business, hours, and services. Spend less time on repeat calls and more time on the job.",
                 icon: "ai",
               },
-              { title: "Sample site two", image: "/theme4-dog-hero.png", href: "https://example.com", internal: false, icon: "site" },
+              {
+                title: "AI Smart Intake",
+                image: "/theme4-dog-hero.png",
+                href: "/intake",
+                internal: true,
+                description: "Qualify leads and scope projects in minutes. Visitors answer a few questions one at a time; you get a clear lead summary and requirements. No long email chains.",
+                icon: "ai",
+              },
               { title: "Sample site three", image: "/theme5-hero-bg.png", href: "https://example.com", internal: false, icon: "site" },
             ].map((site) => (
               <div key={site.title}>
@@ -316,6 +323,19 @@ export default function Theme1Home() {
                   onClick={() => copyToClipboard(PHONE, "phone")}
                 >
                   {copied === "phone" ? "Copied!" : `Call - ${PHONE}`}
+                </a>
+              </div>
+
+              <div className="mt-6 flex flex-col items-center gap-4 rounded-2xl border border-sky-400/40 bg-sky-500/20 p-5 text-center md:text-2xl">
+                <span className="text-xl font-medium text-white">Try our AI Smart Intake form</span>
+                <a
+                  href="/intake"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20 hover:border-white/40"
+                >
+                  Scope your project with AI intake
+                  <span aria-hidden>↗</span>
                 </a>
               </div>
             </div>
