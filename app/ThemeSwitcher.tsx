@@ -27,9 +27,6 @@ export default function ThemeSwitcher({
       <button className={`btn ${theme === "theme5" ? "active" : ""}`} onClick={() => onChange("theme5")}>
         Portfolio
       </button>
-      <button className={`btn ${theme === "theme6" ? "active" : ""}`} onClick={() => onChange("theme6")}>
-        Custom
-      </button>
       <button className={`btn ${theme === "theme2" ? "active" : ""}`} onClick={() => onChange("theme2")}>
         Contractor
       </button>
