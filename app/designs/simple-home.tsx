@@ -79,6 +79,12 @@ export default function Theme1Home() {
             </a>
             <a 
               className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
+              href="#samples"
+            >
+              Modern features
+            </a>
+            <a 
+              className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
               href="#faq"
             >
               FAQ
@@ -127,14 +133,14 @@ export default function Theme1Home() {
 
               <div className="mt-8 grid grid-cols-3 gap-4 text-sm">
                 <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-slate-300 hover:shadow-lg">
-                  <div className="text-sm font-semibold">Mobile-first</div>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">Looks great anywhere</p>
+                  <div className="text-sm font-semibold">Modern</div>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">Mobile-first, Video Support, AI Automation</p>
                 </div>
                 <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-slate-300 hover:shadow-lg">
                   <div className="text-sm font-semibold">Fast</div>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">Speed + SEO friendly</p>
                 </div>
-                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-slate-300 hover:shadow-lg">
+                <div className="rounded-3xsl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-slate-300 hover:shadow-lg">
                   <div className="text-sm font-semibold">Support</div>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">Help when you need it</p>
                 </div>
@@ -193,7 +199,7 @@ export default function Theme1Home() {
       <section id="samples" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
         <FadeInSection>
         <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
-          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">Modern Website Features</h2>
+          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">Modern Features</h2>
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
             {[
               {
@@ -202,12 +208,30 @@ export default function Theme1Home() {
                 href: "/?theme=theme2#ask-ai",
                 internal: true,
                 description: "Let visitors get instant answers about your business, hours, and services. Spend less time on repeat calls and more time on the job.",
+                icon: "ai",
               },
-              { title: "Sample site two", image: "/theme4-dog-hero.png", href: "https://example.com", internal: false },
-              { title: "Sample site three", image: "/theme5-hero-bg.png", href: "https://example.com", internal: false },
+              { title: "Sample site two", image: "/theme4-dog-hero.png", href: "https://example.com", internal: false, icon: "site" },
+              { title: "Sample site three", image: "/theme5-hero-bg.png", href: "https://example.com", internal: false, icon: "site" },
             ].map((site) => (
               <div key={site.title}>
-                <h3 className="mb-2 text-lg font-semibold text-slate-800 md:text-xl">{site.title}</h3>
+                <h3 className="mb-2 flex items-center justify-center gap-2 text-lg font-semibold text-slate-800 md:text-xl">
+                  {"icon" in site && site.icon === "ai" ? (
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-sky-100 text-sky-600" aria-hidden>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      </svg>
+                    </span>
+                  ) : (
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600" aria-hidden>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                        <path d="M3 9h18" />
+                        <path d="M9 21V9" />
+                      </svg>
+                    </span>
+                  )}
+                  {site.title}
+                </h3>
                 <a
                   href={site.href}
                   {...(site.internal ? {} : { target: "_blank", rel: "noopener noreferrer" })}

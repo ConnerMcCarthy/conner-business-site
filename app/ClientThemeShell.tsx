@@ -34,7 +34,7 @@ export default function ClientThemeShell() {
     setMounted(true);
   }, []);
 
-  // Apply theme from URL ?theme= on load (e.g. /?theme=theme2#ask-ai)
+  // Apply theme from URL ?theme= only once on initial load (e.g. /?theme=theme2#ask-ai)
   useEffect(() => {
     if (!mounted) return;
     const t = searchParams.get("theme");
@@ -43,11 +43,11 @@ export default function ClientThemeShell() {
       setTheme(themeFromUrl);
       document.documentElement.setAttribute("data-theme", themeFromUrl);
     } else {
-      document.documentElement.setAttribute("data-theme", theme);
+      document.documentElement.setAttribute("data-theme", "theme1");
     }
-  }, [mounted, searchParams, theme]);
+  }, [mounted, searchParams]);
 
-  // Scroll to hash (e.g. #ask-ai) after theme is applied
+  // Scroll to hash (e.g. #ask-ai) once after initial theme-from-URL is applied
   useEffect(() => {
     if (!mounted || typeof window === "undefined") return;
     const hash = window.location.hash;
@@ -60,7 +60,7 @@ export default function ClientThemeShell() {
       const t = setTimeout(scroll, 400);
       return () => clearTimeout(t);
     }
-  }, [mounted, theme, searchParams]);
+  }, [mounted, searchParams]);
 
   function applyTheme(t: Theme) {
     setTheme(t);
