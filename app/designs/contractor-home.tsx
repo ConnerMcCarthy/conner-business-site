@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ContractorAskAI from "../components/ContractorAskAI";
 
 export default function Theme2Home() {
   return (
@@ -24,12 +25,15 @@ export default function Theme2Home() {
               <span className="ml-1.5 text-xs text-white/70 md:text-sm">· Asheville, NC</span>
             </div>
           </div>
-          <nav className="hidden items-center gap-8 text-sm text-white/90 md:flex">
-            <a className="transition-opacity hover:text-white" href="#services">
-              Services
+          <nav className="hidden items-center gap-6 text-sm text-white/90 md:flex md:gap-8">
+            <a className="transition-opacity hover:text-white" href="#ask-ai">
+              Ask AI
             </a>
-            <a className="transition-opacity hover:text-white" href="#about">
-              About
+            <a className="transition-opacity hover:text-white" href="#service-area">
+              Service area
+            </a>
+            <a className="transition-opacity hover:text-white" href="#services">
+              What we do
             </a>
             <a className="transition-opacity hover:text-white" href="#contact">
               Contact
@@ -66,7 +70,7 @@ export default function Theme2Home() {
 
         {/* Hero content — centered, max-width, backdrop blur behind text */}
         <div className="relative z-10 mx-auto max-w-[1150px] px-4 py-20 text-center md:py-28 lg:py-32">
-          <div className="mx-auto max-w-2xl rounded-2xl bg-black/30 px-6 py-8 backdrop-blur-sm md:px-10 md:py-10">
+          <div className="mx-auto max-w-2xl rounded-2xl bg-[#0b1220] px-6 py-8 md:px-10 md:py-10">
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/90 md:text-sm">
               Licensed &amp; insured · Asheville &amp; surrounding areas
             </p>
@@ -101,32 +105,29 @@ export default function Theme2Home() {
         </div>
       </section>
 
-      {/* Trust strip — compact, one line on desktop */}
+      {/* Trust strip — credentials under hero */}
       <section
-        className="border-b border-white/10 px-4 py-3"
+        className="border-b border-white/10 px-4 py-6 md:py-8"
         aria-label="Credentials"
       >
-        <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-x-8 gap-y-1.5 text-xs text-white/80 md:flex-nowrap md:justify-center md:gap-x-10 md:text-sm">
+        <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-x-8 gap-y-4 text-base font-semibold text-white md:flex-nowrap md:justify-center md:gap-x-14 md:gap-y-0 md:text-lg">
           <span>Licensed</span>
+          <span className="text-white/60" aria-hidden>·</span>
           <span>Insured</span>
+          <span className="text-white/60" aria-hidden>·</span>
           <span>Fast response</span>
+          <span className="text-white/60" aria-hidden>·</span>
           <span>Upfront pricing</span>
         </div>
       </section>
 
-      {/* About */}
-      <section id="about" className="mx-auto max-w-3xl px-4 py-10 md:py-14">
-        <div className="rounded-xl border border-white/10 bg-white/10 px-6 py-8 text-center md:px-10 md:py-10">
-          <h2 className="text-xl font-semibold tracking-tight md:text-2xl">Why choose us</h2>
-          <p className="mt-3 text-sm opacity-90">
-            Local, licensed, and focused on doing the job right. We explain options and costs
-            upfront so you can decide with confidence.
-          </p>
-        </div>
+      {/* Ask AI — questions about business, prices, installation */}
+      <section id="ask-ai" className="mx-auto max-w-3xl px-4 py-10 md:py-14 scroll-mt-40">
+        <ContractorAskAI />
       </section>
 
       {/* Service area map — Asheville radius, locked to clicks */}
-      <section className="mx-auto max-w-4xl px-4 pb-14 md:pb-20" aria-label="Service area">
+      <section id="service-area" className="mx-auto max-w-4xl px-4 pb-14 md:pb-20 scroll-mt-48" aria-label="Service area">
         <h2 className="mb-4 text-center text-lg font-semibold tracking-tight text-white/90 md:text-xl">
           Service area
         </h2>
@@ -155,7 +156,7 @@ export default function Theme2Home() {
       {/* Services */}
       <section
         id="services"
-        className="relative overflow-hidden py-10 md:py-16"
+        className="relative overflow-hidden py-10 md:py-16 scroll-mt-40"
         style={{
           backgroundImage: "url('/plumbing-background.png')",
           backgroundSize: "cover",

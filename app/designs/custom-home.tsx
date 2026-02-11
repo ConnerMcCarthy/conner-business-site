@@ -76,7 +76,6 @@ export default function Theme6Home() {
 
         {/* Hero */}
         <section id="home" className="relative min-h-[80vh] overflow-hidden rounded-2xl scroll-mt-36">
-          <FadeInSection>
           <div className="relative min-h-[80vh]">
             {/* Left content stays constrained */}
             <div className="mx-auto grid min-h-[80vh] max-w-6xl grid-cols-1 gap-12 px-4 py-20 md:grid-cols-2 md:items-end md:gap-16 md:px-6">
@@ -122,7 +121,6 @@ export default function Theme6Home() {
               </div>
             </div>
           </div>
-          </FadeInSection>
         </section>
         {/* Testimonial */}
 <section className="relative overflow-visible px-0 py-8 md:py-16">

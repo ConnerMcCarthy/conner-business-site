@@ -189,6 +189,52 @@ export default function Theme1Home() {
         </FadeInSection>
       </section>
 
+      {/* Sample sites – 3 cards with pictures linking to sample sites */}
+      <section id="samples" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
+        <FadeInSection>
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
+          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">Modern Website Features</h2>
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+            {[
+              {
+                title: "AI FAQ",
+                image: "/theme3-photo-1-new.png",
+                href: "/?theme=theme2#ask-ai",
+                internal: true,
+                description: "Let visitors get instant answers about your business, hours, and services. Spend less time on repeat calls and more time on the job.",
+              },
+              { title: "Sample site two", image: "/theme4-dog-hero.png", href: "https://example.com", internal: false },
+              { title: "Sample site three", image: "/theme5-hero-bg.png", href: "https://example.com", internal: false },
+            ].map((site) => (
+              <div key={site.title}>
+                <h3 className="mb-2 text-lg font-semibold text-slate-800 md:text-xl">{site.title}</h3>
+                <a
+                  href={site.href}
+                  {...(site.internal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+                  className="group block overflow-hidden rounded-xl border border-slate-200 transition-all duration-200 hover:scale-[1.02] hover:border-slate-300 hover:shadow-lg"
+                >
+                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
+                    <Image
+                      src={site.image}
+                      alt={site.title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                    />
+                  </div>
+                </a>
+                {"description" in site && site.description && (
+                  <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                    <p className="text-sm leading-relaxed text-slate-600">{site.description}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+        </FadeInSection>
+      </section>
+
       {/* FAQ */}
       <section id="faq" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
         <FadeInSection>
