@@ -241,13 +241,43 @@ export default function CritterSitter() {
                 <p className="mt-4 max-w-lg text-sm leading-relaxed text-stone-600 sm:mt-6 sm:text-base md:mt-8 md:text-lg">
                   Reliable, experienced dog sitting from Rick Johnson. Overnight stays and day care. Your pup gets personalized care in a safe, loving environment.
                 </p>
-                <button
-                  type="button"
-                  onClick={() => goToSection("contact")}
-                  className="mt-6 inline-block rounded-lg bg-gradient-to-r from-fuchsia-500 to-fuchsia-600 px-6 py-3 text-sm font-bold text-white shadow-md transition-all hover:from-fuchsia-600 hover:to-fuchsia-700"
-                >
-                  Book
-                </button>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={() => goToSection("contact")}
+                    className="inline-block rounded-lg bg-gradient-to-r from-fuchsia-500 to-fuchsia-600 px-6 py-3 text-sm font-bold text-white shadow-md transition-all hover:from-fuchsia-600 hover:to-fuchsia-700"
+                  >
+                    Book
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => goToSection("services")}
+                    className="inline-block rounded-lg border-2 border-stone-300 bg-white px-5 py-2.5 text-sm font-semibold text-stone-800 transition-all hover:border-fuchsia-300 hover:bg-fuchsia-50 hover:text-fuchsia-700"
+                  >
+                    Services
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => goToSection("servicearea")}
+                    className="inline-block rounded-lg border-2 border-stone-300 bg-white px-5 py-2.5 text-sm font-semibold text-stone-800 transition-all hover:border-fuchsia-300 hover:bg-fuchsia-50 hover:text-fuchsia-700"
+                  >
+                    Service area
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => goToSection("rates")}
+                    className="inline-block rounded-lg border-2 border-stone-300 bg-white px-5 py-2.5 text-sm font-semibold text-stone-800 transition-all hover:border-fuchsia-300 hover:bg-fuchsia-50 hover:text-fuchsia-700"
+                  >
+                    Rates
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => goToSection("faq")}
+                    className="inline-block rounded-lg border-2 border-stone-300 bg-white px-5 py-2.5 text-sm font-semibold text-stone-800 transition-all hover:border-fuchsia-300 hover:bg-fuchsia-50 hover:text-fuchsia-700"
+                  >
+                    FAQ
+                  </button>
+                </div>
               </div>
               <div className="relative aspect-square w-full max-w-[280px] flex-shrink-0 self-center overflow-hidden rounded-xl sm:max-w-sm md:max-w-md md:mt-0 md:self-start">
                 <Image
