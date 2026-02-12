@@ -237,7 +237,7 @@ export default function Theme1Home() {
             {[
               {
                 title: "AI FAQ",
-                image: "/theme3-photo-1-new.png",
+                image: "/faq.png",
                 href: "/?theme=theme2#ask-ai",
                 internal: true,
                 description: "Let visitors get instant answers about your business, hours, and services. Spend less time on repeat calls and more time on the job.",
@@ -252,7 +252,14 @@ export default function Theme1Home() {
                 description: "Qualify leads and scope projects in minutes. Visitors answer a few questions one at a time. You get a clear lead summary and requirements. No long email chains.",
                 icon: "ai",
               },
-              { title: "Sample site three", image: "/theme5-hero-bg.png", href: "https://example.com", internal: false, icon: "site" },
+              {
+                title: "Optimized Videos",
+                image: "/theme5-hero-bg.png",
+                href: "https://example.com",
+                internal: false,
+                description: "Videos that load only when in view, use compressed formats, and start playing quickly. Keeps your site fast and keeps visitors engaged without slowing the page.",
+                icon: "site",
+              },
             ].map((site) => (
               <div key={site.title}>
                 <h3 className="mb-2 flex items-center justify-center gap-2 text-lg font-semibold text-slate-800 md:text-xl">

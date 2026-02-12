@@ -31,10 +31,15 @@ export default function IntakePage() {
   const [emailStatus, setEmailStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [emailError, setEmailError] = useState<string | null>(null);
   const transcriptEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     transcriptEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  useEffect(() => {
+    if (!loading && !done) inputRef.current?.focus();
+  }, [loading, done]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -165,6 +170,7 @@ export default function IntakePage() {
           <form onSubmit={handleSubmit} className="mb-8">
             <div className="flex gap-2">
               <input
+                ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -193,7 +199,7 @@ export default function IntakePage() {
           <div className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             {emailStatus === "sent" && (
               <p className="rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
-                Lead summary and data have been sent to the site owner.
+                Lead summary and data have been emailed to the site owner.
               </p>
             )}
             {emailStatus === "error" && emailError && (
