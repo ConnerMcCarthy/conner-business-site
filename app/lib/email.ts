@@ -63,3 +63,57 @@ export async function sendContactEmail({
     throw error;
   }
 }
+
+export async function sendIntakeLeadEmail({
+  leadSummary,
+  lead,
+}: {
+  leadSummary: string;
+  lead: Record<string, unknown>;
+}) {
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || "smtp.gmail.com",
+    port: parseInt(process.env.SMTP_PORT || "587"),
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
+    },
+  });
+
+  const to = process.env.CONTACT_EMAIL || "conner.mccarthy.97@gmail.com";
+
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
+    console.warn("SMTP credentials not configured. Intake lead email skipped.");
+    console.log("Would send intake lead email:", { to, leadSummary, lead });
+    return false;
+  }
+
+  const jsonBlock = JSON.stringify(lead, null, 2);
+  const escapedJson = jsonBlock.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  try {
+    const info = await transporter.sendMail({
+      from: `"Website Intake" <${process.env.SMTP_USER}>`,
+      to,
+      subject: `AI Smart Intake Lead: ${(lead.businessName as string) || "New lead"}`,
+      text: `AI Smart Intake – Lead Summary\n\n${leadSummary}\n\n--- Lead data (JSON) ---\n${jsonBlock}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #0f172a;">AI Smart Intake – New Lead</h2>
+          <p><strong>Summary</strong></p>
+          <div style="background-color: #f1f5f9; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            <p style="white-space: pre-wrap; margin: 0;">${leadSummary || "(No summary)"}</p>
+          </div>
+          <p><strong>Lead data (JSON)</strong></p>
+          <pre style="background-color: #e2e8f0; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 12px;">${escapedJson}</pre>
+        </div>
+      `,
+    });
+    console.log("Intake lead email sent:", info.messageId);
+    return true;
+  } catch (error) {
+    console.error("Error sending intake lead email:", error);
+    throw error;
+  }
+}

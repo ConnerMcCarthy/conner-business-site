@@ -36,6 +36,62 @@ function FadeInSection({ children, className = "" }: { children: ReactNode; clas
   );
 }
 
+/** Lazy-loads video when in viewport; shows poster until then. Keeps video off the main thread until needed. */
+function LazyVideo({
+  src,
+  poster,
+  title,
+  className = "",
+}: {
+  src: string;
+  poster: string;
+  title: string;
+  className?: string;
+}) {
+  const [inView, setInView] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setInView(true);
+      },
+      { rootMargin: "100px", threshold: 0.01 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={containerRef} className="relative h-full w-full">
+      {!inView ? (
+        <Image
+          src={poster}
+          alt={title}
+          fill
+          className={className}
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+        />
+      ) : (
+        <video
+          src={src}
+          poster={poster}
+          preload="metadata"
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls={false}
+          className={`h-full w-full ${className}`}
+          aria-label={title}
+        />
+      )}
+    </div>
+  );
+}
+
 export default function Theme1Home() {
   const [copied, setCopied] = useState<"email" | "phone" | null>(null);
 
@@ -73,15 +129,15 @@ export default function Theme1Home() {
           <nav className="flex items-center gap-2 text-sm">
             <a 
               className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
-              href="#pricing"
-            >
-              Pricing
-            </a>
-            <a 
-              className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
               href="#samples"
             >
               Modern features
+            </a>
+            <a 
+              className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
+              href="#pricing"
+            >
+              Pricing
             </a>
             <a 
               className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
@@ -90,7 +146,7 @@ export default function Theme1Home() {
               FAQ
             </a>
             <a 
-              className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
+              className="rounded-full border border-slate-900 bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-slate-800 hover:border-slate-800 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
               href="#contact"
             >
               Contact
@@ -172,29 +228,6 @@ export default function Theme1Home() {
         </FadeInSection>
       </section>
 
-      {/* One simple monthly price */}
-      <section id="pricing" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
-        <FadeInSection>
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
-          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">One simple monthly price</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
-              <div className="text-sm font-semibold">ZERO upfront cost</div>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">No upfront cost. No contracts. Cancel anytime.</p>
-            </div>
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 min-h-[120px]">
-              <div className="text-sm font-semibold">Pay only when your site goes live</div> 
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">A professional website without the big upfront expense and risk.</p>
-            </div>
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 min-h-[120px]">
-              <div className="text-sm font-semibold">Starting at $85 / month</div>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">Includes hosting, domain, backups, security, and simple edits.</p>
-            </div>
-          </div>
-        </div>
-        </FadeInSection>
-      </section>
-
       {/* Sample sites – 3 cards with pictures linking to sample sites */}
       <section id="samples" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
         <FadeInSection>
@@ -213,9 +246,10 @@ export default function Theme1Home() {
               {
                 title: "AI Smart Intake",
                 image: "/theme4-dog-hero.png",
+                video: "/smart-intake-web.mp4",
                 href: "/intake",
                 internal: true,
-                description: "Qualify leads and scope projects in minutes. Visitors answer a few questions one at a time; you get a clear lead summary and requirements. No long email chains.",
+                description: "Qualify leads and scope projects in minutes. Visitors answer a few questions one at a time. You get a clear lead summary and requirements. No long email chains.",
                 icon: "ai",
               },
               { title: "Sample site three", image: "/theme5-hero-bg.png", href: "https://example.com", internal: false, icon: "site" },
@@ -245,13 +279,22 @@ export default function Theme1Home() {
                   className="group block overflow-hidden rounded-xl border border-slate-200 transition-all duration-200 hover:scale-[1.02] hover:border-slate-300 hover:shadow-lg"
                 >
                   <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
-                    <Image
-                      src={site.image}
-                      alt={site.title}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                    />
+                    {"video" in site && site.video ? (
+                      <LazyVideo
+                        src={site.video}
+                        poster={site.image}
+                        title={site.title}
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <Image
+                        src={site.image}
+                        alt={site.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                      />
+                    )}
                   </div>
                 </a>
                 {"description" in site && site.description && (
@@ -261,6 +304,29 @@ export default function Theme1Home() {
                 )}
               </div>
             ))}
+          </div>
+        </div>
+        </FadeInSection>
+      </section>
+
+      {/* One simple monthly price */}
+      <section id="pricing" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
+        <FadeInSection>
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
+          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">One simple monthly price</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
+              <div className="text-sm font-semibold">ZERO upfront cost</div>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">No upfront cost. No contracts. Cancel anytime.</p>
+            </div>
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 min-h-[120px]">
+              <div className="text-sm font-semibold">Pay only when your site goes live</div> 
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">A professional website without the big upfront expense and risk.</p>
+            </div>
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 min-h-[120px]">
+              <div className="text-sm font-semibold">Starting at $85 / month</div>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">Includes hosting, domain, backups, security, and simple edits.</p>
+            </div>
           </div>
         </div>
         </FadeInSection>

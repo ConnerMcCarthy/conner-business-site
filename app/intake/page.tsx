@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import type { LeadUpdates } from "../api/intake/route";
+import { submitIntakeLead } from "../actions/intake";
 
 const INITIAL_GREETING =
   "Hi! I can help scope your website. What business is this for, and what do you want the website to do?";
@@ -27,6 +28,8 @@ export default function IntakePage() {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [leadSummary, setLeadSummary] = useState("");
+  const [emailStatus, setEmailStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [emailError, setEmailError] = useState<string | null>(null);
   const transcriptEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -72,9 +75,22 @@ export default function IntakePage() {
 
       const assistantMessage = data.assistant_message ?? "Thanks for that.";
       setMessages((m) => [...m, { role: "assistant", content: assistantMessage }]);
-      setLead((prev) => mergeLeadUpdates(prev, data.lead_updates ?? {}));
+      const mergedLead = mergeLeadUpdates(lead, data.lead_updates ?? {});
+      setLead(mergedLead);
       setDone(Boolean(data.done));
-      setLeadSummary(data.lead_summary ?? "");
+      const summary = data.lead_summary ?? "";
+      setLeadSummary(summary);
+
+      if (Boolean(data.done)) {
+        setEmailStatus("sending");
+        const result = await submitIntakeLead(summary, mergedLead as Record<string, unknown>);
+        if (result.success) {
+          setEmailStatus("sent");
+        } else {
+          setEmailStatus("error");
+          setEmailError(result.error ?? "Failed to send.");
+        }
+      }
     } catch {
       setError("Something went wrong. Please try again.");
       setMessages((m) => [
@@ -93,6 +109,12 @@ export default function IntakePage() {
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-2xl px-4 py-8 md:py-12">
         <header className="mb-8">
+          <a
+            href="/"
+            className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:border-slate-400 hover:bg-slate-50"
+          >
+            ← Back to home
+          </a>
           <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
             AI Smart Intake
           </h1>
@@ -169,6 +191,19 @@ export default function IntakePage() {
         {/* Done state: summary + JSON */}
         {done && (
           <div className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            {emailStatus === "sent" && (
+              <p className="rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+                Lead summary and data have been sent to the site owner.
+              </p>
+            )}
+            {emailStatus === "error" && emailError && (
+              <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+                {emailError}
+              </p>
+            )}
+            {emailStatus === "sending" && (
+              <p className="text-sm text-slate-500">Sending lead to site owner…</p>
+            )}
             <h2 className="text-lg font-semibold text-slate-800">
               Lead summary
             </h2>
