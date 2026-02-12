@@ -39,12 +39,18 @@ export default function ContractorAskAI() {
         Ask about our business, prices, or installations
       </h2>
       <p className="mt-2 text-sm text-white/80">
-        Ask a question and get an instant answer—e.g. services, pricing, water heater installs, or service area.
+        Ask a question and get an instant answer. e.g. services, pricing, water heater installs, or service area.
       </p>
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <textarea
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              e.currentTarget.form?.requestSubmit();
+            }
+          }}
           placeholder="e.g. How much for a water heater install? Do you do emergency repairs?"
           rows={3}
           className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder-white/50 focus:border-white/40 focus:outline-none focus:ring-1 focus:ring-white/40"
