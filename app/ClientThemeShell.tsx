@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import ThemeSwitcher from "./ThemeSwitcher";
 import Theme1Home from "./designs/simple-home";
 import Theme2Home from "./designs/contractor-home";
@@ -27,6 +27,8 @@ const THEMES: Theme[] = ["theme1", "theme2", "theme3", "theme4", "theme5", "them
 
 export default function ClientThemeShell() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const [theme, setTheme] = useState<Theme>("theme1");
   const [mounted, setMounted] = useState(false);
 
@@ -65,6 +67,8 @@ export default function ClientThemeShell() {
   function applyTheme(t: Theme) {
     setTheme(t);
     document.documentElement.setAttribute("data-theme", t);
+    const url = `${pathname || "/"}?theme=${t}`;
+    router.replace(url);
   }
 
   return (
