@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Conner McCarthy Websites",
-  description: "Professional & personal websites with zero upfront cost.",
+  title: "Web Design for Small Businesses | Conner McCarthy",
+  description: "Custom website design for small businesses. Fast, secure, modern sites with zero upfront cost and ongoing support.",
   icons: {
     icon: "/conner-headshot-v2.png",
   },
@@ -31,8 +31,28 @@ export const metadata: Metadata = {
       },
     ],
     type: "website",
+    locale: "en_US",
+    
   },
-  // ❌ Don't put fb:app_id in `other` — Next will emit name="fb:app_id"
+  twitter: {
+    card: "summary_large_image",
+    title: "Conner McCarthy Websites",
+    description: "Professional & personal websites. Zero upfront cost.",
+    images: ["https://connermccarthy.com/og.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  metadataBase: new URL("https://connermccarthy.com"),
+  alternates: {
+    canonical: "/",
+  },
+  formatDetection: {
+    telephone: false,
+    address: false,
+    email: false,
+  },
 };
 
 export default function RootLayout({
