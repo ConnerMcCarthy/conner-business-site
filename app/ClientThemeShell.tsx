@@ -71,11 +71,15 @@ export default function ClientThemeShell() {
     router.replace(url);
   }
 
+  function goToContact() {
+    router.replace(`${pathname || "/"}?theme=theme1#contact`);
+  }
+
   return (
     <>
       <header className="topbar">
         <div className="brand text-xl">Samples</div>
-        <ThemeSwitcher theme={theme} onChange={applyTheme} />
+        <ThemeSwitcher theme={theme} onChange={applyTheme} onContactClick={goToContact} />
       </header>
 
       {mounted ? THEME_PAGES[theme] : THEME_PAGES.theme1}

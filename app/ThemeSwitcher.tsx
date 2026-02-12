@@ -5,17 +5,12 @@ type Theme = "theme1" | "theme2" | "theme3" | "theme4" | "theme5" | "theme6" | "
 export default function ThemeSwitcher({
   theme,
   onChange,
+  onContactClick,
 }: {
   theme: Theme;
   onChange: (t: Theme) => void;
+  onContactClick?: () => void;
 }) {
-  function goToContact() {
-    onChange("theme1");
-    setTimeout(() => {
-      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-    }, 150);
-  }
-
   return (
     <div className="switcher">
       <button className={`btn ${theme === "theme1" ? "active" : ""}`} onClick={() => onChange("theme1")}>
@@ -36,7 +31,7 @@ export default function ThemeSwitcher({
       <button className={`btn ${theme === "theme4" ? "active" : ""}`} onClick={() => onChange("theme4")}>
         Local Service
       </button>
-      <button className="btn btn-contact ml-2" onClick={goToContact}>
+      <button className="btn btn-contact ml-2" onClick={onContactClick}>
         Contact
       </button>
     </div>
