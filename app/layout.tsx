@@ -32,19 +32,23 @@ export const metadata: Metadata = {
     ],
     type: "website",
   },
-  other: {
-    "fb:app_id": "1448812570281584",
-  },
+  // ❌ Don't put fb:app_id in `other` — Next will emit name="fb:app_id"
 };
 
-// app/layout.tsx
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" data-theme="theme1" suppressHydrationWarning>
+      <head>
+        {/* Facebook requires property= (NOT name=) */}
+        <meta property="fb:app_id" content="1448812570281584" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>
   );
 }
-
