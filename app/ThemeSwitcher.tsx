@@ -31,7 +31,11 @@ export default function ThemeSwitcher({
       <button className={`btn ${theme === "theme4" ? "active" : ""}`} onClick={() => onChange("theme4")}>
         Local Service
       </button>
-      <button className="btn btn-contact ml-2" onClick={onContactClick}>
+      <button
+        className="btn btn-contact ml-2 text-white hover:!bg-red-900 hover:!border-red-950"
+        style={{ background: "#b91c1c", borderColor: "#991b1b" }}
+        onClick={onContactClick}
+      >
         Contact
       </button>
     </div>
