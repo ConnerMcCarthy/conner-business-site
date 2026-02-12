@@ -32,6 +32,9 @@ export const metadata: Metadata = {
     ],
     type: "website",
   },
+  other: {
+    "fb:app_id": "1448812570281584",
+  },
 };
 
 // app/layout.tsx
