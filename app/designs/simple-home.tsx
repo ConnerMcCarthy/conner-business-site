@@ -129,7 +129,7 @@ export default function Theme1Home() {
           <nav className="flex items-center gap-2 text-sm">
             <a 
               className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 hover:scale-105 hover:shadow-md sm:px-4 sm:py-2 sm:text-sm"
-              href="#samples"
+              href="#features"
             >
               Modern features
             </a>
@@ -229,7 +229,7 @@ export default function Theme1Home() {
       </section>
 
       {/* Sample sites – 3 cards with pictures linking to sample sites */}
-      <section id="samples" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
+      <section id="features" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
         <FadeInSection>
         <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
           <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">Modern Features</h2>
