@@ -27,7 +27,7 @@ export default function Theme2Home() {
           </div>
           <nav className="hidden items-center gap-6 text-sm text-white/90 md:flex md:gap-8">
             <a className="transition-opacity hover:text-white" href="#ask-ai">
-              Ask AI
+              Smart FAQ
             </a>
             <a className="transition-opacity hover:text-white" href="#service-area">
               Service area
