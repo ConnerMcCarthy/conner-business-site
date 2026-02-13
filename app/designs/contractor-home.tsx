@@ -124,7 +124,7 @@ export default function Theme2Home() {
       {/* Ask AI — questions about business, prices, installation */}
       <section id="ask-ai" className="mx-auto max-w-3xl px-4 py-10 md:py-14 scroll-mt-40">
         <h2 className="mb-6 text-center text-2xl font-semibold tracking-tight text-white md:text-3xl">
-          AI FAQ
+          Smart FAQ
         </h2>
         <ContractorAskAI />
       </section>

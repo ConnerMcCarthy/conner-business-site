@@ -236,7 +236,7 @@ export default function Theme1Home() {
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
             {[
               {
-                title: "AI FAQ",
+                title: "Smart FAQ",
                 image: "/faq.png",
                 href: "/?theme=theme2#ask-ai",
                 internal: true,
@@ -244,7 +244,7 @@ export default function Theme1Home() {
                 icon: "ai",
               },
               {
-                title: "AI Smart Intake",
+                title: "Smart Intake",
                 image: "/theme4-dog-hero.png",
                 video: "/smart-intake-web.mp4",
                 href: "/intake",
@@ -400,14 +400,14 @@ export default function Theme1Home() {
               </div>
 
               <div className="mt-6 flex flex-col items-center gap-4 rounded-2xl border border-sky-400/40 bg-sky-500/20 p-5 text-center md:text-2xl">
-                <span className="text-xl font-medium text-white">Try our AI Smart Intake form</span>
+                <span className="text-xl font-medium text-white">Try our Smart Intake form</span>
                 <a
                   href="/intake"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20 hover:border-white/40"
                 >
-                  Scope your project with AI intake
+                  Scope your project with Smart Intake
                   <span aria-hidden>↗</span>
                 </a>
               </div>

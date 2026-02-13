@@ -121,7 +121,7 @@ export default function IntakePage() {
             ← Back to home
           </a>
           <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
-            AI Smart Intake
+            Smart Intake
           </h1>
           <p className="mt-1 text-sm text-slate-600">
             Answer a few questions so we can scope your website project.
