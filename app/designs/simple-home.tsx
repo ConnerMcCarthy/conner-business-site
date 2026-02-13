@@ -354,7 +354,7 @@ export default function Theme1Home() {
                     <path d="M12 15h4" />
                   </svg>
                 </span>
-                <span className="text-sm font-semibold">Starting at $85 / month</span>
+                <span className="text-sm font-semibold">Starting at $65 / month</span>
               </div>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">Includes hosting, domain, backups, security, and simple edits.</p>
             </div>
