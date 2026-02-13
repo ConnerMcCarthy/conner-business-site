@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import ContactForm from "../components/ContactForm";
 import Image from "next/image";
+import { LazyVideo } from "@/app/components/LazyVideo";
 
 const EMAIL = "conner.mccarthy.97@gmail.com";
 const PHONE = "(828) 329-5839";
@@ -32,62 +33,6 @@ function FadeInSection({ children, className = "" }: { children: ReactNode; clas
       } ${className}`}
     >
       {children}
-    </div>
-  );
-}
-
-/** Lazy-loads video when in viewport; shows poster until then. Keeps video off the main thread until needed. */
-function LazyVideo({
-  src,
-  poster,
-  title,
-  className = "",
-}: {
-  src: string;
-  poster: string;
-  title: string;
-  className?: string;
-}) {
-  const [inView, setInView] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setInView(true);
-      },
-      { rootMargin: "100px", threshold: 0.01 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div ref={containerRef} className="relative h-full w-full">
-      {!inView ? (
-        <Image
-          src={poster}
-          alt={title}
-          fill
-          className={className}
-          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-        />
-      ) : (
-        <video
-          src={src}
-          poster={poster}
-          preload="metadata"
-          autoPlay
-          muted
-          loop
-          playsInline
-          controls={false}
-          className={`h-full w-full ${className}`}
-          aria-label={title}
-        />
-      )}
     </div>
   );
 }
@@ -279,7 +224,8 @@ export default function Theme1Home() {
               {
                 title: "Optimized Videos",
                 image: "/theme5-hero-bg.png",
-                href: "https://example.com",
+                video: "/theme1-video-demo-small-web.mp4",
+                href: "/?theme=theme5#work",
                 internal: false,
                 description: "Videos that load only when in view, use compressed formats, and start playing quickly. Keeps your site fast and keeps visitors engaged without slowing the page.",
                 icon: "video",
@@ -333,6 +279,7 @@ export default function Theme1Home() {
                         poster={site.image}
                         title={site.title}
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                       />
                     ) : (
                       <Image

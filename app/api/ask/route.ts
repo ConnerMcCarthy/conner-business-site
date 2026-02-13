@@ -6,7 +6,7 @@ const FALLBACK_PROMPT = `You are a helpful assistant for a licensed plumbing com
 
 async function getBusinessData(): Promise<string> {
   try {
-    const path = join(process.cwd(), "app", "faq", "business-data.md");
+    const path = join(process.cwd(), "app", "data", "business-data.md");
     const content = await readFile(path, "utf-8");
     return content.trim();
   } catch {

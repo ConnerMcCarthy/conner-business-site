@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import Image from "next/image";
+import { LazyVideo } from "@/app/components/LazyVideo";
 
 function FadeInSection({ children, className = "" }: { children: ReactNode; className?: string }) {
   const [isVisible, setVisible] = useState(false);
@@ -32,8 +33,11 @@ function FadeInSection({ children, className = "" }: { children: ReactNode; clas
   );
 }
 
+type WorkViewMode = "video" | "image";
+
 export default function Theme5Home() {
   const [activeFilter, setActiveFilter] = useState<string>("all");
+  const [workViewMode, setWorkViewMode] = useState<WorkViewMode>("video");
 
   const workSamples = [
     {
@@ -176,6 +180,37 @@ export default function Theme5Home() {
           <p className="mx-auto mt-3 max-w-lg text-neutral-600">
             A curated selection of projects spanning design, photography, and digital art.
           </p>
+          {/* Video / Picture toggle with sliding highlight */}
+          <div className="mt-6 flex justify-center">
+            <div className="relative inline-flex rounded-full border border-neutral-300 bg-neutral-100 p-1">
+              <div
+                className="absolute top-1 bottom-1 rounded-full bg-neutral-900 transition-all duration-200 ease-out"
+                style={{
+                  left: "4px",
+                  width: "calc(50% - 4px)",
+                  transform: workViewMode === "image" ? "translateX(100%)" : "translateX(0)",
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setWorkViewMode("video")}
+                className={`relative z-10 rounded-full px-5 py-2 text-sm font-medium transition-colors ${
+                  workViewMode === "video" ? "text-white" : "text-neutral-600 hover:text-neutral-900"
+                }`}
+              >
+                Video
+              </button>
+              <button
+                type="button"
+                onClick={() => setWorkViewMode("image")}
+                className={`relative z-10 rounded-full px-5 py-2 text-sm font-medium transition-colors ${
+                  workViewMode === "image" ? "text-white" : "text-neutral-600 hover:text-neutral-900"
+                }`}
+              >
+                Picture
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Filter buttons */}
@@ -203,13 +238,22 @@ export default function Theme5Home() {
               className="group relative overflow-hidden rounded-lg border border-neutral-200 bg-white transition-all hover:border-neutral-300 hover:shadow-lg"
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  className="object-cover"
-                />
+                {workViewMode === "video" ? (
+                  <LazyVideo
+                    src={`/theme5-work-${item.id}-web.mp4`}
+                    poster={item.image}
+                    title={item.title}
+                    className="object-cover"
+                  />
+                ) : (
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover"
+                  />
+                )}
               </div>
               <div className="p-6">
                 <div className="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-500">
