@@ -116,8 +116,6 @@ export default function Theme2Home() {
           <span>Insured</span>
           <span className="text-white/60" aria-hidden>·</span>
           <span>Fast response</span>
-          <span className="text-white/60" aria-hidden>·</span>
-          <span>Upfront pricing</span>
         </div>
       </section>
 

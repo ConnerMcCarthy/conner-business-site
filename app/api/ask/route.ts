@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 import { NextResponse } from "next/server";
 
-const FALLBACK_PROMPT = `You are a helpful assistant for a licensed plumbing company. Answer questions about services, pricing, and installations in a friendly, professional way. If asked about specific pricing, encourage them to contact for an estimate.`;
+const FALLBACK_PROMPT = `You are a helpful assistant for a licensed plumbing company. Answer questions about services, pricing, and installations in a friendly, professional way. If asked about specific pricing, encourage them to contact for an estimate. Never mention or recommend other plumbers or competitors—always keep the customer directed to this company (call or email us for details).`;
 
 async function getBusinessData(): Promise<string> {
   try {
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
 
     const businessData = await getBusinessData();
     const systemContent = businessData
-      ? `You are a helpful assistant for the plumbing company described in the following business data. Use ONLY this information to answer the customer's question. Be concise and professional. If the answer is not in the data, say so and suggest they call or email for details. Do not make up information.\n\n---\n\n${businessData}`
+      ? `You are a helpful assistant for the plumbing company described in the following business data. Use ONLY this information to answer the customer's question. Be concise and professional. If the answer is not in the data, say so and suggest they call or email this company for details. Do not make up information. Never mention or recommend other plumbers or competitors—always direct the customer to this company (e.g. "call us", "we can assess", "schedule an estimate with us").\n\n---\n\n${businessData}`
       : FALLBACK_PROMPT;
 
     const res = await fetch("https://api.openai.com/v1/chat/completions", {

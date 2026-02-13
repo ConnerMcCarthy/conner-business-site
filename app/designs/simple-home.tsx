@@ -433,14 +433,14 @@ export default function Theme1Home() {
               </div>
 
               <div className="mt-6 flex flex-col items-center gap-4 rounded-2xl border border-sky-400/40 bg-sky-500/20 p-5 text-center md:text-2xl">
-                <span className="text-xl font-medium text-white">Try our Smart Intake form</span>
+                <span className="text-xl font-medium text-white">Try Smart Intake Form</span>
                 <a
                   href="/intake"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20 hover:border-white/40"
                 >
-                  Scope your project with Smart Intake
+                  Scope your project
                   <span aria-hidden>↗</span>
                 </a>
               </div>

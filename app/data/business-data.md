@@ -1,7 +1,7 @@
-# Blue Ridge Precision Plumbing, LLC
+# Your Company Plumbing
 
 ## Mission Statement
-Blue Ridge Precision Plumbing is a locally owned and operated plumbing company dedicated to providing dependable, high-quality residential and light commercial plumbing services. Our goal is to deliver long-term solutions, not temporary fixes, while maintaining transparency, professionalism, and safety on every job.
+Your Company Plumbing is a locally owned and operated plumbing company dedicated to providing dependable, high-quality residential and light commercial plumbing services. Our goal is to deliver long-term solutions, not temporary fixes, while maintaining transparency, professionalism, and safety on every job.
 
 ## Core Values
 - Integrity in pricing and recommendations  
@@ -119,7 +119,7 @@ We respect customer property and aim to leave spaces as clean as or cleaner than
 
 # Services & Installations
 
-Blue Ridge Precision Plumbing provides full-service plumbing installation for residential and light commercial properties. All installations are performed in accordance with North Carolina plumbing code and manufacturer specifications.
+Your Company Plumbing provides full-service plumbing installation for residential and light commercial properties. All installations are performed in accordance with North Carolina plumbing code and manufacturer specifications.
 
 ---
 
@@ -322,7 +322,7 @@ Customers receive written documentation of installed equipment upon completion.
 
 # Repairs & Troubleshooting
 
-Blue Ridge Precision Plumbing provides diagnostic and repair services for residential and light commercial plumbing systems. Our goal is to identify the root cause of the issue and provide a lasting solution rather than a temporary patch.
+Your Company Plumbing provides diagnostic and repair services for residential and light commercial plumbing systems. Our goal is to identify the root cause of the issue and provide a lasting solution rather than a temporary patch.
 
 ---
 
@@ -565,7 +565,7 @@ Upon completion of repair work, customers receive:
 
 # Policies, Warranties & Guarantees
 
-Blue Ridge Precision Plumbing maintains clear policies to ensure transparency, safety, and customer confidence. The following policies apply to most residential and light commercial projects unless otherwise specified in writing.
+Your Company Plumbing maintains clear policies to ensure transparency, safety, and customer confidence. The following policies apply to most residential and light commercial projects unless otherwise specified in writing.
 
 ---
 
@@ -722,7 +722,7 @@ Failure to disclose known issues may affect repair outcomes.
 
 ## Limitation of Liability
 
-Blue Ridge Precision Plumbing is not responsible for:
+Your Company Plumbing is not responsible for:
 
 - Pre-existing plumbing system damage
 - Undiscovered structural defects
