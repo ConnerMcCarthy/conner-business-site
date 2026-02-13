@@ -189,15 +189,39 @@ export default function Theme1Home() {
 
               <div className="mt-8 grid grid-cols-3 gap-4 text-sm">
                 <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-slate-300 hover:shadow-lg">
-                  <div className="text-sm font-semibold">Modern</div>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">Mobile-first, Video Support, AI Automation</p>
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600" aria-hidden>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 0 1-9 9 9 9 0 0 1-9-9 6 6 0 0 0 9-9" />
+                      </svg>
+                    </span>
+                    <span className="text-sm font-semibold">Modern</span>
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">Mobile-first, Video Support, Automation</p>
                 </div>
                 <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-slate-300 hover:shadow-lg">
-                  <div className="text-sm font-semibold">Fast</div>
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-sky-100 text-sky-600" aria-hidden>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+                        <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+                        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+                        <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+                      </svg>
+                    </span>
+                    <span className="text-sm font-semibold">Fast</span>
+                  </div>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">Speed + SEO friendly</p>
                 </div>
-                <div className="rounded-3xsl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-slate-300 hover:shadow-lg">
-                  <div className="text-sm font-semibold">Support</div>
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:border-slate-300 hover:shadow-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600" aria-hidden>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      </svg>
+                    </span>
+                    <span className="text-sm font-semibold">Support</span>
+                  </div>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">Help when you need it</p>
                 </div>
               </div>
@@ -232,7 +256,7 @@ export default function Theme1Home() {
       <section id="features" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
         <FadeInSection>
         <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
-          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">Modern Features</h2>
+          <h2 className="text-center text-2xl font-semibold tracking-tight md:text-3xl">Modern Features</h2>
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
             {[
               {
@@ -250,7 +274,7 @@ export default function Theme1Home() {
                 href: "/intake",
                 internal: true,
                 description: "Qualify leads and scope projects in minutes. Visitors answer a few questions one at a time. You get a clear lead summary and requirements. No long email chains.",
-                icon: "ai",
+                icon: "intake",
               },
               {
                 title: "Optimized Videos",
@@ -258,7 +282,7 @@ export default function Theme1Home() {
                 href: "https://example.com",
                 internal: false,
                 description: "Videos that load only when in view, use compressed formats, and start playing quickly. Keeps your site fast and keeps visitors engaged without slowing the page.",
-                icon: "site",
+                icon: "video",
               },
             ].map((site) => (
               <div key={site.title}>
@@ -267,6 +291,23 @@ export default function Theme1Home() {
                     <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-sky-100 text-sky-600" aria-hidden>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      </svg>
+                    </span>
+                  ) : "icon" in site && site.icon === "intake" ? (
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600" aria-hidden>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <path d="M14 2v6h6" />
+                        <path d="M16 13H8" />
+                        <path d="M16 17H8" />
+                        <path d="M10 9H8" />
+                      </svg>
+                    </span>
+                  ) : "icon" in site && site.icon === "video" ? (
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-violet-100 text-violet-600" aria-hidden>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                        <path d="m22 8-6 4 6 4V8Z" />
+                        <rect width="14" height="12" x="2" y="6" rx="2" ry="2" />
                       </svg>
                     </span>
                   ) : (
@@ -320,18 +361,54 @@ export default function Theme1Home() {
       <section id="pricing" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
         <FadeInSection>
         <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
-          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">One simple monthly price</h2>
+          <h2 className="flex items-center justify-center gap-2 text-2xl font-semibold tracking-tight md:text-3xl">
+            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600" aria-hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                <line x1="12" y1="1" x2="12" y2="23" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+            </span>
+            One simple monthly price
+          </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
-              <div className="text-sm font-semibold">ZERO upfront cost</div>
+              <div className="flex items-center gap-2">
+                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-slate-200 text-slate-600" aria-hidden>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
+                    <path d="M12 18V6" />
+                  </svg>
+                </span>
+                <span className="text-sm font-semibold">ZERO upfront cost</span>
+              </div>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">No upfront cost. No contracts. Cancel anytime.</p>
             </div>
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 min-h-[120px]">
-              <div className="text-sm font-semibold">Pay only when your site goes live</div> 
+              <div className="flex items-center gap-2">
+                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-sky-100 text-sky-600" aria-hidden>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+                    <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+                    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+                    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+                  </svg>
+                </span>
+                <span className="text-sm font-semibold">Pay only when your site goes live</span>
+              </div>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">A professional website without the big upfront expense and risk.</p>
             </div>
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 min-h-[120px]">
-              <div className="text-sm font-semibold">Starting at $85 / month</div>
+              <div className="flex items-center gap-2">
+                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600" aria-hidden>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                    <rect width="20" height="14" x="2" y="5" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                    <path d="M12 15h4" />
+                  </svg>
+                </span>
+                <span className="text-sm font-semibold">Starting at $85 / month</span>
+              </div>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">Includes hosting, domain, backups, security, and simple edits.</p>
             </div>
           </div>
@@ -343,7 +420,16 @@ export default function Theme1Home() {
       <section id="faq" className="mx-auto max-w-6xl px-4 pt-14 md:pt-20 scroll-mt-32">
         <FadeInSection>
         <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12">
-          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">FAQ</h2>
+          <h2 className="flex items-center justify-center gap-2 text-2xl font-semibold tracking-tight md:text-3xl">
+            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-slate-200 text-slate-600" aria-hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <path d="M12 17h.01" />
+              </svg>
+            </span>
+            FAQ
+          </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {[
               {
