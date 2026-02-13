@@ -218,7 +218,7 @@ export default function Theme1Home() {
                 video: "/smart-intake-web.mp4",
                 href: "/intake",
                 internal: true,
-                description: "Qualify leads and scope projects in minutes. Visitors answer a few questions one at a time. You get a clear lead summary and requirements. No long email chains.",
+                description: "Qualify leads and define projects in minutes. Visitors answer a few questions one at a time. You get a clear lead summary and requirements. No long email chains.",
                 icon: "intake",
               },
               {
@@ -440,7 +440,7 @@ export default function Theme1Home() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20 hover:border-white/40"
                 >
-                  Scope your project
+                  Define your project
                   <span aria-hidden>↗</span>
                 </a>
               </div>
