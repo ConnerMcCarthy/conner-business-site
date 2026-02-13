@@ -46,9 +46,9 @@ export type IntakeRequestBody = {
 
 // --- Pricing tier guidance (internal) ---
 const PRICING = {
-  Starter: { base: 85, low: 85, high: 95 },
-  Growth: { base: 125, low: 125, high: 145 },
-  Pro: { base: 165, low: 165, high: 195 },
+  Starter: { base: 80, low: 65, high: 95 },
+  Growth: { base: 115, low: 95, high: 135 },
+  Pro: { base: 165, low: 135, high: 195 },
 } as const;
 
 export type PricingTier = "Starter" | "Growth" | "Pro";
@@ -158,9 +158,9 @@ function estimatePricing(lead: LeadUpdates): PricingEstimate {
 }
 
 // Example lead inputs → tier (for verification):
-// 1) { websiteType: "1-page", mustHaveFeatures: ["contact form"] } => Starter ($85–$95)
-// 2) { websiteType: "multi-page", mustHaveFeatures: ["smart intake", "smart faq"] } => Growth ($125–$145)
-// 3) { websiteType: "LMS/training" } or { mustHaveFeatures: ["login", "dashboard", "SQL", "backups"] } => Pro ($165–$195)
+// 1) { websiteType: "1-page", mustHaveFeatures: ["contact form"] } => Starter ($65–$95)
+// 2) { websiteType: "multi-page", mustHaveFeatures: ["smart intake", "smart faq"] } => Growth ($95–$135)
+// 3) { websiteType: "LMS/training" } or { mustHaveFeatures: ["login", "dashboard", "SQL", "backups"] } => Pro ($135–$195)
 
 export type IntakeResponseBody = {
   assistant_message: string;
