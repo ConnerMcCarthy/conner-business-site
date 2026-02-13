@@ -64,6 +64,93 @@ export async function sendContactEmail({
   }
 }
 
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function formatLeadForEmail(lead: Record<string, unknown>): { html: string; text: string } {
+  const textLines: string[] = [];
+  const rows: string[] = [];
+
+  const formatLabel = (key: string): string =>
+    key.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase()).trim();
+
+  const formatValue = (v: unknown): string => {
+    if (v == null || v === "") return "—";
+    if (Array.isArray(v)) return v.length ? v.join(", ") : "—";
+    if (typeof v === "object") return JSON.stringify(v);
+    return String(v);
+  };
+
+  const formatValueHtml = (v: unknown): string => {
+    if (v == null || v === "") return "<em>—</em>";
+    if (Array.isArray(v)) {
+      if (!v.length) return "<em>—</em>";
+      return "<ul style=\"margin: 0; padding-left: 18px;\">" + v.map((i) => `<li>${escapeHtml(String(i))}</li>`).join("") + "</ul>";
+    }
+    if (typeof v === "object") {
+      const obj = v as Record<string, unknown>;
+      const inner = Object.entries(obj)
+        .map(([k, val]) => `<tr><td style="padding: 4px 8px 4px 0; color: #64748b; font-size: 12px;">${escapeHtml(formatLabel(k))}</td><td style="padding: 4px 0;">${formatValueHtml(val)}</td></tr>`)
+        .join("");
+      return `<table style="width: 100%; font-size: 13px; border-collapse: collapse;">${inner}</table>`;
+    }
+    return escapeHtml(String(v));
+  };
+
+  for (const [key, value] of Object.entries(lead)) {
+    if (value === undefined) continue;
+    const label = formatLabel(key);
+    if (key === "pricing_estimate" && value && typeof value === "object") {
+      const est = value as Record<string, unknown>;
+      const range = [est.monthlyLow, est.monthlyHigh].every((n) => typeof n === "number")
+        ? `$${est.monthlyLow}–$${est.monthlyHigh}/mo`
+        : "—";
+      textLines.push(`Pricing estimate – Tier: ${est.suggestedTier ?? "—"}, Est. pages: ${est.estimatedPages ?? "—"}, Range: ${range}`);
+      if (Array.isArray(est.rationale) && est.rationale.length) textLines.push(`  Rationale: ${est.rationale.join(" ")}`);
+    } else {
+      textLines.push(`${label}: ${formatValue(value)}`);
+    }
+
+    if (key === "pricing_estimate" && value && typeof value === "object") {
+      rows.push(
+        `<tr><td colspan="2" style="padding: 12px 0 4px; border-top: 1px solid #e2e8f0; font-weight: 600; color: #0f172a;">Pricing estimate</td></tr>`,
+      );
+      const est = value as Record<string, unknown>;
+      const tier = est.suggestedTier ?? "—";
+      const pages = est.estimatedPages ?? "—";
+      const range = [est.monthlyLow, est.monthlyHigh].every((n) => typeof n === "number")
+        ? `$${est.monthlyLow}–$${est.monthlyHigh}/mo`
+        : "—";
+      const rationale = Array.isArray(est.rationale) ? est.rationale.join(" ") : String(est.rationale ?? "—");
+      rows.push(
+        `<tr><td style="padding: 4px 12px 4px 0; color: #64748b; vertical-align: top; width: 140px;">Tier</td><td style="padding: 4px 0;">${escapeHtml(String(tier))}</td></tr>`,
+        `<tr><td style="padding: 4px 12px 4px 0; color: #64748b;">Est. pages</td><td style="padding: 4px 0;">${escapeHtml(String(pages))}</td></tr>`,
+        `<tr><td style="padding: 4px 12px 4px 0; color: #64748b;">Monthly range</td><td style="padding: 4px 0;">${escapeHtml(String(range))}</td></tr>`,
+        `<tr><td style="padding: 4px 12px 4px 0; color: #64748b;">Rationale</td><td style="padding: 4px 0;">${escapeHtml(rationale)}</td></tr>`,
+      );
+    } else {
+      rows.push(
+        `<tr><td style="padding: 6px 12px 6px 0; color: #64748b; vertical-align: top; width: 140px;">${escapeHtml(label)}</td><td style="padding: 6px 0;">${formatValueHtml(value)}</td></tr>`,
+      );
+    }
+  }
+
+  const tableHtml =
+    rows.length > 0
+      ? `<table style="width: 100%; font-size: 14px; border-collapse: collapse;">${rows.join("")}</table>`
+      : "<p><em>No lead data</em></p>";
+
+  return {
+    html: tableHtml,
+    text: textLines.join("\n"),
+  };
+}
+
 export async function sendIntakeLeadEmail({
   leadSummary,
   lead,
@@ -89,24 +176,27 @@ export async function sendIntakeLeadEmail({
     return false;
   }
 
-  const jsonBlock = JSON.stringify(lead, null, 2);
-  const escapedJson = jsonBlock.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const { html: leadTableHtml, text: leadText } = formatLeadForEmail(lead);
+
+  const summaryEscaped = escapeHtml(leadSummary || "(No summary)").replace(/\n/g, "<br>");
 
   try {
     const info = await transporter.sendMail({
       from: `"Website Intake" <${process.env.SMTP_USER}>`,
       to,
-      subject: `AI Smart Intake Lead: ${(lead.businessName as string) || "New lead"}`,
-      text: `AI Smart Intake – Lead Summary\n\n${leadSummary}\n\n--- Lead data (JSON) ---\n${jsonBlock}`,
+      subject: `Smart Intake Lead: ${(lead.businessName as string) || "New lead"}`,
+      text: `Smart Intake – Lead Summary\n\n${leadSummary || "(No summary)"}\n\n--- Lead data ---\n${leadText}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #0f172a;">AI Smart Intake – New Lead</h2>
           <p><strong>Summary</strong></p>
-          <div style="background-color: #f1f5f9; padding: 15px; border-radius: 5px; margin: 10px 0;">
-            <p style="white-space: pre-wrap; margin: 0;">${leadSummary || "(No summary)"}</p>
+          <div style="background-color: #f1f5f9; padding: 15px; border-radius: 6px; margin: 10px 0;">
+            <p style="white-space: pre-wrap; margin: 0; line-height: 1.5;">${summaryEscaped}</p>
           </div>
-          <p><strong>Lead data (JSON)</strong></p>
-          <pre style="background-color: #e2e8f0; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 12px;">${escapedJson}</pre>
+          <p style="margin-top: 20px;"><strong>Lead data</strong></p>
+          <div style="background-color: #f8fafc; padding: 16px; border-radius: 6px; border: 1px solid #e2e8f0;">
+            ${leadTableHtml}
+          </div>
         </div>
       `,
     });

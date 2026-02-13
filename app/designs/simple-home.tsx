@@ -206,7 +206,7 @@ export default function Theme1Home() {
             {[
               {
                 title: "Smart FAQ",
-                image: "/faq.png",
+                image: "/smart-faq-placeholder.png",
                 href: "/?theme=theme2#ask-ai",
                 internal: true,
                 description: "Let visitors get instant answers about your business, hours, and services. Spend less time on repeat calls and more time on the job.",
@@ -214,7 +214,7 @@ export default function Theme1Home() {
               },
               {
                 title: "Smart Intake",
-                image: "/theme4-dog-hero.png",
+                image: "/smart-intake-placeholder.jpeg",
                 video: "/smart-intake-web.mp4",
                 href: "/intake",
                 internal: true,

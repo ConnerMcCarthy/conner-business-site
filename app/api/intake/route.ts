@@ -44,64 +44,172 @@ export type IntakeRequestBody = {
   lead?: LeadUpdates;
 };
 
+// --- Pricing tier guidance (internal) ---
+const PRICING = {
+  Starter: { base: 85, low: 85, high: 95 },
+  Growth: { base: 125, low: 125, high: 145 },
+  Pro: { base: 165, low: 165, high: 195 },
+} as const;
+
+export type PricingTier = "Starter" | "Growth" | "Pro";
+
+export type PricingEstimate = {
+  suggestedTier: PricingTier;
+  estimatedPages: number;
+  monthlyLow: number;
+  monthlyHigh: number;
+  rationale: string[];
+};
+
+const PRO_KEYWORDS = [
+  "login",
+  "account",
+  "accounts",
+  "portal",
+  "roles",
+  "dashboard",
+  "database",
+  "sql",
+  "backups",
+  "security",
+  "hipaa",
+];
+
+const GROWTH_KEYWORDS = [
+  "ai intake",
+  "smart intake",
+  "ai faq",
+  "smart faq",
+];
+
+function hasProSignals(lead: LeadUpdates): boolean {
+  const features = (lead.mustHaveFeatures ?? []).join(" ").toLowerCase();
+  const notes = (lead.notes ?? "").toLowerCase();
+  const text = `${features} ${notes}`;
+  return PRO_KEYWORDS.some((k) => text.includes(k));
+}
+
+function hasGrowthSignals(lead: LeadUpdates): boolean {
+  const features = (lead.mustHaveFeatures ?? []).join(" ").toLowerCase();
+  const notes = (lead.notes ?? "").toLowerCase();
+  const text = `${features} ${notes}`;
+  return GROWTH_KEYWORDS.some((k) => text.includes(k));
+}
+
+function estimatePages(lead: LeadUpdates): number {
+  const type = lead.websiteType;
+  const features = lead.mustHaveFeatures ?? [];
+  if (type === "1-page") return 1;
+  if (type === "multi-page") {
+    const count = features.length;
+    if (count <= 2) return 6;
+    if (count <= 5) return 8;
+    return Math.min(15, 6 + count);
+  }
+  if (type === "ecommerce" || type === "booking/appointments") return 10;
+  if (type === "LMS/training") return 20;
+  return 8;
+}
+
+function chooseTier(lead: LeadUpdates): PricingTier {
+  const type = lead.websiteType;
+  if (type === "LMS/training") return "Pro";
+  if (hasProSignals(lead)) return "Pro";
+  if (type === "1-page") return "Starter";
+  if (hasGrowthSignals(lead)) return "Growth";
+  if (type === "ecommerce" || type === "booking/appointments") return "Growth";
+  if (type === "multi-page") {
+    const pages = estimatePages(lead);
+    if (pages <= 5) return "Starter";
+    return "Growth";
+  }
+  return "Starter";
+}
+
+function estimatePricing(lead: LeadUpdates): PricingEstimate {
+  const suggestedTier = chooseTier(lead);
+  const estimatedPages = estimatePages(lead);
+  const range = PRICING[suggestedTier];
+  const rationale: string[] = [];
+
+  if (lead.websiteType === "1-page") {
+    rationale.push("1-page site with simple scope.");
+  } else if (lead.websiteType === "multi-page") {
+    rationale.push(`Multi-page site (~${estimatedPages} pages).`);
+    if (hasGrowthSignals(lead)) rationale.push("AI/Smart features (intake or FAQ) → Growth tier.");
+    if (hasProSignals(lead)) rationale.push("Account/login/database-type needs → Pro tier.");
+  } else if (lead.websiteType === "ecommerce" || lead.websiteType === "booking/appointments") {
+    rationale.push(`${lead.websiteType} typically needs more than 5 pages and optional AI features.`);
+  } else if (lead.websiteType === "LMS/training") {
+    rationale.push("LMS/training implies platform features, accounts, and higher complexity.");
+  }
+
+  if (suggestedTier === "Starter" && !lead.websiteType) {
+    rationale.push("Insufficient info; defaulting to Starter range. Scope may change after more details.");
+  }
+
+  return {
+    suggestedTier,
+    estimatedPages,
+    monthlyLow: range.low,
+    monthlyHigh: range.high,
+    rationale: rationale.length > 0 ? rationale : [`Based on ${suggestedTier} tier (${estimatedPages} pages).`],
+  };
+}
+
+// Example lead inputs → tier (for verification):
+// 1) { websiteType: "1-page", mustHaveFeatures: ["contact form"] } => Starter ($85–$95)
+// 2) { websiteType: "multi-page", mustHaveFeatures: ["smart intake", "smart faq"] } => Growth ($125–$145)
+// 3) { websiteType: "LMS/training" } or { mustHaveFeatures: ["login", "dashboard", "SQL", "backups"] } => Pro ($165–$195)
+
 export type IntakeResponseBody = {
   assistant_message: string;
   lead_updates: LeadUpdates;
   missing_fields: string[];
   done: boolean;
   lead_summary: string;
+  /** Optional; present when pricing estimator runs (always computed from merged lead). */
+  pricing_estimate?: PricingEstimate;
 };
 
-const SYSTEM_PROMPT = `You are an intake assistant for a web development business. Your job is to qualify leads and collect clear project requirements for NEW WEBSITE / WEB PLATFORM projects.
-
-Business context:
-- Service: ${BUSINESS_TYPE}. ${SERVICE_AREA}.
-- We build modern websites and web platforms for small businesses: secure sites, landing pages, booking/contact flows, LMS/Moodle, and optional AI features like FAQ assistants.
-
-Rules:
-1. Ask ONE question at a time. Keep questions short and non-technical unless the user is clearly technical.
-2. Do NOT quote exact prices or guarantee timelines. You may ask for budget range as an optional, polite question.
-3. If the user asks "how much?" or "what will it cost?", respond with a brief disclaimer (e.g. "Projects vary—I’d rather scope it first so we can give you a useful range.") and ask the next key scoping question instead.
-4. Be professional and friendly.
-
-Required fields (all must be present before you ask the wrap-up question):
-- Contact: at least one of phone OR email.
-- businessName: name of their business.
-- websiteGoal: what they want the website to achieve (free text).
-- websiteType: exactly one of "1-page", "multi-page", "ecommerce", "booking/appointments", "LMS/training", "other".
-- mustHaveFeatures: array of strings, at least one item (e.g. contact form, booking, blog).
-- currentStatus: exactly one of "no site", "has site needs redesign", "moving from builder", "urgent fix".
-- timelineUrgency: exactly one of "asap", "2-4 weeks", "1-2 months", "flexible".
-
-Optional (nice-to-have): domainStatus, hostingStatus, budgetRange, brandingAssets, contentReadiness, cityState, exampleSites, preferredContact, bestTimeToReach, notes.
-
-Completion flow (IMPORTANT):
-- First, collect all required fields above. Populate missing_fields with the list of required field names still missing. Do NOT set done=true yet.
-- Once every required field is present, you MUST ask: "Do you have any other questions?" (or very close, e.g. "Do you have any other questions for me?").
-- If the user then asks another question, answer it briefly and helpfully, then ask again: "Do you have any other questions?" Keep done=false.
-- Only when the user clearly indicates they have no more questions (e.g. "no", "nope", "that's all", "I'm good", "nothing else", "no that's it") do you set done=true and fill lead_summary with a concise 2-4 sentence summary for the developer. Say a short closing (e.g. "Great, I'll pass this along and we'll be in touch.").
-
-You will receive the current conversation and the current lead object. Extract any new info from the latest user message and merge into lead_updates.
-
-Output ONLY valid JSON, no markdown or extra text, with this exact structure:
-{
-  "assistant_message": "Your next question or closing message to the user.",
-  "lead_updates": { ... only include keys you are updating or inferring this turn ... },
-  "missing_fields": ["field1", "field2"],
-  "done": false,
-  "lead_summary": "When done=true, a 2-4 sentence summary. Otherwise empty string."
-}
-
-Allowed lead_updates keys: businessName, contactName, phone, email, cityState, websiteGoal, websiteType, mustHaveFeatures, niceToHaveFeatures, currentStatus, timelineUrgency, domainStatus, hostingStatus, budgetRange, brandingAssets, contentReadiness, exampleSites, preferredContact, bestTimeToReach, notes.`;
+const SYSTEM_PROMPT =
+  "You are an intake assistant for a web development business. Your job is to qualify leads and collect clear project requirements for NEW WEBSITE / WEB PLATFORM projects.\n\n" +
+  "Business context:\n" +
+  "- Service: " + BUSINESS_TYPE + ". " + SERVICE_AREA + ".\n" +
+  "\n- We build modern websites and web platforms for small businesses: secure sites, landing pages, booking/contact flows, LMS/Moodle, and optional AI features like FAQ assistants.\n\n" +
+  "Rules:\n" +
+  "1. Ask ONE question at a time. Keep questions short and non-technical unless the user is clearly technical.\n" +
+  "2. Do NOT quote exact prices or guarantee timelines.\n" +
+  "3. Pricing: When the user asks about cost, use the Pricing guidance (internal) block to give a rough monthly range with a short disclaimer only when we have websiteType, mustHaveFeatures, currentStatus, and timelineUrgency; otherwise say projects vary and ask the next scoping question.\n" +
+  "4. Be professional and friendly.\n\n" +
+  "Required fields (all must be present before you ask the wrap-up question):\n" +
+  "- Contact: at least one of phone OR email.\n" +
+  "- businessName: name of their business.\n" +
+  "- websiteGoal: what they want the website to achieve (free text).\n" +
+  "- websiteType: exactly one of \"1-page\", \"multi-page\", \"ecommerce\", \"booking/appointments\", \"LMS/training\", \"other\".\n" +
+  "- mustHaveFeatures: array of strings, at least one item (e.g. contact form, booking, blog).\n" +
+  "- currentStatus: exactly one of \"no site\", \"has site needs redesign\", \"moving from builder\", \"urgent fix\".\n" +
+  "- timelineUrgency: exactly one of \"asap\", \"2-4 weeks\", \"1-2 months\", \"flexible\".\n\n" +
+  "Optional (nice-to-have): domainStatus, hostingStatus, budgetRange, brandingAssets, contentReadiness, cityState, exampleSites, preferredContact, bestTimeToReach, notes.\n\n" +
+  "Completion flow (IMPORTANT):\n" +
+  "- First, collect all required fields above. Populate missing_fields with the list of required field names still missing. Do NOT set done=true yet.\n" +
+  "- Once every required field is present, you MUST ask: \"Do you have any other questions?\"\n" +
+  "- If the user then asks another question, answer it briefly and helpfully, then ask again: \"Do you have any other questions?\" Keep done=false.\n" +
+  "- Only when the user clearly indicates they have no more questions (e.g. \"no\", \"nope\", \"that's all\") do you set done=true and fill lead_summary with a concise 2-4 sentence summary. Say a short closing.\n\n" +
+  "You will receive the current conversation and the current lead object. Extract any new info from the latest user message and merge into lead_updates.\n\n" +
+  "Output ONLY valid JSON, no markdown or extra text, with this exact structure (lead_updates: only keys you are updating this turn; lead_summary: 2-4 sentence summary when done, else empty string):\n" +
+  "{ \"assistant_message\": \"...\", \"lead_updates\": { }, \"missing_fields\": [], \"done\": false, \"lead_summary\": \"\" }\n\n" +
+  "Allowed lead_updates keys: businessName, contactName, phone, email, cityState, websiteGoal, websiteType, mustHaveFeatures, niceToHaveFeatures, currentStatus, timelineUrgency, domainStatus, hostingStatus, budgetRange, brandingAssets, contentReadiness, exampleSites, preferredContact, bestTimeToReach, notes.";
 
 function buildMessages(
-  body: IntakeRequestBody
+  body: IntakeRequestBody,
+  pricingContext: string
 ): { role: "system" | "user" | "assistant"; content: string }[] {
   const leadContext =
     Object.keys(body.lead ?? {}).length > 0
       ? `\n\nCurrent lead data we have so far:\n${JSON.stringify(body.lead)}`
       : "";
-  const systemWithContext = SYSTEM_PROMPT + leadContext;
+  const systemWithContext = SYSTEM_PROMPT + leadContext + pricingContext;
   const conversation = (body.messages ?? []).map((m) => ({
     role: m.role as "user" | "assistant",
     content: m.content,
@@ -110,6 +218,19 @@ function buildMessages(
     { role: "system", content: systemWithContext },
     ...conversation,
   ];
+}
+
+function buildPricingContext(lead: LeadUpdates | undefined): string {
+  if (!lead || Object.keys(lead).length === 0) return "";
+  const est = estimatePricing(lead);
+  return [
+    "",
+    "Pricing guidance (internal) — use only when user asks about cost and we have websiteType, mustHaveFeatures, currentStatus, timelineUrgency:",
+    "- Suggested tier: " + est.suggestedTier,
+    "- Estimated pages: " + est.estimatedPages,
+    "- Rough monthly range: $" + est.monthlyLow + "–$" + est.monthlyHigh + "/mo (not a quote)",
+    "- Rationale: " + est.rationale.join(" "),
+  ].join("\n");
 }
 
 export async function POST(request: Request) {
@@ -134,7 +255,8 @@ export async function POST(request: Request) {
       );
     }
 
-    const apiMessages = buildMessages(body);
+    const pricingContext = buildPricingContext(body.lead);
+    const apiMessages = buildMessages(body, pricingContext);
 
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -195,7 +317,19 @@ export async function POST(request: Request) {
       parsed.lead_updates = {};
     }
 
-    return NextResponse.json(parsed);
+    const mergedLead: LeadUpdates = { ...body.lead, ...parsed.lead_updates };
+    const pricingEstimate = estimatePricing(mergedLead);
+
+    return NextResponse.json({
+      ...parsed,
+      pricing_estimate: {
+        suggestedTier: pricingEstimate.suggestedTier,
+        estimatedPages: pricingEstimate.estimatedPages,
+        monthlyLow: pricingEstimate.monthlyLow,
+        monthlyHigh: pricingEstimate.monthlyHigh,
+        rationale: pricingEstimate.rationale,
+      },
+    });
   } catch (e) {
     console.error("Intake API error:", e);
     return NextResponse.json(
@@ -204,3 +338,4 @@ export async function POST(request: Request) {
     );
   }
 }
+
