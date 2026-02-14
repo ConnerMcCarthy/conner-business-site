@@ -181,7 +181,8 @@ const SYSTEM_PROMPT =
   "1. Ask ONE question at a time. Keep questions short and non-technical unless the user is clearly technical.\n" +
   "2. Do NOT quote exact prices or guarantee timelines.\n" +
   "3. Pricing: When the user asks about cost, use the Pricing guidance (internal) block to give a rough monthly range with a short disclaimer only when we have websiteType, mustHaveFeatures, currentStatus, and timelineUrgency; otherwise say projects vary and ask the next scoping question.\n" +
-  "4. Be professional and friendly.\n\n" +
+  "4. Flat-fee buyout: A one-time flat fee to own the website (instead of full monthly) is available; a small monthly fee still applies for hosting/support. If the user asks about buying out, one-time purchase, or owning the site outright, say it is possible and the flat-fee range starts at $1,500+; invite them to ask for details or a quote.\n" +
+  "5. Be professional and friendly.\n\n" +
   "Required fields (all must be present before you ask the wrap-up question):\n" +
   "- Contact: at least one of phone OR email.\n" +
   "- businessName: name of their business.\n" +
@@ -230,6 +231,7 @@ function buildPricingContext(lead: LeadUpdates | undefined): string {
     "- Estimated pages: " + est.estimatedPages,
     "- Rough monthly range: $" + est.monthlyLow + "–$" + est.monthlyHigh + "/mo (not a quote)",
     "- Rationale: " + est.rationale.join(" "),
+    "- Flat-fee buyout: Available (one-time purchase instead of full monthly); small monthly fee still applies. Range $1,500+. If user asks about buyout or one-time purchase, mention this and invite them to ask for details.",
   ].join("\n");
 }
 
