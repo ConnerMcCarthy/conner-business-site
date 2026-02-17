@@ -46,12 +46,13 @@ export type IntakeRequestBody = {
 
 // --- Pricing tier guidance (internal) ---
 const PRICING = {
+  Basic: { base: 50, low: 35, high: 65 },
   Starter: { base: 80, low: 65, high: 95 },
   Growth: { base: 115, low: 95, high: 135 },
   Pro: { base: 165, low: 135, high: 195 },
 } as const;
 
-export type PricingTier = "Starter" | "Growth" | "Pro";
+export type PricingTier = "Basic" | "Starter" | "Growth" | "Pro";
 
 export type PricingEstimate = {
   suggestedTier: PricingTier;
@@ -113,9 +114,13 @@ function estimatePages(lead: LeadUpdates): number {
 
 function chooseTier(lead: LeadUpdates): PricingTier {
   const type = lead.websiteType;
+  const featureCount = (lead.mustHaveFeatures ?? []).length;
   if (type === "LMS/training") return "Pro";
   if (hasProSignals(lead)) return "Pro";
-  if (type === "1-page") return "Starter";
+  if (type === "1-page") {
+    if (featureCount <= 1 && !hasGrowthSignals(lead)) return "Basic";
+    return "Starter";
+  }
   if (hasGrowthSignals(lead)) return "Growth";
   if (type === "ecommerce" || type === "booking/appointments") return "Growth";
   if (type === "multi-page") {
@@ -133,7 +138,7 @@ function estimatePricing(lead: LeadUpdates): PricingEstimate {
   const rationale: string[] = [];
 
   if (lead.websiteType === "1-page") {
-    rationale.push("1-page site with simple scope.");
+    rationale.push(suggestedTier === "Basic" ? "Single-page, low-feature site." : "1-page site with simple scope.");
   } else if (lead.websiteType === "multi-page") {
     rationale.push(`Multi-page site (~${estimatedPages} pages).`);
     if (hasGrowthSignals(lead)) rationale.push("AI/Smart features (intake or FAQ) → Growth tier.");
@@ -158,9 +163,10 @@ function estimatePricing(lead: LeadUpdates): PricingEstimate {
 }
 
 // Example lead inputs → tier (for verification):
-// 1) { websiteType: "1-page", mustHaveFeatures: ["contact form"] } => Starter ($65–$95)
-// 2) { websiteType: "multi-page", mustHaveFeatures: ["smart intake", "smart faq"] } => Growth ($95–$135)
-// 3) { websiteType: "LMS/training" } or { mustHaveFeatures: ["login", "dashboard", "SQL", "backups"] } => Pro ($135–$195)
+// 1) { websiteType: "1-page", mustHaveFeatures: [] } or 1-page + 1 simple feature => Basic ($35–$65)
+// 2) { websiteType: "1-page", mustHaveFeatures: ["contact form", "blog"] } => Starter ($65–$95)
+// 3) { websiteType: "multi-page", mustHaveFeatures: ["smart intake", "smart faq"] } => Growth ($95–$135)
+// 4) { websiteType: "LMS/training" } or { mustHaveFeatures: ["login", "dashboard", "SQL", "backups"] } => Pro ($135–$195)
 
 export type IntakeResponseBody = {
   assistant_message: string;
