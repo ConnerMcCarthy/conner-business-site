@@ -128,7 +128,7 @@ export default function IntakePage() {
             Smart Intake
           </h1>
           <p className="mt-1 text-sm text-slate-600">
-            Answer a few questions so we can scope your website project.
+            Answer a few questions so we can build your website project.
           </p>
         </header>
 
@@ -203,7 +203,7 @@ export default function IntakePage() {
           <div className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             {emailStatus === "sent" && (
               <p className="rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
-                Lead summary and data have been emailed to the site owner.
+                Your request has been emailed.
               </p>
             )}
             {emailStatus === "error" && emailError && (
@@ -215,7 +215,7 @@ export default function IntakePage() {
               <p className="text-sm text-slate-500">Sending lead to site owner…</p>
             )}
             <h2 className="text-lg font-semibold text-slate-800">
-              Lead summary
+              Summary of your request
             </h2>
             {leadSummary ? (
               <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
@@ -223,13 +223,9 @@ export default function IntakePage() {
               </p>
             ) : (
               <p className="text-sm text-slate-500">
-                No summary generated. See lead data below.
+                No summary generated.
               </p>
             )}
-            <h2 className="text-lg font-semibold text-slate-800">Lead data</h2>
-            <pre className="max-h-64 overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
-              {JSON.stringify(lead, null, 2)}
-            </pre>
           </div>
         )}
       </div>

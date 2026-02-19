@@ -11,13 +11,7 @@ export type LeadUpdates = {
   email?: string;
   cityState?: string;
   websiteGoal?: string;
-  websiteType?:
-    | "1-page"
-    | "multi-page"
-    | "ecommerce"
-    | "booking/appointments"
-    | "LMS/training"
-    | "other";
+  websiteDescription?: string; // Open-ended description of what the website is like
   mustHaveFeatures?: string[];
   niceToHaveFeatures?: string[];
   currentStatus?:
@@ -98,37 +92,64 @@ function hasGrowthSignals(lead: LeadUpdates): boolean {
 }
 
 function estimatePages(lead: LeadUpdates): number {
-  const type = lead.websiteType;
+  const description = (lead.websiteDescription ?? "").toLowerCase();
   const features = lead.mustHaveFeatures ?? [];
-  if (type === "1-page") return 1;
-  if (type === "multi-page") {
-    const count = features.length;
-    if (count <= 2) return 6;
-    if (count <= 5) return 8;
-    return Math.min(15, 6 + count);
+  const featureCount = features.length;
+  
+  // Check for single-page indicators
+  if (description.includes("single page") || description.includes("one page") || description.includes("landing page")) {
+    return 1;
   }
-  if (type === "ecommerce" || type === "booking/appointments") return 10;
-  if (type === "LMS/training") return 20;
-  return 8;
+  
+  // Check for complex platform indicators
+  if (description.includes("lms") || description.includes("training") || description.includes("learning management")) {
+    return 20;
+  }
+  if (description.includes("ecommerce") || description.includes("e-commerce") || description.includes("online store") || description.includes("shop")) {
+    return 10;
+  }
+  if (description.includes("booking") || description.includes("appointment") || description.includes("scheduling")) {
+    return 10;
+  }
+  
+  // Multi-page or general website
+  if (featureCount <= 2) return 6;
+  if (featureCount <= 5) return 8;
+  return Math.min(15, 6 + featureCount);
 }
 
 function chooseTier(lead: LeadUpdates): PricingTier {
-  const type = lead.websiteType;
+  const description = (lead.websiteDescription ?? "").toLowerCase();
   const featureCount = (lead.mustHaveFeatures ?? []).length;
-  if (type === "LMS/training") return "Pro";
+  
+  // Check for complex platform indicators
+  if (description.includes("lms") || description.includes("training") || description.includes("learning management")) {
+    return "Pro";
+  }
   if (hasProSignals(lead)) return "Pro";
-  if (type === "1-page") {
+  
+  // Check for single-page indicators
+  if (description.includes("single page") || description.includes("one page") || description.includes("landing page")) {
     if (featureCount <= 1 && !hasGrowthSignals(lead)) return "Basic";
     return "Starter";
   }
+  
   if (hasGrowthSignals(lead)) return "Growth";
-  if (type === "ecommerce" || type === "booking/appointments") return "Growth";
-  if (type === "multi-page") {
-    const pages = estimatePages(lead);
-    if (pages <= 5) return "Starter";
+  if (description.includes("ecommerce") || description.includes("e-commerce") || description.includes("online store") || description.includes("shop")) {
     return "Growth";
   }
-  return "Starter";
+  if (description.includes("booking") || description.includes("appointment") || description.includes("scheduling")) {
+    return "Growth";
+  }
+  
+  // Multi-page or general website
+  const pages = estimatePages(lead);
+  if (pages === 1) {
+    if (featureCount <= 1 && !hasGrowthSignals(lead)) return "Basic";
+    return "Starter";
+  }
+  if (pages <= 5) return "Starter";
+  return "Growth";
 }
 
 function estimatePricing(lead: LeadUpdates): PricingEstimate {
@@ -136,20 +157,23 @@ function estimatePricing(lead: LeadUpdates): PricingEstimate {
   const estimatedPages = estimatePages(lead);
   const range = PRICING[suggestedTier];
   const rationale: string[] = [];
+  const description = (lead.websiteDescription ?? "").toLowerCase();
 
-  if (lead.websiteType === "1-page") {
+  if (estimatedPages === 1) {
     rationale.push(suggestedTier === "Basic" ? "Single-page, low-feature site." : "1-page site with simple scope.");
-  } else if (lead.websiteType === "multi-page") {
+  } else if (description.includes("lms") || description.includes("training") || description.includes("learning management")) {
+    rationale.push("LMS/training platform implies complex features, accounts, and higher complexity.");
+  } else if (description.includes("ecommerce") || description.includes("e-commerce") || description.includes("online store") || description.includes("shop")) {
+    rationale.push("E-commerce site typically needs more than 5 pages and optional AI features.");
+  } else if (description.includes("booking") || description.includes("appointment") || description.includes("scheduling")) {
+    rationale.push("Booking/appointment site typically needs more than 5 pages and optional AI features.");
+  } else if (estimatedPages > 1) {
     rationale.push(`Multi-page site (~${estimatedPages} pages).`);
     if (hasGrowthSignals(lead)) rationale.push("AI/Smart features (intake or FAQ) → Growth tier.");
     if (hasProSignals(lead)) rationale.push("Account/login/database-type needs → Pro tier.");
-  } else if (lead.websiteType === "ecommerce" || lead.websiteType === "booking/appointments") {
-    rationale.push(`${lead.websiteType} typically needs more than 5 pages and optional AI features.`);
-  } else if (lead.websiteType === "LMS/training") {
-    rationale.push("LMS/training implies platform features, accounts, and higher complexity.");
   }
 
-  if (suggestedTier === "Starter" && !lead.websiteType) {
+  if (suggestedTier === "Starter" && !lead.websiteDescription) {
     rationale.push("Insufficient info; defaulting to Starter range. Scope may change after more details.");
   }
 
@@ -163,10 +187,10 @@ function estimatePricing(lead: LeadUpdates): PricingEstimate {
 }
 
 // Example lead inputs → tier (for verification):
-// 1) { websiteType: "1-page", mustHaveFeatures: [] } or 1-page + 1 simple feature => Basic ($35–$65)
-// 2) { websiteType: "1-page", mustHaveFeatures: ["contact form", "blog"] } => Starter ($65–$95)
-// 3) { websiteType: "multi-page", mustHaveFeatures: ["smart intake", "smart faq"] } => Growth ($95–$135)
-// 4) { websiteType: "LMS/training" } or { mustHaveFeatures: ["login", "dashboard", "SQL", "backups"] } => Pro ($135–$195)
+// 1) { websiteDescription: "single page site", mustHaveFeatures: [] } or single-page + 1 simple feature => Basic ($35–$65)
+// 2) { websiteDescription: "one page website", mustHaveFeatures: ["contact form", "blog"] } => Starter ($65–$95)
+// 3) { websiteDescription: "multi-page business website", mustHaveFeatures: ["smart intake", "smart faq"] } => Growth ($95–$135)
+// 4) { websiteDescription: "LMS platform" } or { mustHaveFeatures: ["login", "dashboard", "SQL", "backups"] } => Pro ($135–$195)
 
 export type IntakeResponseBody = {
   assistant_message: string;
@@ -186,14 +210,14 @@ const SYSTEM_PROMPT =
   "Rules:\n" +
   "1. Ask ONE question at a time. Keep questions short and non-technical unless the user is clearly technical.\n" +
   "2. Do NOT quote exact prices or guarantee timelines.\n" +
-  "3. Pricing: When the user asks about cost, use the Pricing guidance (internal) block to give a rough monthly range with a short disclaimer only when we have websiteType, mustHaveFeatures, currentStatus, and timelineUrgency; otherwise say projects vary and ask the next scoping question.\n" +
+  "3. Pricing: When the user asks about cost, use the Pricing guidance (internal) block to give a rough monthly range with a short disclaimer only when we have websiteDescription, mustHaveFeatures, currentStatus, and timelineUrgency; otherwise say projects vary and ask the next scoping question.\n" +
   "4. Flat-fee buyout: A one-time flat fee to own the website (instead of full monthly) is available; a small monthly fee still applies for hosting/support. If the user asks about buying out, one-time purchase, or owning the site outright, say it is possible and the flat-fee range starts at $1,500+; invite them to ask for details or a quote.\n" +
   "5. Be professional and friendly.\n\n" +
   "Required fields (all must be present before you ask the wrap-up question):\n" +
   "- Contact: at least one of phone OR email.\n" +
   "- businessName: name of their business.\n" +
   "- websiteGoal: what they want the website to achieve (free text).\n" +
-  "- websiteType: exactly one of \"1-page\", \"multi-page\", \"ecommerce\", \"booking/appointments\", \"LMS/training\", \"other\".\n" +
+  "- websiteDescription: an open-ended description of what the website is like. Ask something like: \"What kind of website are you looking for? For example, it could be a simple single-page site, a multi-page business website, an e-commerce store, a booking/appointment system, an LMS/training platform, or something else entirely. Describe what you have in mind.\" Do NOT require a specific category - accept their description as-is.\n" +
   "- mustHaveFeatures: array of strings, at least one item (e.g. contact form, booking, blog).\n" +
   "- currentStatus: exactly one of \"no site\", \"has site needs redesign\", \"moving from builder\", \"urgent fix\".\n" +
   "- timelineUrgency: exactly one of \"asap\", \"2-4 weeks\", \"1-2 months\", \"flexible\".\n\n" +
@@ -206,7 +230,7 @@ const SYSTEM_PROMPT =
   "You will receive the current conversation and the current lead object. Extract any new info from the latest user message and merge into lead_updates.\n\n" +
   "Output ONLY valid JSON, no markdown or extra text, with this exact structure (lead_updates: only keys you are updating this turn; lead_summary: 2-4 sentence summary when done, else empty string):\n" +
   "{ \"assistant_message\": \"...\", \"lead_updates\": { }, \"missing_fields\": [], \"done\": false, \"lead_summary\": \"\" }\n\n" +
-  "Allowed lead_updates keys: businessName, contactName, phone, email, cityState, websiteGoal, websiteType, mustHaveFeatures, niceToHaveFeatures, currentStatus, timelineUrgency, domainStatus, hostingStatus, budgetRange, brandingAssets, contentReadiness, exampleSites, preferredContact, bestTimeToReach, notes.";
+  "Allowed lead_updates keys: businessName, contactName, phone, email, cityState, websiteGoal, websiteDescription, mustHaveFeatures, niceToHaveFeatures, currentStatus, timelineUrgency, domainStatus, hostingStatus, budgetRange, brandingAssets, contentReadiness, exampleSites, preferredContact, bestTimeToReach, notes.";
 
 function buildMessages(
   body: IntakeRequestBody,
@@ -232,7 +256,7 @@ function buildPricingContext(lead: LeadUpdates | undefined): string {
   const est = estimatePricing(lead);
   return [
     "",
-    "Pricing guidance (internal) — use only when user asks about cost and we have websiteType, mustHaveFeatures, currentStatus, timelineUrgency:",
+    "Pricing guidance (internal) — use only when user asks about cost and we have websiteDescription, mustHaveFeatures, currentStatus, timelineUrgency:",
     "- Suggested tier: " + est.suggestedTier,
     "- Estimated pages: " + est.estimatedPages,
     "- Rough monthly range: $" + est.monthlyLow + "–$" + est.monthlyHigh + "/mo (not a quote)",

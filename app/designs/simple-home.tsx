@@ -218,7 +218,7 @@ export default function Theme1Home() {
                 video: "/smart-intake-web.mp4",
                 href: "/intake",
                 internal: true,
-                description: "Qualify leads and define projects in minutes. Visitors answer a few questions one at a time. You get a clear lead summary and requirements. No long email chains.",
+                description: "Qualify leads and define projects in minutes. Visitors answer a few questions one at a time. You get a clear summary and requirements. No long email chains.",
                 icon: "intake",
               },
               {
