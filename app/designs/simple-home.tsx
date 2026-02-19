@@ -223,8 +223,8 @@ export default function Theme1Home() {
               },
               {
                 title: "Optimized Videos",
-                image: "/theme5-hero-bg.png",
-                video: "/theme1-video-demo-small-web.mp4",
+                image: "/theme1-video-demo-poster.jpg",
+                video: "/theme1-video-demo-web.mp4",
                 href: "/?theme=theme5#work",
                 internal: false,
                 description: "Videos that load only when in view, use compressed formats, and start playing quickly. Keeps your site fast and keeps visitors engaged without slowing the page.",
