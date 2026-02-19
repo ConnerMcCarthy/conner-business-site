@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     siteName: "Conner McCarthy",
     images: [
       {
-        url: "https://connermccarthy.com/og.png",
+        url: "https://connermccarthy.com/og-v2.png",
         width: 1200,
         height: 630,
       },
