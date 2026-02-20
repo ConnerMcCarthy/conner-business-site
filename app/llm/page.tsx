@@ -40,6 +40,9 @@ export default function LLMPage() {
   const [recording, setRecording] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [selectedModels, setSelectedModels] = useState<Set<string>>(DEFAULT_SELECTED);
+  const [useGrokSummary, setUseGrokSummary] = useState(true);
+  const [useSynthesisSummary, setUseSynthesisSummary] = useState(true);
+  const [doublePrompt, setDoublePrompt] = useState(false);
   const [conversationMessages, setConversationMessages] = useState<ChatMessage[] | null>(null);
   const [conversationModelId, setConversationModelId] = useState<string | null>(null);
   const [conversationProviderLabel, setConversationProviderLabel] = useState<string>("");
@@ -186,8 +189,10 @@ export default function LLMPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: text,
+          prompt: doublePrompt ? `${text}\n\n${text}` : text,
           models: Array.from(selectedModels),
+          useGrokSummary,
+          useSynthesis: useSynthesisSummary,
         }),
       });
 
@@ -334,6 +339,50 @@ export default function LLMPage() {
                 <p className="mt-2 text-xs text-slate-500">Select more than one model to see synthesis.</p>
               )}
             </div>
+            {selectedModels.size >= 1 && (
+              <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-4">
+                {selectedModels.size > 1 && (
+                  <>
+                    <span className="text-sm font-medium text-slate-700">Summaries</span>
+                    <p className="mt-1 text-xs text-slate-500 mb-3">Choose which summaries to generate (when 2+ models selected).</p>
+                    <div className="flex flex-wrap gap-x-6 gap-y-2 mb-3">
+                      <label className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg py-2.5 sm:min-h-0 sm:py-0">
+                        <input
+                          type="checkbox"
+                          checked={useGrokSummary}
+                          onChange={(e) => setUseGrokSummary(e.target.checked)}
+                          disabled={loading}
+                          className="h-4 w-4 shrink-0 rounded border-slate-300 text-slate-900 focus:ring-2 focus:ring-sky-500 focus:ring-offset-0"
+                        />
+                        <span className="text-sm text-slate-700 select-none">Grok 4-1 Reasoning Summary</span>
+                      </label>
+                      <label className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg py-2.5 sm:min-h-0 sm:py-0">
+                        <input
+                          type="checkbox"
+                          checked={useSynthesisSummary}
+                          onChange={(e) => setUseSynthesisSummary(e.target.checked)}
+                          disabled={loading}
+                          className="h-4 w-4 shrink-0 rounded border-slate-300 text-slate-900 focus:ring-2 focus:ring-sky-500 focus:ring-offset-0"
+                        />
+                        <span className="text-sm text-slate-700 select-none">Synthesis (5.2)</span>
+                      </label>
+                    </div>
+                  </>
+                )}
+                <div className="flex flex-wrap gap-x-6 gap-y-2">
+                  <label className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg py-2.5 sm:min-h-0 sm:py-0">
+                    <input
+                      type="checkbox"
+                      checked={doublePrompt}
+                      onChange={(e) => setDoublePrompt(e.target.checked)}
+                      disabled={loading}
+                      className="h-4 w-4 shrink-0 rounded border-slate-300 text-slate-900 focus:ring-2 focus:ring-sky-500 focus:ring-offset-0"
+                    />
+                    <span className="text-sm text-slate-700 select-none">Double prompt</span>
+                  </label>
+                </div>
+              </div>
+            )}
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}

@@ -17,6 +17,10 @@ type LLMRequestBody = {
   messages?: ChatMessage[];
   /** When replying in a conversation, send the existing session id so we update it instead of creating a new entry. */
   sessionId?: string;
+  /** Include Grok 4-1 reasoning summary when 2+ models. Default true. */
+  useGrokSummary?: boolean;
+  /** Include OpenAI 5.2 synthesis when 2+ models. Default true. */
+  useSynthesis?: boolean;
 };
 
 type LLMResult = {
@@ -498,7 +502,7 @@ function buildPromises(
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as LLMRequestBody;
-    const { prompt, models: requestedModels, messages: bodyMessages, sessionId: bodySessionId } = body;
+    const { prompt, models: requestedModels, messages: bodyMessages, sessionId: bodySessionId, useGrokSummary = true, useSynthesis = true } = body;
 
     const messages: ChatMessage[] =
       bodyMessages && bodyMessages.length > 0
@@ -538,21 +542,29 @@ export async function POST(request: Request) {
     let summary: string = "";
     let grokSummary: string = "";
     if (responses.length > 1) {
-      const [openaiSummary, grokResult] = await Promise.all([
-        generateSummary(responses).catch((error) =>
-          "Failed to generate summary. " +
-          (error instanceof Error ? error.message : "Unknown error")
-        ),
-        generateGrokSummary(responses).catch(() => ""),
-      ]);
-      summary = openaiSummary;
-      grokSummary = grokResult;
+      const promises: Promise<string>[] = [];
+      if (useSynthesis) {
+        promises.push(
+          generateSummary(responses).catch((error) =>
+            "Failed to generate summary. " +
+            (error instanceof Error ? error.message : "Unknown error")
+          )
+        );
+      }
+      if (useGrokSummary) {
+        promises.push(generateGrokSummary(responses).catch(() => ""));
+      }
+      const results = await Promise.all(promises);
+      let i = 0;
+      if (useSynthesis) summary = results[i++] ?? "";
+      if (useGrokSummary) grokSummary = results[i++] ?? "";
     }
 
     let title = "";
     if (!isReplyToExistingSession) {
       try {
-        title = summary.trim() ? await generateTitle(summary) : "";
+        const titleSource = summary.trim() || grokSummary.trim();
+        title = titleSource ? await generateTitle(titleSource) : "";
       } catch {
         // keep title ""
       }
@@ -563,10 +575,15 @@ export async function POST(request: Request) {
     if (supabase) {
       try {
         if (isReplyToExistingSession) {
+          const r = responses[0];
+          const messagesWithLatest: ChatMessage[] = [
+            ...messages,
+            { role: "assistant", content: r.error ? `[Error: ${r.error}]` : r.response },
+          ];
           const { error: updateError } = await supabase
             .from("llm_sessions")
             .update({
-              messages: messages as unknown as Record<string, unknown>[],
+              messages: messagesWithLatest as unknown as Record<string, unknown>[],
               conversation_model_id: modelIds[0],
             })
             .eq("id", bodySessionId);
@@ -581,7 +598,6 @@ export async function POST(request: Request) {
               .order("sort_order", { ascending: false })
               .limit(1);
             const nextSortOrder = existingRows?.[0]?.sort_order != null ? existingRows[0].sort_order + 1 : 0;
-            const r = responses[0];
             await supabase.from("llm_responses").insert({
               session_id: bodySessionId,
               provider: r.provider,
