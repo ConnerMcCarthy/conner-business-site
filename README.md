@@ -1,4 +1,4 @@
-# Conner McCarthy — Business & Tools
+# Conner McCarthy Websites | ConnerMccarthy.com
 
 A Next.js site that combines a **themed business/portfolio homepage**, a **website scoping intake flow**, and a **Multi-LLM Aggregator** for comparing and synthesizing AI model responses.
 
