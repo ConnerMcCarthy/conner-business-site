@@ -21,6 +21,22 @@ type LLMResult = {
   responses: LLMResponse[];
 };
 
+/** Normalize API content to string (handles OpenAI array format and other shapes). */
+function normalizeContent(content: unknown): string {
+  if (typeof content === "string") return content;
+  if (Array.isArray(content)) {
+    return content
+      .map((part) =>
+        part && typeof part === "object" && "text" in part
+          ? (part as { text?: string }).text
+          : String(part)
+      )
+      .filter(Boolean)
+      .join("");
+  }
+  return String(content ?? "");
+}
+
 async function callOpenAI(messages: ChatMessage[]): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
@@ -46,24 +62,17 @@ async function callOpenAI(messages: ChatMessage[]): Promise<string> {
   }
 
   const data = await res.json();
-  
-  // Handle different response structures for different models
   const content = data.choices?.[0]?.message?.content;
-  if (content) {
-    return content;
+  if (content !== undefined && content !== null) {
+    return normalizeContent(content);
   }
-  
-  // Log the actual response structure for debugging
-  console.error("OpenAI response structure:", JSON.stringify(data, null, 2));
-  
-  // Try alternative paths
   if (data.choices?.[0]?.message?.text) {
-    return data.choices[0].message.text;
+    return normalizeContent(data.choices[0].message.text);
   }
   if (data.choices?.[0]?.text) {
-    return data.choices[0].text;
+    return normalizeContent(data.choices[0].text);
   }
-  
+  console.error("OpenAI response structure:", JSON.stringify(data, null, 2));
   throw new Error(`Unexpected OpenAI response structure: ${JSON.stringify(data)}`);
 }
 
@@ -93,7 +102,7 @@ async function callOpenAI41(messages: ChatMessage[]): Promise<string> {
 
   const data = await res.json();
   const content = data.choices?.[0]?.message?.content;
-  return content ?? "";
+  return normalizeContent(content ?? "");
 }
 
 async function callClaude(messages: ChatMessage[]): Promise<string> {
@@ -122,7 +131,8 @@ async function callClaude(messages: ChatMessage[]): Promise<string> {
   }
 
   const data = await res.json();
-  return data.content?.[0]?.text || "No response";
+  const text = data.content?.[0]?.text;
+  return normalizeContent(text ?? "");
 }
 
 async function callClaudeSonnet(messages: ChatMessage[]): Promise<string> {
@@ -151,7 +161,8 @@ async function callClaudeSonnet(messages: ChatMessage[]): Promise<string> {
   }
 
   const data = await res.json();
-  return data.content?.[0]?.text || "No response";
+  const text = data.content?.[0]?.text;
+  return normalizeContent(text ?? "");
 }
 
 async function callGrok(messages: ChatMessage[]): Promise<string> {
@@ -179,7 +190,7 @@ async function callGrok(messages: ChatMessage[]): Promise<string> {
   }
 
   const data = await res.json();
-  return data.choices?.[0]?.message?.content || "No response";
+  return normalizeContent(data.choices?.[0]?.message?.content ?? "");
 }
 
 async function callGrokNonReasoning(messages: ChatMessage[]): Promise<string> {
@@ -207,7 +218,7 @@ async function callGrokNonReasoning(messages: ChatMessage[]): Promise<string> {
   }
 
   const data = await res.json();
-  return data.choices?.[0]?.message?.content || "No response";
+  return normalizeContent(data.choices?.[0]?.message?.content ?? "");
 }
 
 async function callDeepSeek(messages: ChatMessage[]): Promise<string> {
@@ -235,7 +246,7 @@ async function callDeepSeek(messages: ChatMessage[]): Promise<string> {
   }
 
   const data = await res.json();
-  return data.choices?.[0]?.message?.content || "No response";
+  return normalizeContent(data.choices?.[0]?.message?.content ?? "");
 }
 
 async function generateSummary(responses: LLMResponse[]): Promise<string> {
@@ -317,9 +328,9 @@ ${context}`;
 
   const data = await res.json();
   const content = data.choices?.[0]?.message?.content;
-  if (content) return content;
-  if (data.choices?.[0]?.message?.text) return data.choices[0].message.text;
-  if (data.choices?.[0]?.text) return data.choices[0].text;
+  if (content !== undefined && content !== null) return normalizeContent(content);
+  if (data.choices?.[0]?.message?.text) return normalizeContent(data.choices[0].message.text);
+  if (data.choices?.[0]?.text) return normalizeContent(data.choices[0].text);
   console.error("Summary response structure:", JSON.stringify(data, null, 2));
   throw new Error(
     "Summary model returned no text. Check server logs for response structure."

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type LLMResponse = {
   provider: string;
@@ -42,7 +43,7 @@ export default function LLMPage() {
   const [conversationModelId, setConversationModelId] = useState<string | null>(null);
   const [conversationProviderLabel, setConversationProviderLabel] = useState<string>("");
   const [replyText, setReplyText] = useState("");
-  const [recordingForReply, setRecordingForReply] = useState(false);
+    const [recordingForReply, setRecordingForReply] = useState(false);
   const replyEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -390,7 +391,7 @@ export default function LLMPage() {
                   </button>
                 </div>
                 <div className="prose prose-sm max-w-none prose-headings:text-slate-800 prose-p:text-slate-700 prose-strong:text-slate-900 prose-ul:text-slate-700 prose-li:text-slate-700 prose-h2:mt-8 prose-h2:mb-3 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h3:mt-6 prose-h3:mb-2 prose-h4:mt-5 prose-h4:mb-2 prose-p:my-2.5 prose-ul:my-3 prose-ol:my-3 prose-li:my-0.5 [&>h2:first-child]:mt-0 [&>h3:first-child]:mt-0 [&>h4:first-child]:mt-0">
-                  <ReactMarkdown>{result.summary}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{result.summary}</ReactMarkdown>
                 </div>
               </div>
             ) : null}
@@ -440,7 +441,7 @@ export default function LLMPage() {
                         <p className="mt-3 text-sm text-red-600">{response.error}</p>
                       ) : (
                         <div className="mt-3 prose prose-sm max-w-none prose-headings:text-slate-800 prose-p:text-slate-700 prose-strong:text-slate-900 prose-ul:text-slate-700 prose-li:text-slate-700 prose-h2:mt-8 prose-h2:mb-3 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h3:mt-6 prose-h3:mb-2 prose-h4:mt-5 prose-h4:mb-2 prose-p:my-2.5 prose-ul:my-3 prose-ol:my-3 prose-li:my-0.5 [&>h2:first-child]:mt-0 [&>h3:first-child]:mt-0 [&>h4:first-child]:mt-0">
-                          <ReactMarkdown>{response.response}</ReactMarkdown>
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{response.response}</ReactMarkdown>
                         </div>
                       )}
                     </div>
@@ -477,7 +478,7 @@ export default function LLMPage() {
                         </span>
                         {msg.role === "assistant" ? (
                           <div className="mt-1 prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 text-slate-700">
-                            <ReactMarkdown>{msg.content}</ReactMarkdown>
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
                           </div>
                         ) : (
                           <p className="mt-0.5 whitespace-pre-wrap">{msg.content}</p>
