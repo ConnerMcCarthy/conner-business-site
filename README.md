@@ -1,36 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Conner McCarthy — Business & Tools
 
-## Getting Started
+A Next.js site that combines a **themed business/portfolio homepage**, a **website scoping intake flow**, and a **Multi-LLM Aggregator** for comparing and synthesizing AI model responses.
 
-First, run the development server:
+---
+
+## What the site does
+
+### Home
+
+- **Themeable landing** — Multiple visual themes (e.g. simple, contractor, small business, portfolio, professional) selectable via URL (`?theme=theme2`) or in-app.
+- **Sections** — Hero, services, contact, and optional “Ask AI” / intake entry points depending on theme.
+
+### Intake (`/intake`)
+
+- **Conversational website scoping** — Chat-style flow that collects business context and website goals.
+- **Structured lead data** — Captures project type, scope, and a free-form website description; supports pricing/estimation logic based on keywords.
+- **Email delivery** — Option to send the summarized lead to a configured address.
+
+### Multi-LLM Aggregator (`/llm`)
+
+- **One prompt, many models** — Send a single prompt to several LLMs at once and compare answers in one place.
+- **Supported models**
+  - OpenAI 5.2, OpenAI 4.1  
+  - Claude Opus 4.6, Claude Sonnet 4.6  
+  - Grok 4-1 Fast (Reasoning & Non-Reasoning)  
+  - DeepSeek Chat  
+- **Summaries (when 2+ models selected)**
+  - **Grok 4-1 Reasoning** — Short compare/contrast summary (optional).
+  - **Model-Response Synthesis (OpenAI 5.2)** — Structured synthesis: per-model summaries, agreement/disagreement, gaps, and a final synthesis (optional).
+- **Options**
+  - Checkboxes to choose which summaries to run.
+  - **Double prompt** — Sends the prompt twice (end-to-end) to potentially improve some model responses.
+- **Speech-to-text** — Record or upload audio; transcript is appended to the prompt (gpt-4o-transcribe).
+- **Continue conversation** — After a multi-model run, pick one model and keep a single-model thread with full history.
+- **History (`/llm/history`)** — All runs saved to Supabase; list view with expandable entries showing prompt, full conversation (for continued chats), Grok summary, Synthesis, and individual model responses. Conversation entries are tagged and show the full thread in chat bubbles.
+
+---
+
+## Tech stack
+
+| Area        | Tech |
+|------------|------|
+| Framework  | Next.js 16 (App Router) |
+| UI         | React 19, Tailwind CSS 4 |
+| Database   | Supabase (PostgreSQL) |
+| Markdown   | react-markdown, remark-gfm |
+| Email      | Nodemailer |
+| Maps       | Leaflet / react-leaflet (where used) |
+
+---
+
+## Getting started
+
+### Install and run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create `.env.local` and set what you use:
 
-## Learn More
+| Variable | Purpose |
+|----------|---------|
+| `SUPABASE_URL` | Supabase project URL (LLM history) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-only) |
+| `OPENAI_API_KEY` | OpenAI (prompts, synthesis, transcription) |
+| `ANTHROPIC_API_KEY` | Claude models |
+| `GROK_API_KEY` | Grok models |
+| `DEEPSEEK_API_KEY` | DeepSeek model |
+| (Email) | As required by your intake/contact flow |
 
-To learn more about Next.js, take a look at the following resources:
+### Database (Supabase)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+For LLM history, run the schema in the Supabase SQL Editor (see `supabase-migrations/` or the schema described in the codebase: `llm_sessions`, `llm_responses` with columns such as `prompt`, `messages`, `summary`, `grok_summary`, `title`, `conversation_model_id`, etc.).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Project structure (high level)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+app/
+  page.tsx              # Home (theme shell)
+  ClientThemeShell.tsx  # Theme routing + switcher
+  ThemeSwitcher.tsx
+  designs/              # Theme-specific home components (theme1–theme7)
+  intake/
+    page.tsx            # Intake form
+  llm/
+    page.tsx            # Multi-LLM Aggregator
+    history/
+      page.tsx          # LLM history list + expandable detail
+  api/
+    llm/
+      route.ts          # Multi-model + summaries + persistence
+      history/
+        route.ts        # List sessions
+        [id]/route.ts   # Session detail + responses
+    transcribe/
+      route.ts          # Speech-to-text
+    intake/
+      route.ts          # Intake backend
+  lib/
+    supabase-server.ts  # Server Supabase client
+  components/
+    IntakePage.tsx
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server |
+| `npm run build` | Production build |
+| `npm run start` | Run production server |
+| `npm run lint` | Run ESLint |
+
+---
+
+## License
+
+Private. All rights reserved.
