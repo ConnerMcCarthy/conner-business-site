@@ -12,6 +12,7 @@ type LLMResponse = {
 
 type LLMResult = {
   summary: string;
+  grokSummary?: string;
   responses: LLMResponse[];
 };
 
@@ -42,8 +43,10 @@ export default function LLMPage() {
   const [conversationMessages, setConversationMessages] = useState<ChatMessage[] | null>(null);
   const [conversationModelId, setConversationModelId] = useState<string | null>(null);
   const [conversationProviderLabel, setConversationProviderLabel] = useState<string>("");
+  const [conversationSessionId, setConversationSessionId] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
-    const [recordingForReply, setRecordingForReply] = useState(false);
+  const [recordingForReply, setRecordingForReply] = useState(false);
+  const [lastSubmittedPrompt, setLastSubmittedPrompt] = useState("");
   const replyEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -174,6 +177,7 @@ export default function LLMPage() {
     setConversationMessages(null);
     setConversationModelId(null);
     setConversationProviderLabel("");
+    setConversationSessionId(null);
     setLoading(true);
     setExpandedProviders(new Set());
 
@@ -194,6 +198,7 @@ export default function LLMPage() {
       }
 
       setResult(data);
+      setLastSubmittedPrompt(text);
 
       if (selectedModels.size === 1 && data.responses?.length === 1 && !data.responses[0].error) {
         setConversationMessages([
@@ -202,6 +207,7 @@ export default function LLMPage() {
         ]);
         setConversationModelId(Array.from(selectedModels)[0]);
         setConversationProviderLabel(data.responses[0].provider);
+        setConversationSessionId(data.sessionId ?? null);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to get responses");
@@ -231,6 +237,7 @@ export default function LLMPage() {
           prompt: text,
           models: [conversationModelId],
           messages: nextMessages,
+          ...(conversationSessionId ? { sessionId: conversationSessionId } : {}),
         }),
       });
 
@@ -246,6 +253,7 @@ export default function LLMPage() {
           ...nextMessages,
           { role: "assistant", content: assistantContent },
         ]);
+        setConversationSessionId(data.sessionId ?? conversationSessionId ?? null);
         setResult({
           summary: "",
           responses: [{ provider: conversationProviderLabel, response: assistantContent }],
@@ -266,12 +274,20 @@ export default function LLMPage() {
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-4xl px-4 py-8 md:py-12">
         <header className="mb-8">
-          <a
-            href="/"
-            className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:border-slate-400 hover:bg-slate-50"
-          >
-            ← Back to home
-          </a>
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <a
+              href="/"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:border-slate-400 hover:bg-slate-50"
+            >
+              ← Back to home
+            </a>
+            <a
+              href="/llm/history"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:border-slate-400 hover:bg-slate-50"
+            >
+              History
+            </a>
+          </div>
           <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
             Multi-LLM Aggregator
           </h1>
@@ -375,7 +391,28 @@ export default function LLMPage() {
 
         {result && (
           <div className="space-y-6">
-            {/* Model-Response Synthesis — only when summary is present (2+ models) */}
+            {/* Grok 4-1 Reasoning brief summary — above 5.2 synthesis when 2+ models */}
+            {result.grokSummary ? (
+              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <h2 className="text-lg font-semibold text-slate-800">
+                    Grok 4-1 Reasoning Summary
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(result.grokSummary ?? "", "grokSummary")}
+                    className="shrink-0 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                  >
+                    {copiedId === "grokSummary" ? "Copied!" : "Copy"}
+                  </button>
+                </div>
+                <div className="prose prose-sm max-w-none prose-headings:text-slate-800 prose-p:text-slate-700 prose-strong:text-slate-900 prose-ul:text-slate-700 prose-li:text-slate-700 prose-h2:mt-8 prose-h2:mb-3 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h3:mt-6 prose-h3:mb-2 prose-h4:mt-5 prose-h4:mb-2 prose-p:my-2.5 prose-ul:my-3 prose-ol:my-3 prose-li:my-0.5 [&>h2:first-child]:mt-0 [&>h3:first-child]:mt-0 [&>h4:first-child]:mt-0">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{result.grokSummary}</ReactMarkdown>
+                </div>
+              </div>
+            ) : null}
+
+            {/* Model-Response Synthesis (OpenAI 5.2) — only when summary is present (2+ models) */}
             {result.summary ? (
               <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="mb-4 flex items-center justify-between gap-3">
@@ -396,14 +433,14 @@ export default function LLMPage() {
               </div>
             ) : null}
 
-            {/* Individual Responses */}
+            {/* Individual Responses — when in conversation mode, only show the latest (avoid duplicating thread) */}
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-slate-800">
                 Individual Responses
               </h2>
-              {result.responses.map((response) => (
+              {(conversationMessages != null ? result.responses.slice(-1) : result.responses).map((response, idx) => (
                 <div
-                  key={response.provider}
+                  key={conversationMessages != null ? "latest" : response.provider}
                   className="rounded-xl border border-slate-200 bg-white shadow-sm"
                 >
                   <div className="flex items-center gap-2 rounded-t-xl border-b border-slate-100">
@@ -440,9 +477,32 @@ export default function LLMPage() {
                       {response.error ? (
                         <p className="mt-3 text-sm text-red-600">{response.error}</p>
                       ) : (
-                        <div className="mt-3 prose prose-sm max-w-none prose-headings:text-slate-800 prose-p:text-slate-700 prose-strong:text-slate-900 prose-ul:text-slate-700 prose-li:text-slate-700 prose-h2:mt-8 prose-h2:mb-3 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h3:mt-6 prose-h3:mb-2 prose-h4:mt-5 prose-h4:mb-2 prose-p:my-2.5 prose-ul:my-3 prose-ol:my-3 prose-li:my-0.5 [&>h2:first-child]:mt-0 [&>h3:first-child]:mt-0 [&>h4:first-child]:mt-0">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{response.response}</ReactMarkdown>
-                        </div>
+                        <>
+                          <div className="mt-3 prose prose-sm max-w-none prose-headings:text-slate-800 prose-p:text-slate-700 prose-strong:text-slate-900 prose-ul:text-slate-700 prose-li:text-slate-700 prose-h2:mt-8 prose-h2:mb-3 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h3:mt-6 prose-h3:mb-2 prose-h4:mt-5 prose-h4:mb-2 prose-p:my-2.5 prose-ul:my-3 prose-ol:my-3 prose-li:my-0.5 [&>h2:first-child]:mt-0 [&>h3:first-child]:mt-0 [&>h4:first-child]:mt-0">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{response.response}</ReactMarkdown>
+                          </div>
+                          <div className="mt-3">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const modelId = MODEL_OPTIONS.find((m) => m.label === response.provider)?.id;
+                                if (modelId && lastSubmittedPrompt) {
+                                  setConversationSessionId(null);
+                                  setConversationMessages([
+                                    { role: "user", content: lastSubmittedPrompt },
+                                    { role: "assistant", content: response.response },
+                                  ]);
+                                  setConversationModelId(modelId);
+                                  setConversationProviderLabel(response.provider);
+                                  replyEndRef.current?.scrollIntoView({ behavior: "smooth" });
+                                }
+                              }}
+                              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                            >
+                              Continue conversation
+                            </button>
+                          </div>
+                        </>
                       )}
                     </div>
                   )}

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getSupabaseServer } from "@/app/lib/supabase-server";
 
 type LLMResponse = {
   provider: string;
@@ -14,10 +15,13 @@ type LLMRequestBody = {
   models?: string[];
   /** Full conversation history for follow-up replies. When provided, used instead of single prompt. */
   messages?: ChatMessage[];
+  /** When replying in a conversation, send the existing session id so we update it instead of creating a new entry. */
+  sessionId?: string;
 };
 
 type LLMResult = {
   summary: string;
+  grokSummary?: string;
   responses: LLMResponse[];
 };
 
@@ -249,6 +253,45 @@ async function callDeepSeek(messages: ChatMessage[]): Promise<string> {
   return normalizeContent(data.choices?.[0]?.message?.content ?? "");
 }
 
+/** Brief compare/contrast summary of model responses. Uses Grok 4-1 reasoning. */
+async function generateGrokSummary(responses: LLMResponse[]): Promise<string> {
+  const validResponses = responses.filter((r) => !r.error);
+  if (validResponses.length === 0) return "";
+  const context = validResponses
+    .map((r) => `**${r.provider}:**\n${r.response}`)
+    .join("\n\n---\n\n");
+  const messages: ChatMessage[] = [
+    {
+      role: "user",
+      content: `Briefly summarize and compare and contrast these models' responses.\n\n${context}`,
+    },
+  ];
+  try {
+    return await callGrok(messages);
+  } catch {
+    return "";
+  }
+}
+
+/** One-sentence title summarizing the synthesis. Uses Grok 4.1 non-reasoning. */
+async function generateTitle(summary: string): Promise<string> {
+  if (!summary.trim()) return "";
+  const apiKey = process.env.GROK_API_KEY;
+  if (!apiKey) return "";
+  const messages: ChatMessage[] = [
+    {
+      role: "user",
+      content: `Summarize the following in one short sentence. Reply with only that sentence, no quotes or preamble.\n\n${summary}`,
+    },
+  ];
+  try {
+    const out = await callGrokNonReasoning(messages);
+    return (out ?? "").trim().slice(0, 500) || "";
+  } catch {
+    return "";
+  }
+}
+
 async function generateSummary(responses: LLMResponse[]): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
@@ -346,6 +389,16 @@ const MODEL_IDS = [
   "grok-non-reasoning",
   "deepseek",
 ] as const;
+
+const PROVIDER_TO_MODEL_ID: Record<string, string> = {
+  "OpenAI 5.2": "openai-5.2",
+  "OpenAI 4.1": "openai-4.1",
+  "Claude Opus 4.6": "claude-opus",
+  "Claude Sonnet 4.6": "claude-sonnet",
+  "Grok 4-1 Fast Reasoning": "grok-reasoning",
+  "Grok 4-1 Fast Non-Reasoning": "grok-non-reasoning",
+  "DeepSeek Chat": "deepseek",
+};
 
 function buildPromises(
   messages: ChatMessage[],
@@ -445,7 +498,7 @@ function buildPromises(
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as LLMRequestBody;
-    const { prompt, models: requestedModels, messages: bodyMessages } = body;
+    const { prompt, models: requestedModels, messages: bodyMessages, sessionId: bodySessionId } = body;
 
     const messages: ChatMessage[] =
       bodyMessages && bodyMessages.length > 0
@@ -476,23 +529,116 @@ export async function POST(request: Request) {
 
     const responses: LLMResponse[] = await Promise.all(promises);
 
+    const isReplyToExistingSession =
+      bodySessionId &&
+      typeof bodySessionId === "string" &&
+      modelIds.length === 1 &&
+      messages.length > 1;
+
     let summary: string = "";
+    let grokSummary: string = "";
     if (responses.length > 1) {
-      try {
-        summary = await generateSummary(responses);
-      } catch (error) {
-        summary =
+      const [openaiSummary, grokResult] = await Promise.all([
+        generateSummary(responses).catch((error) =>
           "Failed to generate summary. " +
-          (error instanceof Error ? error.message : "Unknown error");
+          (error instanceof Error ? error.message : "Unknown error")
+        ),
+        generateGrokSummary(responses).catch(() => ""),
+      ]);
+      summary = openaiSummary;
+      grokSummary = grokResult;
+    }
+
+    let title = "";
+    if (!isReplyToExistingSession) {
+      try {
+        title = summary.trim() ? await generateTitle(summary) : "";
+      } catch {
+        // keep title ""
+      }
+    }
+
+    let sessionId: string | null = null;
+    const supabase = getSupabaseServer();
+    if (supabase) {
+      try {
+        if (isReplyToExistingSession) {
+          const { error: updateError } = await supabase
+            .from("llm_sessions")
+            .update({
+              messages: messages as unknown as Record<string, unknown>[],
+              conversation_model_id: modelIds[0],
+            })
+            .eq("id", bodySessionId);
+
+          if (updateError) {
+            console.error("LLM update session error:", updateError);
+          } else {
+            const { data: existingRows } = await supabase
+              .from("llm_responses")
+              .select("sort_order")
+              .eq("session_id", bodySessionId)
+              .order("sort_order", { ascending: false })
+              .limit(1);
+            const nextSortOrder = existingRows?.[0]?.sort_order != null ? existingRows[0].sort_order + 1 : 0;
+            const r = responses[0];
+            await supabase.from("llm_responses").insert({
+              session_id: bodySessionId,
+              provider: r.provider,
+              model_id: PROVIDER_TO_MODEL_ID[r.provider] ?? r.provider,
+              response: r.response,
+              error: r.error ?? null,
+              sort_order: nextSortOrder,
+            });
+            sessionId = bodySessionId;
+          }
+        } else {
+          const promptText = messages[0]?.content ?? "";
+          const conversationModelId = modelIds.length === 1 ? modelIds[0] : null;
+          const { data: sessionRow, error: sessionError } = await supabase
+            .from("llm_sessions")
+            .insert({
+              prompt: promptText,
+              messages: messages as unknown as Record<string, unknown>[],
+              model_ids: modelIds,
+              summary,
+              grok_summary: grokSummary || null,
+              title: title || null,
+              conversation_model_id: conversationModelId,
+            })
+            .select("id")
+            .single();
+
+          if (sessionError) {
+            console.error("LLM save session error:", sessionError);
+          } else if (sessionRow?.id) {
+            sessionId = sessionRow.id;
+            for (let i = 0; i < responses.length; i++) {
+              const r = responses[i];
+              await supabase.from("llm_responses").insert({
+                session_id: sessionRow.id,
+                provider: r.provider,
+                model_id: PROVIDER_TO_MODEL_ID[r.provider] ?? r.provider,
+                response: r.response,
+                error: r.error ?? null,
+                sort_order: i,
+              });
+            }
+          }
+        }
+      } catch (err) {
+        console.error("LLM save error:", err);
       }
     }
 
     const result: LLMResult = {
       summary,
+      ...(grokSummary ? { grokSummary } : {}),
       responses,
     };
-
-    return NextResponse.json(result);
+    return NextResponse.json(
+      sessionId ? { ...result, sessionId } : result
+    );
   } catch (error) {
     console.error("LLM API error:", error);
     return NextResponse.json(
