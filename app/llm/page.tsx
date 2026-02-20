@@ -14,6 +14,8 @@ type LLMResult = {
   responses: LLMResponse[];
 };
 
+type ChatMessage = { role: "user" | "assistant"; content: string };
+
 const MODEL_OPTIONS = [
   { id: "openai-5.2", label: "OpenAI 5.2" },
   { id: "openai-4.1", label: "OpenAI 4.1" },
@@ -36,6 +38,11 @@ export default function LLMPage() {
   const [recording, setRecording] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [selectedModels, setSelectedModels] = useState<Set<string>>(DEFAULT_SELECTED);
+  const [conversationMessages, setConversationMessages] = useState<ChatMessage[] | null>(null);
+  const [conversationModelId, setConversationModelId] = useState<string | null>(null);
+  const [conversationProviderLabel, setConversationProviderLabel] = useState<string>("");
+  const [replyText, setReplyText] = useState("");
+  const replyEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
@@ -153,6 +160,9 @@ export default function LLMPage() {
 
     setError(null);
     setResult(null);
+    setConversationMessages(null);
+    setConversationModelId(null);
+    setConversationProviderLabel("");
     setLoading(true);
     setExpandedProviders(new Set());
 
@@ -173,8 +183,69 @@ export default function LLMPage() {
       }
 
       setResult(data);
+
+      if (selectedModels.size === 1 && data.responses?.length === 1 && !data.responses[0].error) {
+        setConversationMessages([
+          { role: "user", content: text },
+          { role: "assistant", content: data.responses[0].response },
+        ]);
+        setConversationModelId(Array.from(selectedModels)[0]);
+        setConversationProviderLabel(data.responses[0].provider);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to get responses");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleReply(e: React.FormEvent) {
+    e.preventDefault();
+    const text = replyText.trim();
+    if (!text || loading || !conversationModelId || !conversationMessages) return;
+
+    setError(null);
+    setLoading(true);
+    const nextMessages: ChatMessage[] = [
+      ...conversationMessages,
+      { role: "user", content: text },
+    ];
+    setReplyText("");
+
+    try {
+      const res = await fetch("/api/llm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: text,
+          models: [conversationModelId],
+          messages: nextMessages,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Something went wrong");
+      }
+
+      if (data.responses?.length === 1 && !data.responses[0].error) {
+        const assistantContent = data.responses[0].response;
+        setConversationMessages([
+          ...nextMessages,
+          { role: "assistant", content: assistantContent },
+        ]);
+        setResult({
+          summary: "",
+          responses: [{ provider: conversationProviderLabel, response: assistantContent }],
+        });
+        replyEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        setError(data.responses?.[0]?.error ?? "Reply failed");
+        setReplyText(text);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to send reply");
     } finally {
       setLoading(false);
     }
@@ -367,6 +438,71 @@ export default function LLMPage() {
                 </div>
               ))}
             </div>
+
+            {/* Reply / continue conversation (only when one model was selected) */}
+            {conversationMessages != null && conversationModelId != null && (
+              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h2 className="mb-4 text-lg font-semibold text-slate-800">
+                  Continue with {conversationProviderLabel}
+                </h2>
+                <div className="max-h-[40vh] space-y-4 overflow-y-auto rounded-xl border border-slate-100 bg-slate-50/50 p-4">
+                  {conversationMessages.map((msg, i) => (
+                    <div
+                      key={i}
+                      className={
+                        msg.role === "user"
+                          ? "flex justify-end"
+                          : "flex justify-start"
+                      }
+                    >
+                      <div
+                        className={
+                          msg.role === "user"
+                            ? "max-w-[85%] rounded-2xl rounded-tr-sm bg-slate-900 px-4 py-2.5 text-sm text-white"
+                            : "max-w-[85%] rounded-2xl rounded-tl-sm bg-white px-4 py-2.5 text-sm text-slate-800 shadow-sm"
+                        }
+                      >
+                        <span className="text-xs font-medium text-slate-500">
+                          {msg.role === "user" ? "You" : conversationProviderLabel}
+                        </span>
+                        {msg.role === "assistant" ? (
+                          <div className="mt-1 prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 text-slate-700">
+                            <ReactMarkdown>{msg.content}</ReactMarkdown>
+                          </div>
+                        ) : (
+                          <p className="mt-0.5 whitespace-pre-wrap">{msg.content}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  {loading && (
+                    <div className="flex justify-start">
+                      <div className="rounded-2xl rounded-tl-sm bg-white px-4 py-2.5 text-sm text-slate-500 shadow-sm">
+                        Thinking…
+                      </div>
+                    </div>
+                  )}
+                  <div ref={replyEndRef} />
+                </div>
+                <form onSubmit={handleReply} className="mt-4 flex gap-2">
+                  <input
+                    type="text"
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    placeholder="Reply…"
+                    disabled={loading}
+                    className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:opacity-60"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading || !replyText.trim()}
+                    className="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Send
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
         )}
       </div>

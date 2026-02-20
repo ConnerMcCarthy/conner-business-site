@@ -6,10 +6,14 @@ type LLMResponse = {
   error?: string;
 };
 
+export type ChatMessage = { role: "user" | "assistant"; content: string };
+
 type LLMRequestBody = {
   prompt: string;
   /** If provided, only these model ids are called. Summary runs only when length > 1. */
   models?: string[];
+  /** Full conversation history for follow-up replies. When provided, used instead of single prompt. */
+  messages?: ChatMessage[];
 };
 
 type LLMResult = {
@@ -17,7 +21,7 @@ type LLMResult = {
   responses: LLMResponse[];
 };
 
-async function callOpenAI(prompt: string): Promise<string> {
+async function callOpenAI(messages: ChatMessage[]): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error("OpenAI API key not configured");
@@ -31,7 +35,7 @@ async function callOpenAI(prompt: string): Promise<string> {
     },
     body: JSON.stringify({
       model: "gpt-5.2",
-      messages: [{ role: "user", content: prompt }],
+      messages,
       max_completion_tokens: 2000,
     }),
   });
@@ -63,7 +67,7 @@ async function callOpenAI(prompt: string): Promise<string> {
   throw new Error(`Unexpected OpenAI response structure: ${JSON.stringify(data)}`);
 }
 
-async function callOpenAI41(prompt: string): Promise<string> {
+async function callOpenAI41(messages: ChatMessage[]): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error("OpenAI API key not configured");
@@ -77,7 +81,7 @@ async function callOpenAI41(prompt: string): Promise<string> {
     },
     body: JSON.stringify({
       model: "gpt-4.1",
-      messages: [{ role: "user", content: prompt }],
+      messages,
       max_tokens: 2000,
     }),
   });
@@ -92,7 +96,7 @@ async function callOpenAI41(prompt: string): Promise<string> {
   return content ?? "";
 }
 
-async function callClaude(prompt: string): Promise<string> {
+async function callClaude(messages: ChatMessage[]): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     throw new Error("Anthropic API key not configured");
@@ -108,7 +112,7 @@ async function callClaude(prompt: string): Promise<string> {
     body: JSON.stringify({
       model: "claude-opus-4-6",
       max_tokens: 2000,
-      messages: [{ role: "user", content: prompt }],
+      messages,
     }),
   });
 
@@ -121,7 +125,7 @@ async function callClaude(prompt: string): Promise<string> {
   return data.content?.[0]?.text || "No response";
 }
 
-async function callClaudeSonnet(prompt: string): Promise<string> {
+async function callClaudeSonnet(messages: ChatMessage[]): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     throw new Error("Anthropic API key not configured");
@@ -137,7 +141,7 @@ async function callClaudeSonnet(prompt: string): Promise<string> {
     body: JSON.stringify({
       model: "claude-sonnet-4-6",
       max_tokens: 2000,
-      messages: [{ role: "user", content: prompt }],
+      messages,
     }),
   });
 
@@ -150,14 +154,12 @@ async function callClaudeSonnet(prompt: string): Promise<string> {
   return data.content?.[0]?.text || "No response";
 }
 
-async function callGrok(prompt: string): Promise<string> {
+async function callGrok(messages: ChatMessage[]): Promise<string> {
   const apiKey = process.env.GROK_API_KEY;
   if (!apiKey) {
     throw new Error("Grok API key not configured");
   }
 
-  // Note: Grok API endpoint may vary; adjust based on xAI's actual API
-  // This is a placeholder structure - you'll need to check xAI's documentation
   const res = await fetch("https://api.x.ai/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -165,8 +167,8 @@ async function callGrok(prompt: string): Promise<string> {
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "grok-4-1-fast-reasoning", // Grok 4-1 fast reasoning model
-      messages: [{ role: "user", content: prompt }],
+      model: "grok-4-1-fast-reasoning",
+      messages,
       max_tokens: 2000,
     }),
   });
@@ -180,7 +182,7 @@ async function callGrok(prompt: string): Promise<string> {
   return data.choices?.[0]?.message?.content || "No response";
 }
 
-async function callGrokNonReasoning(prompt: string): Promise<string> {
+async function callGrokNonReasoning(messages: ChatMessage[]): Promise<string> {
   const apiKey = process.env.GROK_API_KEY;
   if (!apiKey) {
     throw new Error("Grok API key not configured");
@@ -194,7 +196,7 @@ async function callGrokNonReasoning(prompt: string): Promise<string> {
     },
     body: JSON.stringify({
       model: "grok-4-1-fast-non-reasoning",
-      messages: [{ role: "user", content: prompt }],
+      messages,
       max_tokens: 2000,
     }),
   });
@@ -208,7 +210,7 @@ async function callGrokNonReasoning(prompt: string): Promise<string> {
   return data.choices?.[0]?.message?.content || "No response";
 }
 
-async function callDeepSeek(prompt: string): Promise<string> {
+async function callDeepSeek(messages: ChatMessage[]): Promise<string> {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   if (!apiKey) {
     throw new Error("DeepSeek API key not configured");
@@ -222,7 +224,7 @@ async function callDeepSeek(prompt: string): Promise<string> {
     },
     body: JSON.stringify({
       model: "deepseek-chat",
-      messages: [{ role: "user", content: prompt }],
+      messages,
       max_tokens: 2000,
     }),
   });
@@ -334,7 +336,7 @@ const MODEL_IDS = [
 ] as const;
 
 function buildPromises(
-  prompt: string,
+  messages: ChatMessage[],
   modelIds: string[]
 ): Promise<LLMResponse>[] {
   const set = new Set(modelIds);
@@ -342,7 +344,7 @@ function buildPromises(
 
   if (set.has("openai-5.2")) {
     promises.push(
-      callOpenAI(prompt).then(
+      callOpenAI(messages).then(
         (r) => ({ provider: "OpenAI 5.2", response: r }),
         (e) => ({
           provider: "OpenAI 5.2",
@@ -354,7 +356,7 @@ function buildPromises(
   }
   if (set.has("openai-4.1")) {
     promises.push(
-      callOpenAI41(prompt).then(
+      callOpenAI41(messages).then(
         (r) => ({ provider: "OpenAI 4.1", response: r }),
         (e) => ({
           provider: "OpenAI 4.1",
@@ -366,7 +368,7 @@ function buildPromises(
   }
   if (set.has("claude-opus")) {
     promises.push(
-      callClaude(prompt).then(
+      callClaude(messages).then(
         (r) => ({ provider: "Claude Opus 4.6", response: r }),
         (e) => ({
           provider: "Claude Opus 4.6",
@@ -378,7 +380,7 @@ function buildPromises(
   }
   if (set.has("claude-sonnet")) {
     promises.push(
-      callClaudeSonnet(prompt).then(
+      callClaudeSonnet(messages).then(
         (r) => ({ provider: "Claude Sonnet 4.6", response: r }),
         (e) => ({
           provider: "Claude Sonnet 4.6",
@@ -390,7 +392,7 @@ function buildPromises(
   }
   if (set.has("grok-reasoning")) {
     promises.push(
-      callGrok(prompt).then(
+      callGrok(messages).then(
         (r) => ({ provider: "Grok 4-1 Fast Reasoning", response: r }),
         (e) => ({
           provider: "Grok 4-1 Fast Reasoning",
@@ -402,7 +404,7 @@ function buildPromises(
   }
   if (set.has("grok-non-reasoning")) {
     promises.push(
-      callGrokNonReasoning(prompt).then(
+      callGrokNonReasoning(messages).then(
         (r) => ({ provider: "Grok 4-1 Fast Non-Reasoning", response: r }),
         (e) => ({
           provider: "Grok 4-1 Fast Non-Reasoning",
@@ -414,7 +416,7 @@ function buildPromises(
   }
   if (set.has("deepseek")) {
     promises.push(
-      callDeepSeek(prompt).then(
+      callDeepSeek(messages).then(
         (r) => ({ provider: "DeepSeek Chat", response: r }),
         (e) => ({
           provider: "DeepSeek Chat",
@@ -431,11 +433,18 @@ function buildPromises(
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as LLMRequestBody;
-    const { prompt, models: requestedModels } = body;
+    const { prompt, models: requestedModels, messages: bodyMessages } = body;
 
-    if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
+    const messages: ChatMessage[] =
+      bodyMessages && bodyMessages.length > 0
+        ? bodyMessages
+        : prompt && typeof prompt === "string" && prompt.trim().length > 0
+          ? [{ role: "user", content: prompt.trim() }]
+          : [];
+
+    if (messages.length === 0) {
       return NextResponse.json(
-        { error: "Prompt is required and must be a non-empty string" },
+        { error: "Prompt or messages are required" },
         { status: 400 }
       );
     }
@@ -445,7 +454,7 @@ export async function POST(request: Request) {
         ? requestedModels
         : [...MODEL_IDS];
 
-    const promises = buildPromises(prompt, modelIds);
+    const promises = buildPromises(messages, modelIds);
     if (promises.length === 0) {
       return NextResponse.json(
         { error: "At least one model must be selected" },
