@@ -399,7 +399,16 @@ export default function LLMPage() {
               >
                 {loading ? "Processing..." : "Submit"}
               </button>
-              <span className="text-slate-500 text-sm">Speech-to-text (gpt-4o-transcribe):</span>
+              <label className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50 inline-block">
+                <input
+                  type="file"
+                  accept="audio/*,.mp3,.mp4,.mpeg,.mpga,.m4a,.wav,.webm"
+                  className="hidden"
+                  disabled={transcribing || loading}
+                  onChange={handleFileUpload}
+                />
+                Upload audio
+              </label>
               {!recording ? (
                 <button
                   type="button"
@@ -418,16 +427,6 @@ export default function LLMPage() {
                   Stop
                 </button>
               )}
-              <label className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50 inline-block">
-                <input
-                  type="file"
-                  accept="audio/*,.mp3,.mp4,.mpeg,.mpga,.m4a,.wav,.webm"
-                  className="hidden"
-                  disabled={transcribing || loading}
-                  onChange={handleFileUpload}
-                />
-                Upload audio
-              </label>
             </div>
           </div>
         </form>
