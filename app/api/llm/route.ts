@@ -288,7 +288,8 @@ Rules:
 - Do not invent claims not present in responses
 - When you attribute a point, label it with the model name/id from responses
 - Prefer concrete comparisons over vague statements.
-- Keep total output under 700 words unless the user explicitly asked for more.
+- Base target: ~500–700 words for up to 4 models with moderate disagreement.
+- If analyzing 5–7 models, or if there are multiple substantive disagreements, you may expand to 900 words. More if necissary.
 
 ---
 

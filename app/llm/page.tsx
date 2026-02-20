@@ -42,6 +42,7 @@ export default function LLMPage() {
   const [conversationModelId, setConversationModelId] = useState<string | null>(null);
   const [conversationProviderLabel, setConversationProviderLabel] = useState<string>("");
   const [replyText, setReplyText] = useState("");
+  const [recordingForReply, setRecordingForReply] = useState(false);
   const replyEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -68,7 +69,10 @@ export default function LLMPage() {
     }
   }
 
-  async function sendAudioForTranscription(blob: Blob) {
+  async function sendAudioForTranscription(
+    blob: Blob,
+    target: "main" | "reply" = "main"
+  ) {
     setTranscribing(true);
     setError(null);
     try {
@@ -81,7 +85,11 @@ export default function LLMPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Transcription failed");
       const text = data.text || "";
-      setInput((prev) => (prev ? `${prev}\n\n${text}` : text));
+      if (target === "reply") {
+        setReplyText((prev) => (prev ? `${prev}\n\n${text}` : text));
+      } else {
+        setInput((prev) => (prev ? `${prev}\n\n${text}` : text));
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Transcription failed");
     } finally {
@@ -89,8 +97,9 @@ export default function LLMPage() {
     }
   }
 
-  function startRecording() {
+  function startRecording(target: "main" | "reply" = "main") {
     chunksRef.current = [];
+    setRecordingForReply(target === "reply");
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const recorder = new MediaRecorder(stream);
       mediaRecorderRef.current = recorder;
@@ -100,7 +109,7 @@ export default function LLMPage() {
       recorder.onstop = () => {
         stream.getTracks().forEach((t) => t.stop());
         const blob = new Blob(chunksRef.current, { type: "audio/webm" });
-        sendAudioForTranscription(blob);
+        sendAudioForTranscription(blob, target);
       };
       recorder.start();
       setRecording(true);
@@ -115,6 +124,7 @@ export default function LLMPage() {
       mediaRecorderRef.current = null;
     }
     setRecording(false);
+    setRecordingForReply(false);
   }
 
   function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -328,7 +338,7 @@ export default function LLMPage() {
                 <button
                   type="button"
                   disabled={transcribing || loading}
-                  onClick={startRecording}
+                  onClick={() => startRecording("main")}
                   className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
                 >
                   {transcribing ? "Transcribing..." : "Record"}
@@ -484,19 +494,37 @@ export default function LLMPage() {
                   )}
                   <div ref={replyEndRef} />
                 </div>
-                <form onSubmit={handleReply} className="mt-4 flex gap-2">
+                <form onSubmit={handleReply} className="mt-4 flex flex-wrap items-center gap-2">
                   <input
                     type="text"
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
-                    placeholder="Reply…"
+                    placeholder="Reply or record…"
                     disabled={loading}
-                    className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:opacity-60"
+                    className="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:opacity-60"
                   />
+                  {recording && recordingForReply ? (
+                    <button
+                      type="button"
+                      onClick={stopRecording}
+                      className="shrink-0 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 hover:bg-red-100"
+                    >
+                      Stop
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={recording || transcribing || loading}
+                      onClick={() => startRecording("reply")}
+                      className="shrink-0 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                    >
+                      {transcribing ? "…" : "Record"}
+                    </button>
+                  )}
                   <button
                     type="submit"
                     disabled={loading || !replyText.trim()}
-                    className="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="shrink-0 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Send
                   </button>
