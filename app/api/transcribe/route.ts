@@ -11,13 +11,16 @@ export async function POST(request: Request) {
     }
 
     const formData = await request.formData();
-    const file = formData.get("file") as File | null;
-    if (!file || !(file instanceof File)) {
+    const raw = formData.get("file") as File | Blob | null;
+    const isBlobLike = raw && typeof (raw as Blob).arrayBuffer === "function";
+    if (!raw || (!(raw instanceof File) && !isBlobLike)) {
       return NextResponse.json(
         { error: "Missing or invalid file. Send a single audio file as 'file'." },
         { status: 400 }
       );
     }
+    const file =
+      raw instanceof File ? raw : new File([raw], "audio.webm", { type: raw.type || "audio/webm" });
 
     const body = new FormData();
     body.append("file", file);
