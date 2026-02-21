@@ -489,22 +489,18 @@ export default function LLMPage() {
               >
                 {loading ? "Processing..." : drivingMode ? "Send" : "Submit"}
               </button>
-              <label
-                className={
-                  drivingMode
-                    ? "w-full min-h-[72px] flex items-center justify-center rounded-2xl border-2 border-slate-300 bg-white px-8 py-5 text-xl font-bold text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50 inline-block"
-                    : "rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50 inline-block"
-                }
-              >
-                <input
-                  type="file"
-                  accept="audio/*,.mp3,.mp4,.mpeg,.mpga,.m4a,.wav,.webm"
-                  className="hidden"
-                  disabled={transcribing || loading}
-                  onChange={handleFileUpload}
-                />
-                Upload audio
-              </label>
+              {!drivingMode && (
+                <label className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50 inline-block">
+                  <input
+                    type="file"
+                    accept="audio/*,.mp3,.mp4,.mpeg,.mpga,.m4a,.wav,.webm"
+                    className="hidden"
+                    disabled={transcribing || loading}
+                    onChange={handleFileUpload}
+                  />
+                  Upload audio
+                </label>
+              )}
               {!recording ? (
                 <button
                   type="button"
