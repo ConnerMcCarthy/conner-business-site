@@ -166,6 +166,9 @@ export default function LLMPage() {
       const recorder = new MediaRecorder(stream);
       mediaRecorderRef.current = recorder;
       const targetWhenStarted = target;
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunksRef.current.push(e.data);
+      };
       recorder.onstop = () => {
         stream.getTracks().forEach((t) => t.stop());
         const blob = new Blob(chunksRef.current, { type: "audio/webm" });
