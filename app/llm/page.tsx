@@ -43,7 +43,10 @@ export default function LLMPage() {
   const [useGrokSummary, setUseGrokSummary] = useState(true);
   const [useSynthesisSummary, setUseSynthesisSummary] = useState(true);
   const [doublePrompt, setDoublePrompt] = useState(false);
+  const [drivingMode, setDrivingMode] = useState(false);
   const [conversationMessages, setConversationMessages] = useState<ChatMessage[] | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const speakingRef = useRef(false);
   const [conversationModelId, setConversationModelId] = useState<string | null>(null);
   const [conversationProviderLabel, setConversationProviderLabel] = useState<string>("");
   const [conversationSessionId, setConversationSessionId] = useState<string | null>(null);
@@ -65,6 +68,48 @@ export default function LLMPage() {
 
   const selectAllModels = () => setSelectedModels(new Set(MODEL_OPTIONS.map((m) => m.id)));
   const clearAllModels = () => setSelectedModels(new Set());
+
+  async function speakWithTTS(text: string) {
+    if (!text.trim() || speakingRef.current) return;
+    speakingRef.current = true;
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: text.trim() }),
+      });
+      if (!res.ok) return;
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      audio.onended = () => {
+        URL.revokeObjectURL(url);
+        audioRef.current = null;
+        speakingRef.current = false;
+      };
+      audio.onerror = () => {
+        URL.revokeObjectURL(url);
+        speakingRef.current = false;
+      };
+      await audio.play();
+    } catch {
+      speakingRef.current = false;
+    }
+  }
+
+  function stopPlayback() {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current = null;
+    }
+    speakingRef.current = false;
+  }
 
   async function copyToClipboard(text: string, id: string) {
     try {
@@ -214,6 +259,14 @@ export default function LLMPage() {
         setConversationProviderLabel(data.responses[0].provider);
         setConversationSessionId(data.sessionId ?? null);
       }
+
+      if (drivingMode && data.responses?.length) {
+        const toSpeak =
+          data.responses.length === 1
+            ? data.responses[0].response
+            : data.summary || data.grokSummary || data.responses[0]?.response || "";
+        if (toSpeak) speakWithTTS(toSpeak);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to get responses");
     } finally {
@@ -264,6 +317,7 @@ export default function LLMPage() {
           responses: [{ provider: conversationProviderLabel, response: assistantContent }],
         });
         replyEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        if (drivingMode && assistantContent) speakWithTTS(assistantContent);
       } else {
         setError(data.responses?.[0]?.error ?? "Reply failed");
         setReplyText(text);
@@ -380,6 +434,16 @@ export default function LLMPage() {
                     />
                     <span className="text-sm text-slate-700 select-none">Double prompt</span>
                   </label>
+                  <label className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg py-2.5 sm:min-h-0 sm:py-0">
+                    <input
+                      type="checkbox"
+                      checked={drivingMode}
+                      onChange={(e) => setDrivingMode(e.target.checked)}
+                      disabled={loading}
+                      className="h-4 w-4 shrink-0 rounded border-slate-300 text-slate-900 focus:ring-2 focus:ring-sky-500 focus:ring-offset-0"
+                    />
+                    <span className="text-sm text-slate-700 select-none">Driving mode</span>
+                  </label>
                 </div>
               </div>
             )}
@@ -391,15 +455,25 @@ export default function LLMPage() {
               rows={6}
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:opacity-60 resize-none"
             />
-            <div className="flex flex-wrap items-center gap-3">
+            <div className={`flex flex-wrap items-center gap-3 ${drivingMode ? "flex-col gap-4" : ""}`}>
               <button
                 type="submit"
                 disabled={loading || !input.trim() || selectedModels.size === 0}
-                className="rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                className={
+                  drivingMode
+                    ? "w-full min-h-[72px] rounded-2xl bg-slate-900 px-8 py-5 text-xl font-bold text-white transition-all hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                    : "rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                }
               >
-                {loading ? "Processing..." : "Submit"}
+                {loading ? "Processing..." : drivingMode ? "Send" : "Submit"}
               </button>
-              <label className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50 inline-block">
+              <label
+                className={
+                  drivingMode
+                    ? "w-full min-h-[72px] flex items-center justify-center rounded-2xl border-2 border-slate-300 bg-white px-8 py-5 text-xl font-bold text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50 inline-block"
+                    : "rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50 inline-block"
+                }
+              >
                 <input
                   type="file"
                   accept="audio/*,.mp3,.mp4,.mpeg,.mpga,.m4a,.wav,.webm"
@@ -414,7 +488,11 @@ export default function LLMPage() {
                   type="button"
                   disabled={transcribing || loading}
                   onClick={() => startRecording("main")}
-                  className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                  className={
+                    drivingMode
+                      ? "w-full min-h-[72px] rounded-2xl border-2 border-slate-300 bg-white px-8 py-5 text-xl font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                      : "rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                  }
                 >
                   {transcribing ? "Transcribing..." : "Record"}
                 </button>
@@ -422,9 +500,22 @@ export default function LLMPage() {
                 <button
                   type="button"
                   onClick={stopRecording}
-                  className="rounded-xl border border-red-300 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-100"
+                  className={
+                    drivingMode
+                      ? "w-full min-h-[72px] rounded-2xl border-2 border-red-400 bg-red-100 px-8 py-5 text-xl font-bold text-red-700 hover:bg-red-200"
+                      : "rounded-xl border border-red-300 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-100"
+                  }
                 >
                   Stop
+                </button>
+              )}
+              {drivingMode && (
+                <button
+                  type="button"
+                  onClick={stopPlayback}
+                  className="w-full min-h-[72px] rounded-2xl border-2 border-amber-300 bg-amber-50 px-8 py-5 text-xl font-bold text-amber-800 hover:bg-amber-100"
+                >
+                  Stop playback
                 </button>
               )}
             </div>
@@ -603,20 +694,28 @@ export default function LLMPage() {
                   )}
                   <div ref={replyEndRef} />
                 </div>
-                <form onSubmit={handleReply} className="mt-4 flex flex-wrap items-center gap-2">
+                <form onSubmit={handleReply} className={`mt-4 flex flex-wrap items-center gap-2 ${drivingMode ? "flex-col gap-4" : ""}`}>
                   <input
                     type="text"
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     placeholder="Reply or record…"
                     disabled={loading}
-                    className="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:opacity-60"
+                    className={
+                      drivingMode
+                        ? "w-full min-h-[56px] flex-1 rounded-2xl border-2 border-slate-300 bg-white px-5 py-4 text-lg text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-60"
+                        : "min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:opacity-60"
+                    }
                   />
                   {recording && recordingForReply ? (
                     <button
                       type="button"
                       onClick={stopRecording}
-                      className="shrink-0 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 hover:bg-red-100"
+                      className={
+                        drivingMode
+                          ? "w-full min-h-[72px] shrink-0 rounded-2xl border-2 border-red-400 bg-red-100 px-8 py-5 text-xl font-bold text-red-700 hover:bg-red-200"
+                          : "shrink-0 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 hover:bg-red-100"
+                      }
                     >
                       Stop
                     </button>
@@ -625,7 +724,11 @@ export default function LLMPage() {
                       type="button"
                       disabled={recording || transcribing || loading}
                       onClick={() => startRecording("reply")}
-                      className="shrink-0 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                      className={
+                        drivingMode
+                          ? "w-full min-h-[72px] shrink-0 rounded-2xl border-2 border-slate-300 bg-white px-8 py-5 text-xl font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                          : "shrink-0 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                      }
                     >
                       {transcribing ? "…" : "Record"}
                     </button>
@@ -633,10 +736,23 @@ export default function LLMPage() {
                   <button
                     type="submit"
                     disabled={loading || !replyText.trim()}
-                    className="shrink-0 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className={
+                      drivingMode
+                        ? "w-full min-h-[72px] shrink-0 rounded-2xl bg-slate-900 px-8 py-5 text-xl font-bold text-white transition-all hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                        : "shrink-0 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                    }
                   >
                     Send
                   </button>
+                  {drivingMode && (
+                    <button
+                      type="button"
+                      onClick={stopPlayback}
+                      className="w-full min-h-[72px] shrink-0 rounded-2xl border-2 border-amber-300 bg-amber-50 px-8 py-5 text-xl font-bold text-amber-800 hover:bg-amber-100"
+                    >
+                      Stop playback
+                    </button>
+                  )}
                 </form>
               </div>
             )}

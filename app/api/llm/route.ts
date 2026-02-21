@@ -610,7 +610,9 @@ export async function POST(request: Request) {
           }
         } else {
           const promptText = messages[0]?.content ?? "";
-          const conversationModelId = modelIds.length === 1 ? modelIds[0] : null;
+          // Only tag as conversation when there's more than one exchange (reply path sets it on update)
+          const conversationModelId =
+            modelIds.length === 1 && messages.length > 1 ? modelIds[0] : null;
           const { data: sessionRow, error: sessionError } = await supabase
             .from("llm_sessions")
             .insert({
