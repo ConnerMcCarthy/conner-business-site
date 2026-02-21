@@ -123,7 +123,8 @@ export default function LLMPage() {
 
   async function sendAudioForTranscription(
     blob: Blob,
-    target: "main" | "reply" = "main"
+    target: "main" | "reply" = "main",
+    onDone?: (combinedText: string) => void
   ) {
     setTranscribing(true);
     setError(null);
@@ -138,9 +139,18 @@ export default function LLMPage() {
       if (!res.ok) throw new Error(data.error || "Transcription failed");
       const text = data.text || "";
       if (target === "reply") {
-        setReplyText((prev) => (prev ? `${prev}\n\n${text}` : text));
+        const combined = (prev: string) => (prev ? `${prev}\n\n${text}` : text);
+        setReplyText((prev) => {
+          const c = combined(prev);
+          if (drivingMode && onDone) onDone(c);
+          return c;
+        });
       } else {
-        setInput((prev) => (prev ? `${prev}\n\n${text}` : text));
+        setInput((prev) => {
+          const c = prev ? `${prev}\n\n${text}` : text;
+          if (drivingMode && onDone) onDone(c);
+          return c;
+        });
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Transcription failed");
@@ -155,13 +165,17 @@ export default function LLMPage() {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const recorder = new MediaRecorder(stream);
       mediaRecorderRef.current = recorder;
-      recorder.ondataavailable = (e) => {
-        if (e.data.size) chunksRef.current.push(e.data);
-      };
+      const targetWhenStarted = target;
       recorder.onstop = () => {
         stream.getTracks().forEach((t) => t.stop());
         const blob = new Blob(chunksRef.current, { type: "audio/webm" });
-        sendAudioForTranscription(blob, target);
+        const onDone =
+          drivingMode && targetWhenStarted === "main"
+            ? (combinedText: string) => submitMainPrompt(combinedText)
+            : drivingMode && targetWhenStarted === "reply"
+              ? (combinedText: string) => submitReply(combinedText)
+              : undefined;
+        sendAudioForTranscription(blob, targetWhenStarted, onDone);
       };
       recorder.start();
       setRecording(true);
@@ -215,9 +229,8 @@ export default function LLMPage() {
     });
   };
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const text = input.trim();
+  async function submitMainPrompt(promptText: string) {
+    const text = promptText.trim();
     if (!text || loading || selectedModels.size === 0) return;
 
     setError(null);
@@ -274,9 +287,13 @@ export default function LLMPage() {
     }
   }
 
-  async function handleReply(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const text = replyText.trim();
+    await submitMainPrompt(input.trim());
+  }
+
+  async function submitReply(replyTextParam: string) {
+    const text = replyTextParam.trim();
     if (!text || loading || !conversationModelId || !conversationMessages) return;
 
     setError(null);
@@ -327,6 +344,11 @@ export default function LLMPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleReply(e: React.FormEvent) {
+    e.preventDefault();
+    await submitReply(replyText.trim());
   }
 
   return (

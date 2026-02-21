@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const TTS_MAX_CHARS = 4096;
-const VOICE = "alloy";
+const VOICE = "marin";
 
 export async function POST(request: Request) {
   try {
