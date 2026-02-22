@@ -21,7 +21,20 @@ type LLMRequestBody = {
   useGrokSummary?: boolean;
   /** Include OpenAI 5.2 synthesis when 2+ models. Default true. */
   useSynthesis?: boolean;
+  /** When true, summary models receive TTS-friendly output instructions. */
+  drivingMode?: boolean;
 };
+
+const DRIVING_TTS_SUMMARY_PREFIX = `Reply in a way that is good for text-to-speech.
+Keep it short and clear.
+Use natural spoken language.
+Do not use tables, bullet points, emojis, or code blocks.
+Do not reference visuals, formatting, or links.
+Start with a direct one-sentence answer.
+If giving steps, say "Step one," "Step two," etc.
+Do not explain reasoning unless asked.
+
+`;
 
 type LLMResult = {
   summary: string;
@@ -258,18 +271,18 @@ async function callDeepSeek(messages: ChatMessage[]): Promise<string> {
 }
 
 /** Brief compare/contrast summary of model responses. Uses Grok 4-1 reasoning. */
-async function generateGrokSummary(responses: LLMResponse[]): Promise<string> {
+async function generateGrokSummary(
+  responses: LLMResponse[],
+  drivingMode?: boolean
+): Promise<string> {
   const validResponses = responses.filter((r) => !r.error);
   if (validResponses.length === 0) return "";
   const context = validResponses
     .map((r) => `**${r.provider}:**\n${r.response}`)
     .join("\n\n---\n\n");
-  const messages: ChatMessage[] = [
-    {
-      role: "user",
-      content: `Briefly summarize and compare and contrast these models' responses.\n\n${context}`,
-    },
-  ];
+  const basePrompt = `Briefly summarize and compare and contrast these models' responses.\n\n${context}`;
+  const content = drivingMode ? DRIVING_TTS_SUMMARY_PREFIX + basePrompt : basePrompt;
+  const messages: ChatMessage[] = [{ role: "user", content }];
   try {
     return await callGrok(messages);
   } catch {
@@ -296,7 +309,10 @@ async function generateTitle(summary: string): Promise<string> {
   }
 }
 
-async function generateSummary(responses: LLMResponse[]): Promise<string> {
+async function generateSummary(
+  responses: LLMResponse[],
+  drivingMode?: boolean
+): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error("OpenAI API key not configured for summary");
@@ -312,7 +328,7 @@ async function generateSummary(responses: LLMResponse[]): Promise<string> {
     .map((r) => `**${r.provider}:**\n${r.response}`)
     .join("\n\n---\n\n");
 
-  const summaryPrompt = `You are a model-response synthesizer. You will be given multiple responses from different models in the responses below.
+  const summaryPromptBase = `You are a model-response synthesizer. You will be given multiple responses from different models in the responses below.
 
 Output in this exact structure:
 
@@ -355,6 +371,7 @@ Rules:
 
 ${context}`;
 
+  const summaryPrompt = drivingMode ? DRIVING_TTS_SUMMARY_PREFIX + summaryPromptBase : summaryPromptBase;
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -502,7 +519,7 @@ function buildPromises(
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as LLMRequestBody;
-    const { prompt, models: requestedModels, messages: bodyMessages, sessionId: bodySessionId, useGrokSummary = true, useSynthesis = true } = body;
+    const { prompt, models: requestedModels, messages: bodyMessages, sessionId: bodySessionId, useGrokSummary = true, useSynthesis = true, drivingMode = false } = body;
 
     const messages: ChatMessage[] =
       bodyMessages && bodyMessages.length > 0
@@ -545,14 +562,14 @@ export async function POST(request: Request) {
       const promises: Promise<string>[] = [];
       if (useSynthesis) {
         promises.push(
-          generateSummary(responses).catch((error) =>
+          generateSummary(responses, drivingMode).catch((error) =>
             "Failed to generate summary. " +
             (error instanceof Error ? error.message : "Unknown error")
           )
         );
       }
       if (useGrokSummary) {
-        promises.push(generateGrokSummary(responses).catch(() => ""));
+        promises.push(generateGrokSummary(responses, drivingMode).catch(() => ""));
       }
       const results = await Promise.all(promises);
       let i = 0;

@@ -30,6 +30,17 @@ const MODEL_OPTIONS = [
 
 const DEFAULT_SELECTED = new Set(MODEL_OPTIONS.map((m) => m.id));
 
+const FAST_MODEL_IDS = new Set(["grok-reasoning", "grok-non-reasoning", "deepseek"]);
+
+const DRIVING_TTS_PROMPT_PREFIX = `Reply in a way that is good for text-to-speech.
+Keep it short and clear.
+Use natural spoken language.
+Do not use tables, bullet points, emojis, or code blocks.
+Do not reference visuals, formatting, or links.
+Start with a direct one-sentence answer.
+If giving steps, say "Step one," "Step two," etc.
+Do not explain reasoning unless asked.`;
+
 export default function LLMPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -68,6 +79,7 @@ export default function LLMPage() {
 
   const selectAllModels = () => setSelectedModels(new Set(MODEL_OPTIONS.map((m) => m.id)));
   const clearAllModels = () => setSelectedModels(new Set());
+  const selectFastModels = () => setSelectedModels(new Set(FAST_MODEL_IDS));
 
   async function speakWithTTS(text: string) {
     if (!text.trim() || speakingRef.current) return;
@@ -246,14 +258,17 @@ export default function LLMPage() {
     setExpandedProviders(new Set());
 
     try {
+      const userPart = doublePrompt ? `${text}\n\n${text}` : text;
+      const promptContent = drivingMode ? `${DRIVING_TTS_PROMPT_PREFIX}\n\n${userPart}` : userPart;
       const res = await fetch("/api/llm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: doublePrompt ? `${text}\n\n${text}` : text,
+          prompt: promptContent,
           models: Array.from(selectedModels),
           useGrokSummary,
           useSynthesis: useSynthesisSummary,
+          drivingMode,
         }),
       });
 
@@ -301,9 +316,10 @@ export default function LLMPage() {
 
     setError(null);
     setLoading(true);
+    const userContent = drivingMode ? `${DRIVING_TTS_PROMPT_PREFIX}\n\n${text}` : text;
     const nextMessages: ChatMessage[] = [
       ...conversationMessages,
-      { role: "user", content: text },
+      { role: "user", content: userContent },
     ];
     setReplyText("");
 
@@ -316,6 +332,7 @@ export default function LLMPage() {
           models: [conversationModelId],
           messages: nextMessages,
           ...(conversationSessionId ? { sessionId: conversationSessionId } : {}),
+          drivingMode,
         }),
       });
 
@@ -391,6 +408,9 @@ export default function LLMPage() {
                   </button>
                   <button type="button" onClick={clearAllModels} className="min-h-[44px] min-w-[44px] rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-800 active:bg-slate-200">
                     None
+                  </button>
+                  <button type="button" onClick={selectFastModels} className="min-h-[44px] rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-800 active:bg-slate-200">
+                    Fast
                   </button>
                 </div>
               </div>
@@ -569,6 +589,26 @@ export default function LLMPage() {
                 <div className="prose prose-sm max-w-none prose-headings:text-slate-800 prose-p:text-slate-700 prose-strong:text-slate-900 prose-ul:text-slate-700 prose-li:text-slate-700 prose-h2:mt-8 prose-h2:mb-3 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h3:mt-6 prose-h3:mb-2 prose-h4:mt-5 prose-h4:mb-2 prose-p:my-2.5 prose-ul:my-3 prose-ol:my-3 prose-li:my-0.5 [&>h2:first-child]:mt-0 [&>h3:first-child]:mt-0 [&>h4:first-child]:mt-0">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{result.grokSummary}</ReactMarkdown>
                 </div>
+                {conversationMessages == null && lastSubmittedPrompt && (
+                  <div className="mt-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setConversationSessionId(null);
+                        setConversationMessages([
+                          { role: "user", content: lastSubmittedPrompt },
+                          { role: "assistant", content: result.grokSummary ?? "" },
+                        ]);
+                        setConversationModelId("grok-reasoning");
+                        setConversationProviderLabel("Grok 4-1 Fast Reasoning");
+                        replyEndRef.current?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Continue conversation
+                    </button>
+                  </div>
+                )}
               </div>
             ) : null}
 
@@ -590,6 +630,26 @@ export default function LLMPage() {
                 <div className="prose prose-sm max-w-none prose-headings:text-slate-800 prose-p:text-slate-700 prose-strong:text-slate-900 prose-ul:text-slate-700 prose-li:text-slate-700 prose-h2:mt-8 prose-h2:mb-3 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h3:mt-6 prose-h3:mb-2 prose-h4:mt-5 prose-h4:mb-2 prose-p:my-2.5 prose-ul:my-3 prose-ol:my-3 prose-li:my-0.5 [&>h2:first-child]:mt-0 [&>h3:first-child]:mt-0 [&>h4:first-child]:mt-0">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{result.summary}</ReactMarkdown>
                 </div>
+                {conversationMessages == null && lastSubmittedPrompt && (
+                  <div className="mt-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setConversationSessionId(null);
+                        setConversationMessages([
+                          { role: "user", content: lastSubmittedPrompt },
+                          { role: "assistant", content: result.summary },
+                        ]);
+                        setConversationModelId("openai-5.2");
+                        setConversationProviderLabel("OpenAI 5.2");
+                        replyEndRef.current?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Continue conversation
+                    </button>
+                  </div>
+                )}
               </div>
             ) : null}
 
