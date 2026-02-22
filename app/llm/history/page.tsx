@@ -52,6 +52,8 @@ export default function LLMHistoryPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [detailsCache, setDetailsCache] = useState<Record<string, SessionDetail>>({});
   const [loadingDetailId, setLoadingDetailId] = useState<string | null>(null);
+  /** Per-entry set of expanded model response provider names (for click-to-expand) */
+  const [expandedResponseProviders, setExpandedResponseProviders] = useState<Record<string, Set<string>>>({});
 
   useEffect(() => {
     fetch("/api/llm/history")
@@ -117,6 +119,17 @@ export default function LLMHistoryPage() {
   }
 
   const expandedDetail = expandedId ? detailsCache[expandedId] : null;
+
+  function toggleResponseProvider(entryId: string, provider: string) {
+    setExpandedResponseProviders((prev) => {
+      const next = { ...prev };
+      const set = new Set(next[entryId] ?? []);
+      if (set.has(provider)) set.delete(provider);
+      else set.add(provider);
+      next[entryId] = set;
+      return next;
+    });
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
@@ -276,30 +289,45 @@ export default function LLMHistoryPage() {
                               <div>
                                 <h3 className="text-sm font-semibold text-slate-700 mb-2">Model responses</h3>
                                 <div className="space-y-4">
-                                  {detail.responses.map((r) => (
-                                    <div
-                                      key={`${r.provider}-${r.sort_order}`}
-                                      className="rounded-lg bg-white border border-slate-200 overflow-hidden"
-                                    >
-                                      <div className="border-b border-slate-100 px-3 py-2 font-medium text-slate-800 text-sm">
-                                        {r.provider}
-                                        {r.error && (
-                                          <span className="ml-2 text-xs text-red-600">(Error)</span>
-                                        )}
-                                      </div>
-                                      <div className="p-3">
-                                        {r.error ? (
-                                          <p className="text-sm text-red-600">{r.error}</p>
-                                        ) : (
-                                          <div className="prose prose-sm max-w-none prose-headings:text-slate-800 prose-p:text-slate-700 prose-strong:text-slate-900 prose-ul:text-slate-700 prose-li:text-slate-700 prose-h2:mt-4 prose-h2:mb-2 prose-h3:mt-3 prose-h3:mb-1 prose-p:my-1.5 prose-ul:my-1.5 prose-ol:my-1.5 prose-li:my-0 [&>h2:first-child]:mt-0 [&>h3:first-child]:mt-0">
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                              {r.response}
-                                            </ReactMarkdown>
+                                  {detail.responses.map((r) => {
+                                    const entryId = detail.session.id;
+                                    const isExpanded = (expandedResponseProviders[entryId] ?? new Set()).has(r.provider);
+                                    return (
+                                      <div
+                                        key={`${r.provider}-${r.sort_order}`}
+                                        className="rounded-xl border border-slate-200 bg-white shadow-sm"
+                                      >
+                                        <button
+                                          type="button"
+                                          onClick={() => toggleResponseProvider(entryId, r.provider)}
+                                          className="flex w-full items-center justify-between gap-2 rounded-t-xl border-b border-slate-100 px-4 py-3 text-left hover:bg-slate-50 transition-colors"
+                                        >
+                                          <span className="font-medium text-slate-800">
+                                            {r.provider}
+                                            {r.error && (
+                                              <span className="ml-2 text-xs text-red-600">(Error)</span>
+                                            )}
+                                          </span>
+                                          <span className="shrink-0 text-sm text-slate-500">
+                                            {isExpanded ? "▼" : "▶"}
+                                          </span>
+                                        </button>
+                                        {isExpanded && (
+                                          <div className="border-t border-slate-100 px-4 pb-4">
+                                            {r.error ? (
+                                              <p className="mt-3 text-sm text-red-600">{r.error}</p>
+                                            ) : (
+                                              <div className="mt-3 prose prose-sm max-w-none prose-headings:text-slate-800 prose-p:text-slate-700 prose-strong:text-slate-900 prose-ul:text-slate-700 prose-li:text-slate-700 prose-h2:mt-8 prose-h2:mb-3 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h3:mt-6 prose-h3:mb-2 prose-h4:mt-5 prose-h4:mb-2 prose-p:my-2.5 prose-ul:my-3 prose-ol:my-3 prose-li:my-0.5 [&>h2:first-child]:mt-0 [&>h3:first-child]:mt-0 [&>h4:first-child]:mt-0">
+                                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                  {r.response}
+                                                </ReactMarkdown>
+                                              </div>
+                                            )}
                                           </div>
                                         )}
                                       </div>
-                                    </div>
-                                  ))}
+                                    );
+                                  })}
                                 </div>
                               </div>
                             )}
