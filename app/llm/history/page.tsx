@@ -21,11 +21,16 @@ type ChatMessage = { role: "user" | "assistant"; content: string };
 const MODEL_ID_TO_LABEL: Record<string, string> = {
   "openai-5.2": "OpenAI 5.2",
   "openai-4.1": "OpenAI 4.1",
+  "openai-5-mini": "OpenAI 5 Mini",
+  "openai-5-nano": "OpenAI 5 Nano",
   "claude-opus": "Claude Opus 4.6",
   "claude-sonnet": "Claude Sonnet 4.6",
+  "claude-haiku": "Claude Haiku 4.5",
   "grok-reasoning": "Grok 4-1 Fast Reasoning",
   "grok-non-reasoning": "Grok 4-1 Fast Non-Reasoning",
   deepseek: "DeepSeek Chat",
+  "gemini-flash": "Gemini 1.5 Flash",
+  "mistral-small": "Mistral Small",
 };
 
 type SessionResponse = {

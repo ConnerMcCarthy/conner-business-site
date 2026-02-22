@@ -126,6 +126,38 @@ async function callOpenAI41(messages: ChatMessage[]): Promise<string> {
   return normalizeContent(content ?? "");
 }
 
+async function callOpenAI5Mini(messages: ChatMessage[]): Promise<string> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) throw new Error("OpenAI API key not configured");
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({ model: "gpt-5-mini", messages, max_completion_tokens: 2000 }),
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(`OpenAI API error: ${res.status} ${JSON.stringify(error)}`);
+  }
+  const data = await res.json();
+  return normalizeContent(data.choices?.[0]?.message?.content ?? "");
+}
+
+async function callOpenAI5Nano(messages: ChatMessage[]): Promise<string> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) throw new Error("OpenAI API key not configured");
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({ model: "gpt-5-nano", messages, max_completion_tokens: 2000 }),
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(`OpenAI API error: ${res.status} ${JSON.stringify(error)}`);
+  }
+  const data = await res.json();
+  return normalizeContent(data.choices?.[0]?.message?.content ?? "");
+}
+
 async function callClaude(messages: ChatMessage[]): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
@@ -184,6 +216,30 @@ async function callClaudeSonnet(messages: ChatMessage[]): Promise<string> {
   const data = await res.json();
   const text = data.content?.[0]?.text;
   return normalizeContent(text ?? "");
+}
+
+async function callClaudeHaiku(messages: ChatMessage[]): Promise<string> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) throw new Error("Anthropic API key not configured");
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: "claude-haiku-4-5",
+      max_tokens: 2000,
+      messages,
+    }),
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(`Claude API error: ${res.status} ${JSON.stringify(error)}`);
+  }
+  const data = await res.json();
+  return normalizeContent(data.content?.[0]?.text ?? "");
 }
 
 async function callGrok(messages: ChatMessage[]): Promise<string> {
@@ -266,6 +322,63 @@ async function callDeepSeek(messages: ChatMessage[]): Promise<string> {
     throw new Error(`DeepSeek API error: ${res.status} ${JSON.stringify(error)}`);
   }
 
+  const data = await res.json();
+  return normalizeContent(data.choices?.[0]?.message?.content ?? "");
+}
+
+async function callGemini(messages: ChatMessage[]): Promise<string> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error("Gemini API key not configured");
+  }
+  const contents = messages.map((m) => ({
+    role: m.role === "assistant" ? "model" : "user",
+    parts: [{ text: m.content }],
+  }));
+  const res = await fetch(
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": apiKey,
+      },
+      body: JSON.stringify({
+        contents,
+        generationConfig: { maxOutputTokens: 2000 },
+      }),
+    }
+  );
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(`Gemini API error: ${res.status} ${JSON.stringify(error)}`);
+  }
+  const data = await res.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  return normalizeContent(text ?? "");
+}
+
+async function callMistral(messages: ChatMessage[]): Promise<string> {
+  const apiKey = process.env.MISTRAL_API_KEY;
+  if (!apiKey) {
+    throw new Error("Mistral API key not configured");
+  }
+  const res = await fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: "mistral-small-latest",
+      messages,
+      max_tokens: 2000,
+    }),
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(`Mistral API error: ${res.status} ${JSON.stringify(error)}`);
+  }
   const data = await res.json();
   return normalizeContent(data.choices?.[0]?.message?.content ?? "");
 }
@@ -404,21 +517,31 @@ ${context}`;
 const MODEL_IDS = [
   "openai-5.2",
   "openai-4.1",
+  "openai-5-mini",
+  "openai-5-nano",
   "claude-opus",
   "claude-sonnet",
+  "claude-haiku",
   "grok-reasoning",
   "grok-non-reasoning",
   "deepseek",
+  "gemini-flash",
+  "mistral-small",
 ] as const;
 
 const PROVIDER_TO_MODEL_ID: Record<string, string> = {
   "OpenAI 5.2": "openai-5.2",
   "OpenAI 4.1": "openai-4.1",
+  "OpenAI 5 Mini": "openai-5-mini",
+  "OpenAI 5 Nano": "openai-5-nano",
   "Claude Opus 4.6": "claude-opus",
   "Claude Sonnet 4.6": "claude-sonnet",
+  "Claude Haiku 4.5": "claude-haiku",
   "Grok 4-1 Fast Reasoning": "grok-reasoning",
   "Grok 4-1 Fast Non-Reasoning": "grok-non-reasoning",
   "DeepSeek Chat": "deepseek",
+  "Gemini 1.5 Flash": "gemini-flash",
+  "Mistral Small": "mistral-small",
 };
 
 function buildPromises(
@@ -476,6 +599,18 @@ function buildPromises(
       )
     );
   }
+  if (set.has("claude-haiku")) {
+    promises.push(
+      callClaudeHaiku(messages).then(
+        (r) => ({ provider: "Claude Haiku 4.5", response: r }),
+        (e) => ({
+          provider: "Claude Haiku 4.5",
+          response: "",
+          error: e instanceof Error ? e.message : "Unknown error",
+        })
+      )
+    );
+  }
   if (set.has("grok-reasoning")) {
     promises.push(
       callGrok(messages).then(
@@ -506,6 +641,30 @@ function buildPromises(
         (r) => ({ provider: "DeepSeek Chat", response: r }),
         (e) => ({
           provider: "DeepSeek Chat",
+          response: "",
+          error: e instanceof Error ? e.message : "Unknown error",
+        })
+      )
+    );
+  }
+  if (set.has("gemini-flash")) {
+    promises.push(
+      callGemini(messages).then(
+        (r) => ({ provider: "Gemini 1.5 Flash", response: r }),
+        (e) => ({
+          provider: "Gemini 1.5 Flash",
+          response: "",
+          error: e instanceof Error ? e.message : "Unknown error",
+        })
+      )
+    );
+  }
+  if (set.has("mistral-small")) {
+    promises.push(
+      callMistral(messages).then(
+        (r) => ({ provider: "Mistral Small", response: r }),
+        (e) => ({
+          provider: "Mistral Small",
           response: "",
           error: e instanceof Error ? e.message : "Unknown error",
         })

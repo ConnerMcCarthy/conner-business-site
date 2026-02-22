@@ -21,16 +21,29 @@ type ChatMessage = { role: "user" | "assistant"; content: string };
 const MODEL_OPTIONS = [
   { id: "openai-5.2", label: "OpenAI 5.2" },
   { id: "openai-4.1", label: "OpenAI 4.1" },
+  { id: "openai-5-mini", label: "OpenAI 5 Mini" },
+  { id: "openai-5-nano", label: "OpenAI 5 Nano" },
   { id: "claude-opus", label: "Claude Opus 4.6" },
   { id: "claude-sonnet", label: "Claude Sonnet 4.6" },
+  { id: "claude-haiku", label: "Claude Haiku 4.5" },
   { id: "grok-reasoning", label: "Grok 4-1 Fast Reasoning" },
   { id: "grok-non-reasoning", label: "Grok 4-1 Fast Non-Reasoning" },
   { id: "deepseek", label: "DeepSeek Chat" },
+  { id: "gemini-flash", label: "Gemini 1.5 Flash" },
+  { id: "mistral-small", label: "Mistral Small" },
 ] as const;
 
 const DEFAULT_SELECTED = new Set(MODEL_OPTIONS.map((m) => m.id));
 
-const FAST_MODEL_IDS = new Set(["grok-reasoning", "grok-non-reasoning", "deepseek"]);
+const FAST_MODEL_IDS = new Set([
+  "grok-reasoning",
+  "grok-non-reasoning",
+  "deepseek",
+  "gemini-flash",
+  "mistral-small",
+  "openai-5-mini",
+  "openai-5-nano",
+]);
 
 const DRIVING_TTS_PROMPT_PREFIX = `Reply in a way that is good for text-to-speech.
 Keep it short and clear.
@@ -594,10 +607,18 @@ export default function LLMPage() {
                     <button
                       type="button"
                       onClick={() => {
+                        const summaryBlock = result.grokSummary ?? "";
+                        const allResponses = result.responses
+                          .map(
+                            (r) =>
+                              `**${r.provider}**:\n${r.error ? `(Error: ${r.error})` : r.response}`
+                          )
+                          .join("\n\n---\n\n");
+                        const fullContext = summaryBlock + "\n\n---\n\nIndividual model responses:\n\n" + allResponses;
                         setConversationSessionId(null);
                         setConversationMessages([
                           { role: "user", content: lastSubmittedPrompt },
-                          { role: "assistant", content: result.grokSummary ?? "" },
+                          { role: "assistant", content: fullContext },
                         ]);
                         setConversationModelId("grok-reasoning");
                         setConversationProviderLabel("Grok 4-1 Fast Reasoning");
@@ -635,10 +656,18 @@ export default function LLMPage() {
                     <button
                       type="button"
                       onClick={() => {
+                        const summaryBlock = result.summary;
+                        const allResponses = result.responses
+                          .map(
+                            (r) =>
+                              `**${r.provider}**:\n${r.error ? `(Error: ${r.error})` : r.response}`
+                          )
+                          .join("\n\n---\n\n");
+                        const fullContext = summaryBlock + "\n\n---\n\nIndividual model responses:\n\n" + allResponses;
                         setConversationSessionId(null);
                         setConversationMessages([
                           { role: "user", content: lastSubmittedPrompt },
-                          { role: "assistant", content: result.summary },
+                          { role: "assistant", content: fullContext },
                         ]);
                         setConversationModelId("openai-5.2");
                         setConversationProviderLabel("OpenAI 5.2");
