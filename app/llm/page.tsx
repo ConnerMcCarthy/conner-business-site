@@ -43,6 +43,25 @@ const FAST_MODEL_IDS = new Set([
   "mistral-small",
   "openai-5-mini",
   "openai-5-nano",
+  "claude-haiku",
+]);
+
+const NON_REASONING_MODEL_IDS = new Set([
+  "openai-5-mini",
+  "openai-5-nano",
+  "claude-sonnet",
+  "claude-haiku",
+  "grok-non-reasoning",
+  "gemini-flash",
+  "deepseek",
+  "mistral-small",
+]);
+
+const REASONING_MODEL_IDS = new Set([
+  "grok-reasoning",
+  "openai-5.2",
+  "openai-4.1",
+  "claude-opus",
 ]);
 
 const DRIVING_TTS_PROMPT_PREFIX = `Reply in a way that is good for text-to-speech.
@@ -93,6 +112,8 @@ export default function LLMPage() {
   const selectAllModels = () => setSelectedModels(new Set(MODEL_OPTIONS.map((m) => m.id)));
   const clearAllModels = () => setSelectedModels(new Set());
   const selectFastModels = () => setSelectedModels(new Set(FAST_MODEL_IDS));
+  const selectNonReasoningModels = () => setSelectedModels(new Set(NON_REASONING_MODEL_IDS));
+  const selectReasoningModels = () => setSelectedModels(new Set(REASONING_MODEL_IDS));
 
   async function speakWithTTS(text: string) {
     if (!text.trim() || speakingRef.current) return;
@@ -424,6 +445,12 @@ export default function LLMPage() {
                   </button>
                   <button type="button" onClick={selectFastModels} className="min-h-[44px] rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-800 active:bg-slate-200">
                     Fast
+                  </button>
+                  <button type="button" onClick={selectNonReasoningModels} className="min-h-[44px] rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-800 active:bg-slate-200">
+                    Non-reasoning
+                  </button>
+                  <button type="button" onClick={selectReasoningModels} className="min-h-[44px] rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-800 active:bg-slate-200">
+                    Reasoning
                   </button>
                 </div>
               </div>
