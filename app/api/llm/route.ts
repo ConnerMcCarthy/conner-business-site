@@ -425,7 +425,8 @@ async function callMistral(messages: ChatMessage[]): Promise<string> {
   return normalizeContent(data.choices?.[0]?.message?.content ?? "");
 }
 
-/** Brief compare/contrast summary of model responses. Uses Grok 4-1 reasoning. */
+/** Brief compare/contrast summary of model responses. Uses Grok 4-1 reasoning.
+ * Output must start with a 1–5 word title, then ":", then the rest of the summary (used for history entry title). */
 async function generateGrokSummary(
   responses: LLMResponse[],
   drivingMode?: boolean
@@ -435,7 +436,18 @@ async function generateGrokSummary(
   const context = validResponses
     .map((r) => `**${r.provider}:**\n${r.response}`)
     .join("\n\n---\n\n");
-  const basePrompt = `Briefly summarize and compare and contrast these models' responses.\n\n${context}`;
+  const basePrompt = `Briefly summarize and compare and contrast these models' responses.
+
+Your reply MUST start with a single line in this exact format:
+[1-5 word title]: [rest of summary on same line or continue below]
+
+Example: "Model comparison: All three models agree that..." Then you may add more paragraphs if needed.
+
+Do not use quotes around the title. After the colon, give the main summary content.
+
+Responses to summarize:
+
+${context}`;
   const content = drivingMode ? DRIVING_TTS_SUMMARY_PREFIX + basePrompt : basePrompt;
   const messages: ChatMessage[] = [{ role: "user", content }];
   try {
@@ -453,7 +465,7 @@ async function generateTitle(summary: string): Promise<string> {
   const messages: ChatMessage[] = [
     {
       role: "user",
-      content: `Summarize the following in one short sentence. Reply with only that sentence, no quotes or preamble.\n\n${summary}`,
+      content: `Start with a 1-5 word title: Then summarize the following in one short sentence. Reply with only that sentence, no quotes.\n\n${summary}`,
     },
   ];
   try {
@@ -484,8 +496,6 @@ async function generateSummary(
     .join("\n\n---\n\n");
 
   const summaryPromptBase = `You are a model-response synthesizer. You will be given multiple responses from different models in the responses below.
-
-Start your reply with a single line that is a **1–5 word title**, followed immediately by a colon \":\" and a very short one-sentence overview. After that first line, add a blank line and then follow the structure below.
 
 Output in this exact structure:
 
