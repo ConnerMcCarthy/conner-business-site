@@ -42,6 +42,13 @@ type LLMResult = {
   responses: LLMResponse[];
 };
 
+function sanitizeErrorMessage(message: string): string {
+  if (/invalid|json|symbol|syntax|parse|html|unexpected|Unexpected/i.test(message)) {
+    return "Response was invalid or too large. Try fewer models or a shorter prompt.";
+  }
+  return message;
+}
+
 /** Normalize API content to string (handles OpenAI array format and other shapes). */
 function normalizeContent(content: unknown): string {
   if (typeof content === "string") return content;
@@ -139,7 +146,25 @@ async function callOpenAI5Mini(messages: ChatMessage[]): Promise<string> {
     throw new Error(`OpenAI API error: ${res.status} ${JSON.stringify(error)}`);
   }
   const data = await res.json();
-  return normalizeContent(data.choices?.[0]?.message?.content ?? "");
+  const content = data.choices?.[0]?.message?.content;
+  if (content !== undefined && content !== null) {
+    const out = normalizeContent(content);
+    if (out) return out;
+  }
+  if (data.choices?.[0]?.message?.text) {
+    return normalizeContent(data.choices[0].message.text);
+  }
+  if (data.choices?.[0]?.text) {
+    return normalizeContent(data.choices[0].text);
+  }
+  // Reasoning models may put final answer in output array
+  const output = data.choices?.[0]?.message?.output;
+  if (Array.isArray(output) && output.length > 0) {
+    const text = output.map((o: { content?: string; text?: string }) => o?.content ?? o?.text).filter(Boolean).join("\n");
+    if (text) return text;
+  }
+  console.error("OpenAI 5 mini response structure:", JSON.stringify(data, null, 2));
+  return "(No text in response; check server logs for structure.)";
 }
 
 async function callOpenAI5Nano(messages: ChatMessage[]): Promise<string> {
@@ -155,7 +180,24 @@ async function callOpenAI5Nano(messages: ChatMessage[]): Promise<string> {
     throw new Error(`OpenAI API error: ${res.status} ${JSON.stringify(error)}`);
   }
   const data = await res.json();
-  return normalizeContent(data.choices?.[0]?.message?.content ?? "");
+  const content = data.choices?.[0]?.message?.content;
+  if (content !== undefined && content !== null) {
+    const out = normalizeContent(content);
+    if (out) return out;
+  }
+  if (data.choices?.[0]?.message?.text) {
+    return normalizeContent(data.choices[0].message.text);
+  }
+  if (data.choices?.[0]?.text) {
+    return normalizeContent(data.choices[0].text);
+  }
+  const output = data.choices?.[0]?.message?.output;
+  if (Array.isArray(output) && output.length > 0) {
+    const text = output.map((o: { content?: string; text?: string }) => o?.content ?? o?.text).filter(Boolean).join("\n");
+    if (text) return text;
+  }
+  console.error("OpenAI 5 nano response structure:", JSON.stringify(data, null, 2));
+  return "(No text in response; check server logs for structure.)";
 }
 
 async function callClaude(messages: ChatMessage[]): Promise<string> {
@@ -443,6 +485,8 @@ async function generateSummary(
 
   const summaryPromptBase = `You are a model-response synthesizer. You will be given multiple responses from different models in the responses below.
 
+Start your reply with a single line that is a **1–5 word title**, followed immediately by a colon \":\" and a very short one-sentence overview. After that first line, add a blank line and then follow the structure below.
+
 Output in this exact structure:
 
 ## 1) Per-model summaries (1–3 bullets each)
@@ -558,7 +602,7 @@ function buildPromises(
         (e) => ({
           provider: "OpenAI 5.2",
           response: "",
-          error: e instanceof Error ? e.message : "Unknown error",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
       )
     );
@@ -570,7 +614,31 @@ function buildPromises(
         (e) => ({
           provider: "OpenAI 4.1",
           response: "",
-          error: e instanceof Error ? e.message : "Unknown error",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
+        })
+      )
+    );
+  }
+  if (set.has("openai-5-mini")) {
+    promises.push(
+      callOpenAI5Mini(messages).then(
+        (r) => ({ provider: "OpenAI 5 Mini", response: r }),
+        (e) => ({
+          provider: "OpenAI 5 Mini",
+          response: "",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
+        })
+      )
+    );
+  }
+  if (set.has("openai-5-nano")) {
+    promises.push(
+      callOpenAI5Nano(messages).then(
+        (r) => ({ provider: "OpenAI 5 Nano", response: r }),
+        (e) => ({
+          provider: "OpenAI 5 Nano",
+          response: "",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
       )
     );
@@ -582,7 +650,7 @@ function buildPromises(
         (e) => ({
           provider: "Claude Opus 4.6",
           response: "",
-          error: e instanceof Error ? e.message : "Unknown error",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
       )
     );
@@ -594,7 +662,7 @@ function buildPromises(
         (e) => ({
           provider: "Claude Sonnet 4.6",
           response: "",
-          error: e instanceof Error ? e.message : "Unknown error",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
       )
     );
@@ -606,7 +674,7 @@ function buildPromises(
         (e) => ({
           provider: "Claude Haiku 4.5",
           response: "",
-          error: e instanceof Error ? e.message : "Unknown error",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
       )
     );
@@ -618,7 +686,7 @@ function buildPromises(
         (e) => ({
           provider: "Grok 4-1 Fast Reasoning",
           response: "",
-          error: e instanceof Error ? e.message : "Unknown error",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
       )
     );
@@ -630,7 +698,7 @@ function buildPromises(
         (e) => ({
           provider: "Grok 4-1 Fast Non-Reasoning",
           response: "",
-          error: e instanceof Error ? e.message : "Unknown error",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
       )
     );
@@ -642,7 +710,7 @@ function buildPromises(
         (e) => ({
           provider: "DeepSeek Chat",
           response: "",
-          error: e instanceof Error ? e.message : "Unknown error",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
       )
     );
@@ -654,7 +722,7 @@ function buildPromises(
         (e) => ({
           provider: "Gemini 1.5 Flash",
           response: "",
-          error: e instanceof Error ? e.message : "Unknown error",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
       )
     );
@@ -666,7 +734,7 @@ function buildPromises(
         (e) => ({
           provider: "Mistral Small",
           response: "",
-          error: e instanceof Error ? e.message : "Unknown error",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
       )
     );
@@ -677,7 +745,15 @@ function buildPromises(
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as LLMRequestBody;
+    let body: LLMRequestBody;
+    try {
+      body = (await request.json()) as LLMRequestBody;
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid request body. Please try again." },
+        { status: 400 }
+      );
+    }
     const { prompt, models: requestedModels, messages: bodyMessages, sessionId: bodySessionId, useGrokSummary = true, useSynthesis = true, drivingMode = false } = body;
 
     const messages: ChatMessage[] =
@@ -835,13 +911,10 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     console.error("LLM API error:", error);
+    const raw =
+      error instanceof Error ? error.message : "Something went wrong. Please try again.";
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Something went wrong. Please try again.",
-      },
+      { error: sanitizeErrorMessage(raw) },
       { status: 500 }
     );
   }

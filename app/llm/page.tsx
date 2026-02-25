@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+
+const LLM_CONTINUE_KEY = "llm_continue_conversation";
 
 type LLMResponse = {
   provider: string;
@@ -99,6 +101,36 @@ export default function LLMPage() {
   const replyEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(LLM_CONTINUE_KEY);
+      if (!raw) return;
+      sessionStorage.removeItem(LLM_CONTINUE_KEY);
+      const payload = JSON.parse(raw) as {
+        sessionId?: string | null;
+        modelId: string;
+        providerLabel: string;
+        messages: ChatMessage[];
+      };
+      if (!payload?.modelId || !payload?.providerLabel || !Array.isArray(payload.messages) || payload.messages.length === 0) return;
+      setConversationSessionId(payload.sessionId ?? null);
+      setConversationModelId(payload.modelId);
+      setConversationProviderLabel(payload.providerLabel);
+      setConversationMessages(payload.messages);
+      setSelectedModels(new Set([payload.modelId]));
+      const lastMsg = payload.messages[payload.messages.length - 1];
+      if (lastMsg?.role === "assistant") {
+        setResult({
+          summary: "",
+          responses: [{ provider: payload.providerLabel, response: lastMsg.content }],
+        });
+      }
+      setTimeout(() => replyEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+    } catch {
+      // ignore invalid or missing continue payload
+    }
+  }, []);
 
   const toggleModel = (id: string) => {
     setSelectedModels((prev) => {
@@ -306,10 +338,15 @@ export default function LLMPage() {
         }),
       });
 
-      const data = await res.json();
+      let data: LLMResult & { error?: string; sessionId?: string; responses?: LLMResponse[] };
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error("Response was invalid or too large. Try fewer models or a shorter prompt.");
+      }
 
       if (!res.ok) {
-        throw new Error(data.error || "Something went wrong");
+        throw new Error(data?.error || "Something went wrong");
       }
 
       setResult(data);
@@ -333,7 +370,17 @@ export default function LLMPage() {
         if (toSpeak) speakWithTTS(toSpeak);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to get responses");
+      const message =
+        err instanceof Error
+          ? err.message
+          : typeof err === "string"
+            ? err
+            : "Failed to get responses";
+      const friendly =
+        /invalid|json|symbol|syntax|parse|html|unexpected/i.test(message)
+          ? "Response was invalid or too large. Try fewer models or a shorter prompt."
+          : message;
+      setError(friendly);
     } finally {
       setLoading(false);
     }
@@ -370,10 +417,15 @@ export default function LLMPage() {
         }),
       });
 
-      const data = await res.json();
+      let data: { error?: string; responses?: LLMResponse[]; sessionId?: string };
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error("Response was invalid or too large. Try again with a shorter reply.");
+      }
 
       if (!res.ok) {
-        throw new Error(data.error || "Something went wrong");
+        throw new Error(data?.error || "Something went wrong");
       }
 
       if (data.responses?.length === 1 && !data.responses[0].error) {
@@ -394,7 +446,13 @@ export default function LLMPage() {
         setReplyText(text);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to send reply");
+      const message =
+        err instanceof Error ? err.message : typeof err === "string" ? err : "Failed to send reply";
+      const friendly =
+        /invalid|json|symbol|syntax|parse|html|unexpected/i.test(message)
+          ? "Response was invalid or too large. Try a shorter reply."
+          : message;
+      setError(friendly);
     } finally {
       setLoading(false);
     }
@@ -736,16 +794,29 @@ export default function LLMPage() {
                       </span>
                     </button>
                     {!response.error && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          copyToClipboard(response.response, response.provider);
-                        }}
-                        className="shrink-0 mr-2 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                      >
-                        {copiedId === response.provider ? "Copied!" : "Copy"}
-                      </button>
+                      <>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            speakWithTTS(response.response);
+                          }}
+                          className="shrink-0 mr-2 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                          title="Play with text-to-speech"
+                        >
+                          Play
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copyToClipboard(response.response, response.provider);
+                          }}
+                          className="shrink-0 mr-2 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                        >
+                          {copiedId === response.provider ? "Copied!" : "Copy"}
+                        </button>
+                      </>
                     )}
                   </div>
                   {expandedProviders.has(response.provider) && (
