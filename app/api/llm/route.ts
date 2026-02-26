@@ -9,8 +9,21 @@ type LLMResponse = {
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
+/** Content part for vision: text or image (data URL). */
+type ContentPart =
+  | { type: "text"; text: string }
+  | { type: "image_url"; image_url: { url: string } };
+
+/** Message content can be plain text or multipart (text + images). */
+export type VisionMessage = {
+  role: "user" | "assistant";
+  content: string | ContentPart[];
+};
+
 type LLMRequestBody = {
   prompt: string;
+  /** Optional image data URLs (base64) to attach to the user prompt. */
+  images?: string[];
   /** If provided, only these model ids are called. Summary runs only when length > 1. */
   models?: string[];
   /** Full conversation history for follow-up replies. When provided, used instead of single prompt. */
@@ -21,6 +34,8 @@ type LLMRequestBody = {
   useGrokSummary?: boolean;
   /** Include OpenAI 5.2 synthesis when 2+ models. Default true. */
   useSynthesis?: boolean;
+  /** Include Claude Sonnet summary when 2+ models. Default false. */
+  useClaudeSummary?: boolean;
   /** When true, summary models receive TTS-friendly output instructions. */
   drivingMode?: boolean;
 };
@@ -39,6 +54,7 @@ Do not explain reasoning unless asked.
 type LLMResult = {
   summary: string;
   grokSummary?: string;
+  claudeSummary?: string;
   responses: LLMResponse[];
 };
 
@@ -49,23 +65,143 @@ function sanitizeErrorMessage(message: string): string {
   return message;
 }
 
-/** Normalize API content to string (handles OpenAI array format and other shapes). */
-function normalizeContent(content: unknown): string {
+/** Extract plain text from vision message content (for providers without vision or summaries). */
+function contentToText(content: string | ContentPart[]): string {
   if (typeof content === "string") return content;
-  if (Array.isArray(content)) {
-    return content
-      .map((part) =>
-        part && typeof part === "object" && "text" in part
-          ? (part as { text?: string }).text
-          : String(part)
-      )
-      .filter(Boolean)
-      .join("");
-  }
-  return String(content ?? "");
+  return content.filter((p): p is { type: "text"; text: string } => p.type === "text").map((p) => p.text).join("\n");
 }
 
-async function callOpenAI(messages: ChatMessage[]): Promise<string> {
+/** Convert vision messages to text-only for DB storage (avoid storing base64 images). */
+function visionMessagesToChatMessages(messages: VisionMessage[]): ChatMessage[] {
+  return messages.map((m) => ({ role: m.role, content: contentToText(m.content) }));
+}
+
+/** Convert vision messages to Anthropic format: content array with type "image" using base64. */
+function toAnthropicMessages(messages: VisionMessage[]): { role: string; content: { type: string; text?: string; source?: { type: string; media_type: string; data: string } }[] }[] {
+  return messages.map((m) => {
+    if (typeof m.content === "string") {
+      return { role: m.role, content: [{ type: "text" as const, text: m.content }] };
+    }
+    const blocks: { type: string; text?: string; source?: { type: string; media_type: string; data: string } }[] = [];
+    for (const p of m.content) {
+      if (p.type === "text") {
+        blocks.push({ type: "text", text: p.text });
+      } else if (p.type === "image_url" && p.image_url?.url) {
+        const dataUrl = p.image_url.url;
+        const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+        if (match) {
+          const mediaType = match[1].toLowerCase();
+          const data = match[2];
+          blocks.push({
+            type: "image",
+            source: { type: "base64", media_type: mediaType === "image/png" ? "image/png" : "image/jpeg", data },
+          });
+        }
+      }
+    }
+    return { role: m.role, content: blocks };
+  });
+}
+
+/** Normalize API content to string (handles OpenAI array format and other shapes). */
+function normalizeContent(content: unknown): string {
+  if (typeof content === "string") return content.trim();
+  if (Array.isArray(content)) {
+    return content
+      .map((part) => {
+        if (!part || typeof part !== "object") return "";
+        const p = part as {
+          text?: string;
+          content?: string | unknown;
+          output_text?: string;
+          type?: string;
+        };
+        if (typeof p.text === "string") return p.text;
+        if (typeof p.content === "string") return p.content;
+        if (typeof p.output_text === "string") return p.output_text;
+        if (Array.isArray(p.content)) return normalizeContent(p.content);
+        return "";
+      })
+      .filter(Boolean)
+      .join("\n")
+      .trim();
+  }
+  if (content != null && typeof content === "object") {
+    const o = content as Record<string, unknown>;
+    if (typeof o.text === "string") return o.text.trim();
+    if (typeof o.output_text === "string") return o.output_text.trim();
+    if (typeof o.content === "string") return o.content.trim();
+  }
+  return String(content ?? "").trim();
+}
+
+/** Extract assistant text from OpenAI-style choice (handles various response shapes). */
+function extractChoiceText(data: Record<string, unknown>): string | null {
+  // Top-level output array (e.g. Responses API)
+  const topOutput = data.output;
+  if (Array.isArray(topOutput) && topOutput.length > 0) {
+    for (const item of topOutput) {
+      const obj = item as Record<string, unknown>;
+      if (obj?.type === "message" && Array.isArray(obj.content)) {
+        const t = normalizeContent(obj.content);
+        if (t) return t;
+      }
+      if (typeof obj?.text === "string" && obj.text.trim()) return (obj.text as string).trim();
+      if (Array.isArray(obj?.content)) {
+        const t = normalizeContent(obj.content);
+        if (t) return t;
+      }
+    }
+  }
+
+  const choice = (data.choices as Array<Record<string, unknown>>)?.[0];
+  if (!choice) return null;
+  const msg = choice.message as Record<string, unknown> | undefined;
+
+  if (msg?.content !== undefined && msg?.content !== null) {
+    const normalized = normalizeContent(msg.content);
+    if (normalized) return normalized;
+  }
+  if (msg?.text && typeof msg.text === "string") {
+    const t = (msg.text as string).trim();
+    if (t) return t;
+  }
+  if (choice.text && typeof choice.text === "string") {
+    const t = (choice.text as string).trim();
+    if (t) return t;
+  }
+
+  const output = msg?.output;
+  if (Array.isArray(output) && output.length > 0) {
+    const text = output
+      .map((o: Record<string, unknown>) => {
+        if (!o) return "";
+        const c = o.content ?? o.text;
+        if (typeof c === "string") return c;
+        return normalizeContent(c);
+      })
+      .filter(Boolean)
+      .join("\n")
+      .trim();
+    if (text) return text;
+  }
+  if (msg?.content_parts !== undefined && msg?.content_parts !== null) {
+    const normalized = normalizeContent(msg.content_parts);
+    if (normalized) return normalized;
+  }
+
+  // Fallback: any string in message that looks like body text
+  if (msg && typeof msg === "object") {
+    for (const v of Object.values(msg)) {
+      if (typeof v === "string" && v.length > 20) return v.trim();
+      const fromArr = Array.isArray(v) ? normalizeContent(v) : "";
+      if (fromArr) return fromArr;
+    }
+  }
+  return null;
+}
+
+async function callOpenAI(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error("OpenAI API key not configured");
@@ -104,7 +240,7 @@ async function callOpenAI(messages: ChatMessage[]): Promise<string> {
   throw new Error(`Unexpected OpenAI response structure: ${JSON.stringify(data)}`);
 }
 
-async function callOpenAI41(messages: ChatMessage[]): Promise<string> {
+async function callOpenAI41(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error("OpenAI API key not configured");
@@ -133,74 +269,45 @@ async function callOpenAI41(messages: ChatMessage[]): Promise<string> {
   return normalizeContent(content ?? "");
 }
 
-async function callOpenAI5Mini(messages: ChatMessage[]): Promise<string> {
+async function callOpenAI5Mini(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OpenAI API key not configured");
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({ model: "gpt-5-mini", messages, max_completion_tokens: 2000 }),
+    body: JSON.stringify({ model: "gpt-5-mini", messages, max_completion_tokens: 4000 }),
   });
   if (!res.ok) {
     const error = await res.json().catch(() => ({}));
     throw new Error(`OpenAI API error: ${res.status} ${JSON.stringify(error)}`);
   }
   const data = await res.json();
-  const content = data.choices?.[0]?.message?.content;
-  if (content !== undefined && content !== null) {
-    const out = normalizeContent(content);
-    if (out) return out;
-  }
-  if (data.choices?.[0]?.message?.text) {
-    return normalizeContent(data.choices[0].message.text);
-  }
-  if (data.choices?.[0]?.text) {
-    return normalizeContent(data.choices[0].text);
-  }
-  // Reasoning models may put final answer in output array
-  const output = data.choices?.[0]?.message?.output;
-  if (Array.isArray(output) && output.length > 0) {
-    const text = output.map((o: { content?: string; text?: string }) => o?.content ?? o?.text).filter(Boolean).join("\n");
-    if (text) return text;
-  }
+  const text = extractChoiceText(data);
+  if (text) return text;
   console.error("OpenAI 5 mini response structure:", JSON.stringify(data, null, 2));
   return "(No text in response; check server logs for structure.)";
 }
 
-async function callOpenAI5Nano(messages: ChatMessage[]): Promise<string> {
+async function callOpenAI5Nano(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OpenAI API key not configured");
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({ model: "gpt-5-nano", messages, max_completion_tokens: 2000 }),
+    body: JSON.stringify({ model: "gpt-5-nano", messages, max_completion_tokens: 4000 }),
   });
   if (!res.ok) {
     const error = await res.json().catch(() => ({}));
     throw new Error(`OpenAI API error: ${res.status} ${JSON.stringify(error)}`);
   }
   const data = await res.json();
-  const content = data.choices?.[0]?.message?.content;
-  if (content !== undefined && content !== null) {
-    const out = normalizeContent(content);
-    if (out) return out;
-  }
-  if (data.choices?.[0]?.message?.text) {
-    return normalizeContent(data.choices[0].message.text);
-  }
-  if (data.choices?.[0]?.text) {
-    return normalizeContent(data.choices[0].text);
-  }
-  const output = data.choices?.[0]?.message?.output;
-  if (Array.isArray(output) && output.length > 0) {
-    const text = output.map((o: { content?: string; text?: string }) => o?.content ?? o?.text).filter(Boolean).join("\n");
-    if (text) return text;
-  }
+  const text = extractChoiceText(data);
+  if (text) return text;
   console.error("OpenAI 5 nano response structure:", JSON.stringify(data, null, 2));
   return "(No text in response; check server logs for structure.)";
 }
 
-async function callClaude(messages: ChatMessage[]): Promise<string> {
+async function callClaude(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     throw new Error("Anthropic API key not configured");
@@ -216,7 +323,7 @@ async function callClaude(messages: ChatMessage[]): Promise<string> {
     body: JSON.stringify({
       model: "claude-opus-4-6",
       max_tokens: 2000,
-      messages,
+      messages: toAnthropicMessages(messages),
     }),
   });
 
@@ -230,7 +337,7 @@ async function callClaude(messages: ChatMessage[]): Promise<string> {
   return normalizeContent(text ?? "");
 }
 
-async function callClaudeSonnet(messages: ChatMessage[]): Promise<string> {
+async function callClaudeSonnet(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     throw new Error("Anthropic API key not configured");
@@ -246,7 +353,7 @@ async function callClaudeSonnet(messages: ChatMessage[]): Promise<string> {
     body: JSON.stringify({
       model: "claude-sonnet-4-6",
       max_tokens: 2000,
-      messages,
+      messages: toAnthropicMessages(messages),
     }),
   });
 
@@ -260,7 +367,7 @@ async function callClaudeSonnet(messages: ChatMessage[]): Promise<string> {
   return normalizeContent(text ?? "");
 }
 
-async function callClaudeHaiku(messages: ChatMessage[]): Promise<string> {
+async function callClaudeHaiku(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error("Anthropic API key not configured");
   const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -273,7 +380,7 @@ async function callClaudeHaiku(messages: ChatMessage[]): Promise<string> {
     body: JSON.stringify({
       model: "claude-haiku-4-5",
       max_tokens: 2000,
-      messages,
+      messages: toAnthropicMessages(messages),
     }),
   });
   if (!res.ok) {
@@ -284,11 +391,12 @@ async function callClaudeHaiku(messages: ChatMessage[]): Promise<string> {
   return normalizeContent(data.content?.[0]?.text ?? "");
 }
 
-async function callGrok(messages: ChatMessage[]): Promise<string> {
+async function callGrok(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.GROK_API_KEY;
   if (!apiKey) {
     throw new Error("Grok API key not configured");
   }
+  const textMessages = messages.map((m) => ({ role: m.role, content: contentToText(m.content) }));
 
   const res = await fetch("https://api.x.ai/v1/chat/completions", {
     method: "POST",
@@ -298,7 +406,7 @@ async function callGrok(messages: ChatMessage[]): Promise<string> {
     },
     body: JSON.stringify({
       model: "grok-4-1-fast-reasoning",
-      messages,
+      messages: textMessages,
       max_tokens: 2000,
     }),
   });
@@ -312,11 +420,12 @@ async function callGrok(messages: ChatMessage[]): Promise<string> {
   return normalizeContent(data.choices?.[0]?.message?.content ?? "");
 }
 
-async function callGrokNonReasoning(messages: ChatMessage[]): Promise<string> {
+async function callGrokNonReasoning(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.GROK_API_KEY;
   if (!apiKey) {
     throw new Error("Grok API key not configured");
   }
+  const textMessages = messages.map((m) => ({ role: m.role, content: contentToText(m.content) }));
 
   const res = await fetch("https://api.x.ai/v1/chat/completions", {
     method: "POST",
@@ -326,7 +435,7 @@ async function callGrokNonReasoning(messages: ChatMessage[]): Promise<string> {
     },
     body: JSON.stringify({
       model: "grok-4-1-fast-non-reasoning",
-      messages,
+      messages: textMessages,
       max_tokens: 2000,
     }),
   });
@@ -340,11 +449,12 @@ async function callGrokNonReasoning(messages: ChatMessage[]): Promise<string> {
   return normalizeContent(data.choices?.[0]?.message?.content ?? "");
 }
 
-async function callDeepSeek(messages: ChatMessage[]): Promise<string> {
+async function callDeepSeek(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   if (!apiKey) {
     throw new Error("DeepSeek API key not configured");
   }
+  const textMessages = messages.map((m) => ({ role: m.role, content: contentToText(m.content) }));
 
   const res = await fetch("https://api.deepseek.com/v1/chat/completions", {
     method: "POST",
@@ -354,7 +464,7 @@ async function callDeepSeek(messages: ChatMessage[]): Promise<string> {
     },
     body: JSON.stringify({
       model: "deepseek-chat",
-      messages,
+      messages: textMessages,
       max_tokens: 2000,
     }),
   });
@@ -368,14 +478,14 @@ async function callDeepSeek(messages: ChatMessage[]): Promise<string> {
   return normalizeContent(data.choices?.[0]?.message?.content ?? "");
 }
 
-async function callGemini(messages: ChatMessage[]): Promise<string> {
+async function callGemini(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new Error("Gemini API key not configured");
   }
   const contents = messages.map((m) => ({
     role: m.role === "assistant" ? "model" : "user",
-    parts: [{ text: m.content }],
+    parts: [{ text: contentToText(m.content) }],
   }));
   const res = await fetch(
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
@@ -400,11 +510,12 @@ async function callGemini(messages: ChatMessage[]): Promise<string> {
   return normalizeContent(text ?? "");
 }
 
-async function callMistral(messages: ChatMessage[]): Promise<string> {
+async function callMistral(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.MISTRAL_API_KEY;
   if (!apiKey) {
     throw new Error("Mistral API key not configured");
   }
+  const textMessages = messages.map((m) => ({ role: m.role, content: contentToText(m.content) }));
   const res = await fetch("https://api.mistral.ai/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -413,7 +524,7 @@ async function callMistral(messages: ChatMessage[]): Promise<string> {
     },
     body: JSON.stringify({
       model: "mistral-small-latest",
-      messages,
+      messages: textMessages,
       max_tokens: 2000,
     }),
   });
@@ -452,6 +563,23 @@ ${context}`;
   const messages: ChatMessage[] = [{ role: "user", content }];
   try {
     return await callGrok(messages);
+  } catch {
+    return "";
+  }
+}
+
+/** Summarize model responses using Claude Sonnet. Instruction: "Summarize these models' responses." */
+async function generateClaudeSummary(responses: LLMResponse[]): Promise<string> {
+  const validResponses = responses.filter((r) => !r.error);
+  if (validResponses.length === 0) return "";
+  const context = validResponses
+    .map((r) => `**${r.provider}:**\n${r.response}`)
+    .join("\n\n---\n\n");
+  const messages: ChatMessage[] = [
+    { role: "user", content: `Summarize these models' responses.\n\n${context}` },
+  ];
+  try {
+    return await callClaudeSonnet(messages);
   } catch {
     return "";
   }
@@ -599,7 +727,7 @@ const PROVIDER_TO_MODEL_ID: Record<string, string> = {
 };
 
 function buildPromises(
-  messages: ChatMessage[],
+  messages: VisionMessage[],
   modelIds: string[]
 ): Promise<LLMResponse>[] {
   const set = new Set(modelIds);
@@ -764,13 +892,23 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const { prompt, models: requestedModels, messages: bodyMessages, sessionId: bodySessionId, useGrokSummary = true, useSynthesis = true, drivingMode = false } = body;
+    const { prompt, models: requestedModels, messages: bodyMessages, sessionId: bodySessionId, useGrokSummary = true, useSynthesis = true, useClaudeSummary = false, drivingMode = false, images } = body;
 
-    const messages: ChatMessage[] =
+    const messages: VisionMessage[] =
       bodyMessages && bodyMessages.length > 0
-        ? bodyMessages
+        ? bodyMessages.map((m) => ({ role: m.role, content: m.content }))
         : prompt && typeof prompt === "string" && prompt.trim().length > 0
-          ? [{ role: "user", content: prompt.trim() }]
+          ? images?.length
+            ? [
+                {
+                  role: "user" as const,
+                  content: [
+                    { type: "text" as const, text: prompt.trim() },
+                    ...images.slice(0, 10).map((url) => ({ type: "image_url" as const, image_url: { url } })),
+                  ],
+                },
+              ]
+            : [{ role: "user", content: prompt.trim() }]
           : [];
 
     if (messages.length === 0) {
@@ -803,6 +941,7 @@ export async function POST(request: Request) {
 
     let summary: string = "";
     let grokSummary: string = "";
+    let claudeSummary: string = "";
     if (responses.length > 1) {
       const promises: Promise<string>[] = [];
       if (useSynthesis) {
@@ -816,10 +955,14 @@ export async function POST(request: Request) {
       if (useGrokSummary) {
         promises.push(generateGrokSummary(responses, drivingMode).catch(() => ""));
       }
+      if (useClaudeSummary) {
+        promises.push(generateClaudeSummary(responses).catch(() => ""));
+      }
       const results = await Promise.all(promises);
       let i = 0;
       if (useSynthesis) summary = results[i++] ?? "";
       if (useGrokSummary) grokSummary = results[i++] ?? "";
+      if (useClaudeSummary) claudeSummary = results[i++] ?? "";
     }
 
     let title = "";
@@ -839,7 +982,7 @@ export async function POST(request: Request) {
         if (isReplyToExistingSession) {
           const r = responses[0];
           const messagesWithLatest: ChatMessage[] = [
-            ...messages,
+            ...visionMessagesToChatMessages(messages),
             { role: "assistant", content: r.error ? `[Error: ${r.error}]` : r.response },
           ];
           const { error: updateError } = await supabase
@@ -871,7 +1014,7 @@ export async function POST(request: Request) {
             sessionId = bodySessionId;
           }
         } else {
-          const promptText = messages[0]?.content ?? "";
+          const promptText = messages[0] ? contentToText(messages[0].content) : "";
           // Only tag as conversation when there's more than one exchange (reply path sets it on update)
           const conversationModelId =
             modelIds.length === 1 && messages.length > 1 ? modelIds[0] : null;
@@ -879,7 +1022,7 @@ export async function POST(request: Request) {
             .from("llm_sessions")
             .insert({
               prompt: promptText,
-              messages: messages as unknown as Record<string, unknown>[],
+              messages: visionMessagesToChatMessages(messages) as unknown as Record<string, unknown>[],
               model_ids: modelIds,
               summary,
               grok_summary: grokSummary || null,
@@ -914,6 +1057,7 @@ export async function POST(request: Request) {
     const result: LLMResult = {
       summary,
       ...(grokSummary ? { grokSummary } : {}),
+      ...(claudeSummary ? { claudeSummary } : {}),
       responses,
     };
     return NextResponse.json(

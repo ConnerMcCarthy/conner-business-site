@@ -15,6 +15,7 @@ type LLMResponse = {
 type LLMResult = {
   summary: string;
   grokSummary?: string;
+  claudeSummary?: string;
   responses: LLMResponse[];
 };
 
@@ -86,7 +87,8 @@ export default function LLMPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [selectedModels, setSelectedModels] = useState<Set<string>>(DEFAULT_SELECTED);
   const [useGrokSummary, setUseGrokSummary] = useState(true);
-  const [useSynthesisSummary, setUseSynthesisSummary] = useState(true);
+  const [useSynthesisSummary, setUseSynthesisSummary] = useState(false);
+  const [useClaudeSummary, setUseClaudeSummary] = useState(false);
   const [doublePrompt, setDoublePrompt] = useState(false);
   const [drivingMode, setDrivingMode] = useState(false);
   const [conversationMessages, setConversationMessages] = useState<ChatMessage[] | null>(null);
@@ -98,6 +100,7 @@ export default function LLMPage() {
   const [replyText, setReplyText] = useState("");
   const [recordingForReply, setRecordingForReply] = useState(false);
   const [lastSubmittedPrompt, setLastSubmittedPrompt] = useState("");
+  const [imageDataUrls, setImageDataUrls] = useState<string[]>([]);
   const replyEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -334,7 +337,9 @@ export default function LLMPage() {
           models: Array.from(selectedModels),
           useGrokSummary,
           useSynthesis: useSynthesisSummary,
+          useClaudeSummary,
           drivingMode,
+          ...(imageDataUrls.length > 0 ? { images: imageDataUrls } : {}),
         }),
       });
 
@@ -351,6 +356,7 @@ export default function LLMPage() {
 
       setResult(data);
       setLastSubmittedPrompt(text);
+      setImageDataUrls([]);
 
       if (selectedModels.size === 1 && data.responses?.length === 1 && !data.responses[0].error) {
         setConversationMessages([
@@ -366,7 +372,7 @@ export default function LLMPage() {
         const toSpeak =
           data.responses.length === 1
             ? data.responses[0].response
-            : data.summary || data.grokSummary || data.responses[0]?.response || "";
+            : data.summary || data.grokSummary || data.claudeSummary || data.responses[0]?.response || "";
         if (toSpeak) speakWithTTS(toSpeak);
       }
     } catch (err) {
@@ -563,6 +569,16 @@ export default function LLMPage() {
                         />
                         <span className="text-sm text-slate-700 select-none">Synthesis (5.2)</span>
                       </label>
+                      <label className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg py-2.5 sm:min-h-0 sm:py-0">
+                        <input
+                          type="checkbox"
+                          checked={useClaudeSummary}
+                          onChange={(e) => setUseClaudeSummary(e.target.checked)}
+                          disabled={loading}
+                          className="h-4 w-4 shrink-0 rounded border-slate-300 text-slate-900 focus:ring-2 focus:ring-sky-500 focus:ring-offset-0"
+                        />
+                        <span className="text-sm text-slate-700 select-none">Claude Sonnet Summary</span>
+                      </label>
                     </div>
                   </>
                 )}
@@ -598,6 +614,55 @@ export default function LLMPage() {
               rows={6}
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:opacity-60 resize-none"
             />
+            <div className="space-y-2">
+              <label className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50 inline-block">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  disabled={loading}
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files ?? []);
+                    if (!files.length) return;
+                    const max = 5;
+                    const maxSize = 4 * 1024 * 1024;
+                    const toRead = files.slice(0, max).filter((f) => f.size <= maxSize);
+                    Promise.all(
+                      toRead.map(
+                        (f) =>
+                          new Promise<string>((resolve) => {
+                            const reader = new FileReader();
+                            reader.onload = () => resolve((reader.result as string) ?? "");
+                            reader.readAsDataURL(f);
+                          })
+                      )
+                    ).then((urls) => {
+                      setImageDataUrls((prev) => [...prev, ...urls.filter(Boolean)].slice(0, max));
+                    });
+                    e.target.value = "";
+                  }}
+                />
+                Upload images
+              </label>
+              {imageDataUrls.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {imageDataUrls.map((url, i) => (
+                    <div key={i} className="relative group">
+                      <img src={url} alt="" className="h-20 w-20 object-cover rounded-lg border border-slate-200" />
+                      <button
+                        type="button"
+                        onClick={() => setImageDataUrls((prev) => prev.filter((_, j) => j !== i))}
+                        className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center opacity-90 group-hover:opacity-100"
+                        aria-label="Remove image"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <div className={`flex flex-wrap items-center gap-3 ${drivingMode ? "flex-col gap-4" : ""}`}>
               <button
                 type="submit"
@@ -707,6 +772,55 @@ export default function LLMPage() {
                         ]);
                         setConversationModelId("grok-reasoning");
                         setConversationProviderLabel("Grok 4-1 Fast Reasoning");
+                        replyEndRef.current?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Continue conversation
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : null}
+
+            {/* Claude Sonnet Summary — when requested (2+ models) */}
+            {result.claudeSummary ? (
+              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <h2 className="text-lg font-semibold text-slate-800">
+                    Claude Sonnet Summary
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(result.claudeSummary ?? "", "claudeSummary")}
+                    className="shrink-0 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                  >
+                    {copiedId === "claudeSummary" ? "Copied!" : "Copy"}
+                  </button>
+                </div>
+                <div className="prose prose-sm max-w-none prose-headings:text-slate-800 prose-p:text-slate-700 prose-strong:text-slate-900 prose-ul:text-slate-700 prose-li:text-slate-700 prose-h2:mt-8 prose-h2:mb-3 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h3:mt-6 prose-h3:mb-2 prose-h4:mt-5 prose-h4:mb-2 prose-p:my-2.5 prose-ul:my-3 prose-ol:my-3 prose-li:my-0.5 [&>h2:first-child]:mt-0 [&>h3:first-child]:mt-0 [&>h4:first-child]:mt-0">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{result.claudeSummary}</ReactMarkdown>
+                </div>
+                {conversationMessages == null && lastSubmittedPrompt && (
+                  <div className="mt-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const summaryBlock = result.claudeSummary ?? "";
+                        const allResponses = result.responses
+                          .map(
+                            (r) =>
+                              `**${r.provider}**:\n${r.error ? `(Error: ${r.error})` : r.response}`
+                          )
+                          .join("\n\n---\n\n");
+                        const fullContext = summaryBlock + "\n\n---\n\nIndividual model responses:\n\n" + allResponses;
+                        setConversationSessionId(null);
+                        setConversationMessages([
+                          { role: "user", content: lastSubmittedPrompt },
+                          { role: "assistant", content: fullContext },
+                        ]);
+                        setConversationModelId("claude-sonnet");
+                        setConversationProviderLabel("Claude Sonnet 4.6");
                         replyEndRef.current?.scrollIntoView({ behavior: "smooth" });
                       }}
                       className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
