@@ -29,10 +29,12 @@ const MODEL_OPTIONS = [
   { id: "claude-opus", label: "Claude Opus 4.6" },
   { id: "claude-sonnet", label: "Claude Sonnet 4.6" },
   { id: "claude-haiku", label: "Claude Haiku 4.5" },
-  { id: "grok-reasoning", label: "Grok 4-1 Fast Reasoning" },
-  { id: "grok-non-reasoning", label: "Grok 4-1 Fast Non-Reasoning" },
-  { id: "deepseek", label: "DeepSeek Chat" },
-  { id: "gemini-flash", label: "Gemini 1.5 Flash" },
+  { id: "grok-reasoning", label: "Grok 4.3 Reasoning" },
+  { id: "grok-non-reasoning", label: "Grok 4.3 Non-Reasoning" },
+  { id: "deepseek-flash", label: "DeepSeek V4 Flash" },
+  { id: "deepseek-pro", label: "DeepSeek V4 Pro" },
+  { id: "gemini-flash", label: "Gemini 2.5 Flash" },
+  { id: "gemini-pro", label: "Gemini 2.5 Pro" },
   { id: "mistral-small", label: "Mistral Small" },
 ] as const;
 
@@ -41,7 +43,7 @@ const DEFAULT_SELECTED = new Set(MODEL_OPTIONS.map((m) => m.id));
 const FAST_MODEL_IDS = new Set([
   "grok-reasoning",
   "grok-non-reasoning",
-  "deepseek",
+  "deepseek-flash",
   "gemini-flash",
   "mistral-small",
   "openai-5-mini",
@@ -56,7 +58,7 @@ const NON_REASONING_MODEL_IDS = new Set([
   "claude-haiku",
   "grok-non-reasoning",
   "gemini-flash",
-  "deepseek",
+  "deepseek-flash",
   "mistral-small",
 ]);
 
@@ -65,6 +67,8 @@ const REASONING_MODEL_IDS = new Set([
   "openai-5.2",
   "openai-4.1",
   "claude-opus",
+  "deepseek-pro",
+  "gemini-pro",
 ]);
 
 const DRIVING_TTS_PROMPT_PREFIX = `Reply in a way that is good for text-to-speech.
@@ -86,9 +90,9 @@ export default function LLMPage() {
   const [recording, setRecording] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [selectedModels, setSelectedModels] = useState<Set<string>>(DEFAULT_SELECTED);
-  const [useGrokSummary, setUseGrokSummary] = useState(true);
+  const [useGrokSummary, setUseGrokSummary] = useState(false);
   const [useSynthesisSummary, setUseSynthesisSummary] = useState(false);
-  const [useClaudeSummary, setUseClaudeSummary] = useState(false);
+  const [useClaudeSummary, setUseClaudeSummary] = useState(true);
   const [doublePrompt, setDoublePrompt] = useState(false);
   const [drivingMode, setDrivingMode] = useState(false);
   const [conversationMessages, setConversationMessages] = useState<ChatMessage[] | null>(null);
@@ -102,6 +106,7 @@ export default function LLMPage() {
   const [lastSubmittedPrompt, setLastSubmittedPrompt] = useState("");
   const [imageDataUrls, setImageDataUrls] = useState<string[]>([]);
   const replyEndRef = useRef<HTMLDivElement>(null);
+  const formActionsRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
@@ -497,6 +502,25 @@ export default function LLMPage() {
 
         <form onSubmit={handleSubmit} className="mb-8">
           <div className="space-y-4">
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => {
+                const next = !drivingMode;
+                setDrivingMode(next);
+                if (next) {
+                  selectFastModels();
+                  setTimeout(() => formActionsRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
+                }
+              }}
+              className={`w-full rounded-xl px-6 py-4 text-base font-bold transition-all disabled:opacity-50 ${
+                drivingMode
+                  ? "bg-amber-400 text-amber-900 hover:bg-amber-300"
+                  : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+              }`}
+            >
+              {drivingMode ? "Exit Driving Mode" : "Driving Mode"}
+            </button>
             <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-4">
               <div className="mb-3 flex items-center justify-between gap-2">
                 <span className="text-sm font-medium text-slate-700">Models</span>
@@ -557,7 +581,7 @@ export default function LLMPage() {
                           disabled={loading}
                           className="h-4 w-4 shrink-0 rounded border-slate-300 text-slate-900 focus:ring-2 focus:ring-sky-500 focus:ring-offset-0"
                         />
-                        <span className="text-sm text-slate-700 select-none">Grok 4-1 Reasoning Summary</span>
+                        <span className="text-sm text-slate-700 select-none">Grok 4.3 Reasoning Summary</span>
                       </label>
                       <label className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg py-2.5 sm:min-h-0 sm:py-0">
                         <input
@@ -592,16 +616,6 @@ export default function LLMPage() {
                       className="h-4 w-4 shrink-0 rounded border-slate-300 text-slate-900 focus:ring-2 focus:ring-sky-500 focus:ring-offset-0"
                     />
                     <span className="text-sm text-slate-700 select-none">Double prompt</span>
-                  </label>
-                  <label className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg py-2.5 sm:min-h-0 sm:py-0">
-                    <input
-                      type="checkbox"
-                      checked={drivingMode}
-                      onChange={(e) => setDrivingMode(e.target.checked)}
-                      disabled={loading}
-                      className="h-4 w-4 shrink-0 rounded border-slate-300 text-slate-900 focus:ring-2 focus:ring-sky-500 focus:ring-offset-0"
-                    />
-                    <span className="text-sm text-slate-700 select-none">Driving mode</span>
                   </label>
                 </div>
               </div>
@@ -663,7 +677,7 @@ export default function LLMPage() {
                 </div>
               )}
             </div>
-            <div className={`flex flex-wrap items-center gap-3 ${drivingMode ? "flex-col gap-4" : ""}`}>
+            <div ref={formActionsRef} className={`flex flex-wrap items-center gap-3 ${drivingMode ? "flex-col gap-4" : ""}`}>
               <button
                 type="submit"
                 disabled={loading || !input.trim() || selectedModels.size === 0}
@@ -739,7 +753,7 @@ export default function LLMPage() {
               <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <h2 className="text-lg font-semibold text-slate-800">
-                    Grok 4-1 Reasoning Summary
+                    Grok 4.3 Reasoning Summary
                   </h2>
                   <button
                     type="button"
@@ -771,7 +785,7 @@ export default function LLMPage() {
                           { role: "assistant", content: fullContext },
                         ]);
                         setConversationModelId("grok-reasoning");
-                        setConversationProviderLabel("Grok 4-1 Fast Reasoning");
+                        setConversationProviderLabel("Grok 4.3 Reasoning");
                         replyEndRef.current?.scrollIntoView({ behavior: "smooth" });
                       }}
                       className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"

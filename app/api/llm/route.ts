@@ -405,8 +405,9 @@ async function callGrok(messages: VisionMessage[]): Promise<string> {
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "grok-4-1-fast-reasoning",
+      model: "grok-4.3",
       messages: textMessages,
+      reasoning_effort: "high",
       max_tokens: 2000,
     }),
   });
@@ -434,8 +435,9 @@ async function callGrokNonReasoning(messages: VisionMessage[]): Promise<string> 
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "grok-4-1-fast-non-reasoning",
+      model: "grok-4.3",
       messages: textMessages,
+      reasoning_effort: "none",
       max_tokens: 2000,
     }),
   });
@@ -449,31 +451,36 @@ async function callGrokNonReasoning(messages: VisionMessage[]): Promise<string> 
   return normalizeContent(data.choices?.[0]?.message?.content ?? "");
 }
 
-async function callDeepSeek(messages: VisionMessage[]): Promise<string> {
+async function callDeepSeekFlash(messages: VisionMessage[]): Promise<string> {
   const apiKey = process.env.DEEPSEEK_API_KEY;
-  if (!apiKey) {
-    throw new Error("DeepSeek API key not configured");
-  }
+  if (!apiKey) throw new Error("DeepSeek API key not configured");
   const textMessages = messages.map((m) => ({ role: m.role, content: contentToText(m.content) }));
-
   const res = await fetch("https://api.deepseek.com/v1/chat/completions", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: "deepseek-chat",
-      messages: textMessages,
-      max_tokens: 2000,
-    }),
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({ model: "deepseek-v4-flash", messages: textMessages, max_tokens: 2000, thinking: { type: "disabled" } }),
   });
-
   if (!res.ok) {
     const error = await res.json().catch(() => ({}));
     throw new Error(`DeepSeek API error: ${res.status} ${JSON.stringify(error)}`);
   }
+  const data = await res.json();
+  return normalizeContent(data.choices?.[0]?.message?.content ?? "");
+}
 
+async function callDeepSeekPro(messages: VisionMessage[]): Promise<string> {
+  const apiKey = process.env.DEEPSEEK_API_KEY;
+  if (!apiKey) throw new Error("DeepSeek API key not configured");
+  const textMessages = messages.map((m) => ({ role: m.role, content: contentToText(m.content) }));
+  const res = await fetch("https://api.deepseek.com/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({ model: "deepseek-v4-pro", messages: textMessages, max_tokens: 2000, thinking: { type: "enabled" }, reasoning_effort: "max" }),
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(`DeepSeek API error: ${res.status} ${JSON.stringify(error)}`);
+  }
   const data = await res.json();
   return normalizeContent(data.choices?.[0]?.message?.content ?? "");
 }
@@ -488,7 +495,39 @@ async function callGemini(messages: VisionMessage[]): Promise<string> {
     parts: [{ text: contentToText(m.content) }],
   }));
   const res = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": apiKey,
+      },
+      body: JSON.stringify({
+        contents,
+        generationConfig: { maxOutputTokens: 2000 },
+      }),
+    }
+  );
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(`Gemini API error: ${res.status} ${JSON.stringify(error)}`);
+  }
+  const data = await res.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  return normalizeContent(text ?? "");
+}
+
+async function callGeminiPro(messages: VisionMessage[]): Promise<string> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error("Gemini API key not configured");
+  }
+  const contents = messages.map((m) => ({
+    role: m.role === "assistant" ? "model" : "user",
+    parts: [{ text: contentToText(m.content) }],
+  }));
+  const res = await fetch(
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent",
     {
       method: "POST",
       headers: {
@@ -706,8 +745,10 @@ const MODEL_IDS = [
   "claude-haiku",
   "grok-reasoning",
   "grok-non-reasoning",
-  "deepseek",
+  "deepseek-flash",
+  "deepseek-pro",
   "gemini-flash",
+  "gemini-pro",
   "mistral-small",
 ] as const;
 
@@ -719,10 +760,12 @@ const PROVIDER_TO_MODEL_ID: Record<string, string> = {
   "Claude Opus 4.6": "claude-opus",
   "Claude Sonnet 4.6": "claude-sonnet",
   "Claude Haiku 4.5": "claude-haiku",
-  "Grok 4-1 Fast Reasoning": "grok-reasoning",
-  "Grok 4-1 Fast Non-Reasoning": "grok-non-reasoning",
-  "DeepSeek Chat": "deepseek",
-  "Gemini 1.5 Flash": "gemini-flash",
+  "Grok 4.3 Reasoning": "grok-reasoning",
+  "Grok 4.3 Non-Reasoning": "grok-non-reasoning",
+  "DeepSeek V4 Flash": "deepseek-flash",
+  "DeepSeek V4 Pro": "deepseek-pro",
+  "Gemini 2.5 Flash": "gemini-flash",
+  "Gemini 2.5 Pro": "gemini-pro",
   "Mistral Small": "mistral-small",
 };
 
@@ -820,9 +863,9 @@ function buildPromises(
   if (set.has("grok-reasoning")) {
     promises.push(
       callGrok(messages).then(
-        (r) => ({ provider: "Grok 4-1 Fast Reasoning", response: r }),
+        (r) => ({ provider: "Grok 4.3 Reasoning", response: r }),
         (e) => ({
-          provider: "Grok 4-1 Fast Reasoning",
+          provider: "Grok 4.3 Reasoning",
           response: "",
           error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
@@ -832,21 +875,33 @@ function buildPromises(
   if (set.has("grok-non-reasoning")) {
     promises.push(
       callGrokNonReasoning(messages).then(
-        (r) => ({ provider: "Grok 4-1 Fast Non-Reasoning", response: r }),
+        (r) => ({ provider: "Grok 4.3 Non-Reasoning", response: r }),
         (e) => ({
-          provider: "Grok 4-1 Fast Non-Reasoning",
+          provider: "Grok 4.3 Non-Reasoning",
           response: "",
           error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
       )
     );
   }
-  if (set.has("deepseek")) {
+  if (set.has("deepseek-flash")) {
     promises.push(
-      callDeepSeek(messages).then(
-        (r) => ({ provider: "DeepSeek Chat", response: r }),
+      callDeepSeekFlash(messages).then(
+        (r) => ({ provider: "DeepSeek V4 Flash", response: r }),
         (e) => ({
-          provider: "DeepSeek Chat",
+          provider: "DeepSeek V4 Flash",
+          response: "",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
+        })
+      )
+    );
+  }
+  if (set.has("deepseek-pro")) {
+    promises.push(
+      callDeepSeekPro(messages).then(
+        (r) => ({ provider: "DeepSeek V4 Pro", response: r }),
+        (e) => ({
+          provider: "DeepSeek V4 Pro",
           response: "",
           error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
@@ -856,9 +911,21 @@ function buildPromises(
   if (set.has("gemini-flash")) {
     promises.push(
       callGemini(messages).then(
-        (r) => ({ provider: "Gemini 1.5 Flash", response: r }),
+        (r) => ({ provider: "Gemini 2.5 Flash", response: r }),
         (e) => ({
-          provider: "Gemini 1.5 Flash",
+          provider: "Gemini 2.5 Flash",
+          response: "",
+          error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
+        })
+      )
+    );
+  }
+  if (set.has("gemini-pro")) {
+    promises.push(
+      callGeminiPro(messages).then(
+        (r) => ({ provider: "Gemini 2.5 Pro", response: r }),
+        (e) => ({
+          provider: "Gemini 2.5 Pro",
           response: "",
           error: sanitizeErrorMessage(e instanceof Error ? e.message : "Unknown error"),
         })
