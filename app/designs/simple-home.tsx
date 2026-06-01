@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import ContactForm from "../components/ContactForm";
 import Image from "next/image";
+import Link from "next/link";
 import { LazyVideo } from "@/app/components/LazyVideo";
 
 const EMAIL = "conner.mccarthy.97@gmail.com";
@@ -115,9 +116,17 @@ export default function Theme1Home() {
                 Small-business websites, built with care
               </div>
 
-              <h1 className="mt-5 text-3xl font-semibold leading-tight tracking-tight md:text-5xl">
-                Professional Modern Websites
-              </h1>
+              <div className="mt-10 flex items-center justify-between gap-4">
+                <h1 className="text-3xl font-semibold leading-tight tracking-tight md:text-5xl">
+                  Professional Modern Websites
+                </h1>
+                <Link
+                  href="/websites"
+                  className="hidden lg:inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:scale-105 hover:shadow-md mr-24"
+                >
+                  View All Websites ↗
+                </Link>
+              </div>
 
               <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">
                 Fast, clean, mobile-first sites for real people and real businesses.
@@ -130,6 +139,12 @@ export default function Theme1Home() {
                 >
                   Get a quote
                 </a>
+                <Link
+                  href="/websites"
+                  className="lg:hidden inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:scale-105 hover:shadow-md"
+                >
+                  View All Websites ↗
+                </Link>
               </div>
 
               <div className="mt-8 grid grid-cols-3 gap-4 text-sm">
