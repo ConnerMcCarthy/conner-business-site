@@ -124,7 +124,7 @@ export default function Theme1Home() {
                   href="/websites"
                   className="hidden lg:inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:scale-105 hover:shadow-md mr-24"
                 >
-                  View All Websites ↗
+                  View Live Websites ↗
                 </Link>
               </div>
 
@@ -143,7 +143,7 @@ export default function Theme1Home() {
                   href="/websites"
                   className="lg:hidden inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:scale-105 hover:shadow-md"
                 >
-                  View All Websites ↗
+                  View Live Websites ↗
                 </Link>
               </div>
 
