@@ -11,10 +11,10 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.97.0",
     "leaflet": "^1.9.4",
-    "next": "^16.4.3",
+    "next": "^16.4.6",
     "nodemailer": "^7.0.13",
-    "react": "^19.2.9",
-    "react-dom": "^19.2.9",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "react-leaflet": "^5.0.0",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1"
@@ -29,7 +29,7 @@
     "autoprefixer": "^10.4.23",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "^16.4.3",
+    "eslint-config-next": "^16.4.6",
     "postcss": "^8.4.31",
     "tailwindcss": "^4.1.18",
     "typescript": "^5"
